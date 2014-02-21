@@ -28,10 +28,9 @@
   },
 
   "permissions": [
-    "history",
     "storage",
     "tabs",
-    "<all_urls>"
+    "*://play.google.com/music*"
   ],
 
   "content_scripts": [

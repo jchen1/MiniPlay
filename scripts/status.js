@@ -20,7 +20,6 @@ var music_status = {
     this.total_time = $("#time_container_duration").text();
     var status = 'paused', thumb = 'None', repeat = 'none', shuffle = 'off';
     if ($('button[data-id="play-pause"]').hasClass('playing')) {
-      // console.log('this is playing');
       status = 'playing';
     }
     if ($('li[title="Thumbs up"]').hasClass('selected')) {

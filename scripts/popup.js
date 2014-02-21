@@ -102,3 +102,85 @@ function set_slider(current, total) {
   $('#slider-thumb').attr('style', 'left:' + Math.max(2, width - 17) + 'px;');
   $('#slider-thumb').show();
 }
+
+function act(storage, type) {
+  chrome.tabs.sendMessage(parseInt(storage['id']),
+    {
+      'action': 'send_command',
+      'type': type
+    }, function() { update_act(type); });
+}
+
+function update_act(type) {
+  if (type == 'play' && $('#play').attr('title') == 'Play') {
+    toggle_play('playing');
+  }
+  else if (type == 'play') {
+    toggle_play('paused');
+  }
+
+  if (type == 'up' && $('#up').hasClass('control-checked')) {
+    $('#up').removeClass('up');
+  }
+  else if (type == 'up') {
+    $('#up').addClass('control-checked');
+    if ($('#down').hasClass("control-checked")) {
+      $('#down').removeClass("control-checked");
+    }
+  }
+
+  if (type == 'down' && $('#down').hasClass('control-checked')) {
+    $('#down').removeClass('control-checked');
+  }
+  else if (type == 'control') {
+    $('#down').addClass('control-checked');
+    if ($('#up').hasClass('control-checked')) {
+      $('#up').removeClass('control-checked');
+    }
+  }
+
+  if (type == 'repeat') {
+    if ($("#repeat").hasClass('control-list')) {
+      toggle_repeat('single');
+    }
+    else if ($("#repeat").hasClass('control-single')) {
+      toggle_repeat('none');
+    }
+    else {
+      toggle_repeat('list');
+    }
+  }
+
+  if (type == 'shuffle') {
+    if ($("#shuffle").hasClass('control-checked')) {
+      toggle_shuffle('off');
+    }
+    else {
+      toggle_shuffle('on');
+    }
+  }
+}
+
+$(function() {
+  $('#play').on('click', function() {
+    chrome.storage.local.get('id', function(data) { act(data, 'play'); });
+  });
+  $('#rew').on('click', function() {
+    chrome.storage.local.get('id', function(data) { act(data, 'rew'); });
+  });
+  $('#ff').on('click', function() {
+    chrome.storage.local.get('id', function(data) { act(data, 'ff'); });
+  });
+  $('#up').on('click', function() {
+    chrome.storage.local.get('id', function(data) { act(data, 'up'); });
+  });
+  $('#down').on('click', function() {
+    chrome.storage.local.get('id', function(data) { act(data, 'down'); });
+  });
+  $('#shuffle').on('click', function() {
+    chrome.storage.local.get('id', function(data) { act(data, 'shuffle'); });
+  });
+  $('#repeat').on('click', function() {
+    chrome.storage.local.get('id', function(data) { act(data, 'repeat'); });
+  });
+})

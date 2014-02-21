@@ -10,6 +10,7 @@ function update(data) {
   if (data['id'] === undefined || data['id'] == '-1') {
     $('#title').html('No Google Music tab found');
     $('#artist').html('<a href="#">Click to open a new tab</a>');
+    $('#artist a').css('outline', 'none');
     $('#artist a').on('click', function() {
       chrome.tabs.create({url: "https://play.google.com/music"});
     });
@@ -21,6 +22,7 @@ function update(data) {
           chrome.storage.local.set('id', '-1');
           $('#title').html('No Google Music tab found');
           $('#artist').html('<a href="#">Click to open a new tab</a>');
+          $('#artist a').css('outline', 'none');
           $('#artist a').on('click', function() {
             chrome.tabs.create({url: "https://play.google.com/music"});
           });

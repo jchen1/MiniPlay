@@ -5,6 +5,8 @@
   height: 210px;
   background-color: #e5e5e5;
   position: absolute;
+  cursor: default;
+  -webkit-user-select: none;
 }
 
 body {
@@ -22,22 +24,18 @@ body {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, .2);
   background: white;
   font-weight: 300;
-  cursor: default;
   height: 128px;
   width: 430px;
-  -webkit-user-select: none;
 }
 
 .big-art {
   float: left;
   margin-right: 20px;
   border-radius: 2px 0 0 2px;
-  -webkit-user-select: none;
 }
 
 #album-art-img {
   border-radius: 2px 0 0 2px;
-  -webkit-user-select: none;
   -webkit-user-drag: none;
 }
 
@@ -80,7 +78,8 @@ body {
   outline: none;
   opacity: 0.8;
   transition: background-color 0.218s;
-  background-size: 3079px 727px !important;
+  background: no-repeat url(../img/sprites.png);
+  background-size: 3079px 727px;
 }
 
 .control:hover {
@@ -116,55 +115,55 @@ body {
 }
 
 #repeat.control {
-  background: no-repeat url(../img/sprites.png) -2056px -25px;
+  background-position: -2056px -25px;
 }
 
 #repeat.control-list {
-  background: no-repeat url(../img/sprites.png) -691px -27px;
+  background-position: -691px -27px;
 }
 
 #repeat.control-single {
-  background: no-repeat url(../img/sprites.png) -1354px -266px;
+  background-position: -1354px -266px;
 }
 
 #shuffle.control {
-  background: no-repeat url(../img/sprites.png) -1503px -369px;
+  background-position: -1503px -369px;
 }
 
 #shuffle.control-checked {
-  background: no-repeat url(../img/sprites.png) -1603px 0;
+  background-position: -1603px 0;
 }
 
 #rew.control {
-  background: no-repeat url(../img/sprites.png) 0 -513px;
+  background-position: 0 -513px;
 }
 
 #play.control {
-  background: no-repeat url(../img/sprites.png) -2443px -562px;
+  background-position: -2443px -562px;
 }
 
 #play.control-checked {
-  background: no-repeat url(../img/sprites.png) -2860px -50px;
+  background-position: -2860px -50px;
 }
 
 #ff.control {
-  background: no-repeat url(../img/sprites.png) -2128px -463px;
+  background-position: -2128px -463px;
 }
 
 #down.control {
-  background: no-repeat url(../img/sprites.png) -1735px -468px;
+  background-position: -1735px -468px;
 }
 
 #down.control-checked {
-  background: no-repeat url(../img/sprites.png) -451px -11px;
+  background-position: -451px -11px;
 }
 
 #up.control {
-  background: no-repeat url(../img/sprites.png) -1300px -266px;
+  background-position: -1300px -266px;
 }
 
 #up.control-checked {
-  background: no-repeat url(../img/sprites.png) -414px -513px;
+  background-position: -414px -513px;
 }
 
 #time {

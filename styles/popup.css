@@ -38,6 +38,7 @@ body {
 #album-art-img {
   border-radius: 2px 0 0 2px;
   -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 
 #song-info {
@@ -48,13 +49,13 @@ body {
 }
 
 #controls {
-  position:absolute;
-  bottom:33px;
-  left:0px;
+  position: absolute;
+  bottom: 33px;
+  left: 0px;
   background-color: #fafafa;
   width: 450px;
   outline: none;
-  z-index:1;
+  z-index: 1;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -79,6 +80,7 @@ body {
   outline: none;
   opacity: 0.8;
   transition: background-color 0.218s;
+  background-size: 3079px 727px !important;
 }
 
 .control:hover {
@@ -115,67 +117,54 @@ body {
 
 #repeat.control {
   background: no-repeat url(../img/sprites.png) -2056px -25px;
-  background-size: 3079px 727px;
 }
 
 #repeat.control-list {
   background: no-repeat url(../img/sprites.png) -691px -27px;
-  background-size: 3079px 727px;
 }
 
 #repeat.control-single {
   background: no-repeat url(../img/sprites.png) -1354px -266px;
-  background-size: 3079px 727px;
 }
 
 #shuffle.control {
   background: no-repeat url(../img/sprites.png) -1503px -369px;
-  background-size: 3079px 727px;
 }
 
 #shuffle.control-checked {
   background: no-repeat url(../img/sprites.png) -1603px 0;
-  background-size: 3079px 727px;
 }
 
 #rew.control {
   background: no-repeat url(../img/sprites.png) 0 -513px;
-  background-size: 3079px 727px;
 }
 
 #play.control {
   background: no-repeat url(../img/sprites.png) -2443px -562px;
-  background-size: 3079px 727px;
 }
 
 #play.control-checked {
   background: no-repeat url(../img/sprites.png) -2860px -50px;
-  background-size: 3079px 727px;
 }
 
 #ff.control {
   background: no-repeat url(../img/sprites.png) -2128px -463px;
-  background-size: 3079px 727px;
 }
 
 #down.control {
   background: no-repeat url(../img/sprites.png) -1735px -468px;
-  background-size: 3079px 727px;
 }
 
 #down.control-checked {
   background: no-repeat url(../img/sprites.png) -451px -11px;
-  background-size: 3079px 727px;
 }
 
 #up.control {
   background: no-repeat url(../img/sprites.png) -1300px -266px;
-  background-size: 3079px 727px;
 }
 
 #up.control-checked {
   background: no-repeat url(../img/sprites.png) -414px -513px;
-  background-size: 3079px 727px;
 }
 
 #time {
@@ -196,7 +185,6 @@ body {
 
 #slider {
   outline: none;
-/*  cursor: pointer;*/
   height: 3px;
   padding: 5px 0;
   margin-top: 22px;
@@ -210,8 +198,8 @@ body {
 #slider-thumb {
   width: 12px;
   height: 12px;
-  margin-top:-7px;
-  position:relative;
+  margin-top: -7px;
+  position: relative;
 
   background: no-repeat url(../img/sprites.png) -2862px -476px;
   background-size: 3079px 727px;
@@ -219,12 +207,8 @@ body {
 
 #time-and-slider {
   position:absolute;
-  right:0px;
-  left:0px;
-  bottom:78px;
-  z-index:1000;
-}
-
-#song_info {
-  margin-top:18px;
+  right: 0px;
+  left: 0px;
+  bottom: 78px;
+  z-index: 1000;
 }

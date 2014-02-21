@@ -64,11 +64,14 @@ body {
   margin-bottom: 5px;
   padding-bottom: 5px;
   border-bottom: 1px solid #f1f1f1;
+  overflow: hidden;
 }
 
 #artist, #album {
   font-size: 14px;
-  color: #707070;
+  font-weight: 300;
+  color: #aaa;
+  overflow: hidden;
 }
 
 .control {

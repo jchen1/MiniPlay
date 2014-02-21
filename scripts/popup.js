@@ -26,9 +26,14 @@ function update(data) {
           });
         }
         else {
-          $('#title').html(response.title);
-          $('#artist').html(response.artist);
-          $('#album').html(response.album);
+          if (response.title == '') {
+            $('#title').html('No song selected');
+          }
+          else {
+            $('#title').html(response.title);
+            $('#artist').html(response.artist);
+            $('#album').html(response.album);            
+          }
 
           if (response.album_art == 'http://undefined') {
             response.album_art = 'http://play.google.com/music/default_album_med.png';

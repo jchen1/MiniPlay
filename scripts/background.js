@@ -1,3 +1,5 @@
+//background tab, always running
+
 chrome.storage.local.set({'id': '-1'});
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {

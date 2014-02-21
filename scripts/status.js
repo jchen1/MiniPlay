@@ -18,10 +18,10 @@ var music_status = {
     this.album_art = "http://" + $("#playingAlbumArt").attr('src');
     this.current_time = $("#time_container_current").text();
     this.total_time = $("#time_container_duration").text();
-    var status = 'Play', thumb = 'None', repeat = 'none', shuffle = 'off';
+    var status = 'paused', thumb = 'None', repeat = 'none', shuffle = 'off';
     if ($('button[data-id="play-pause"]').hasClass('playing')) {
       // console.log('this is playing');
-      status = 'Pause';
+      status = 'playing';
     }
     if ($('li[title="Thumbs up"]').hasClass('selected')) {
       thumb = 'Up';

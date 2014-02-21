@@ -9,7 +9,10 @@ chrome.storage.local.get('id', update);
 function update(data) {
   if (data['id'] === undefined || data['id'] == '-1') {
     $('#title').html('No Google Music tab found');
-    $('#artist').html('<a href="https://play.google.com/music">Click to open a new tab</a>');
+    $('#artist').html('<a href="#">Click to open a new tab</a>');
+    $('#artist a').on('click', function() {
+      chrome.tabs.create({url: "https://play.google.com/music"});
+    });
   }
   else {
     chrome.tabs.sendMessage(parseInt(data['id']), {action: 'update_status'},
@@ -17,7 +20,10 @@ function update(data) {
         if (chrome.extension.lastError) {
           chrome.storage.local.set('id', '-1');
           $('#title').html('No Google Music tab found');
-          $('#artist').html('<a href="https://play.google.com/music">Click to open a new tab</a>');
+          $('#artist').html('<a href="#">Click to open a new tab</a>');
+          $('#artist a').on('click', function() {
+            chrome.tabs.create({url: "https://play.google.com/music"});
+          });
         }
         else {
           $('#title').html(response.title);

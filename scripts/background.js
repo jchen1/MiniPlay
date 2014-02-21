@@ -22,5 +22,14 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     if (data['id'] == tabId) {
       chrome.storage.local.set({'id': '-1'});
     }
-  })
+  });
+});
+
+chrome.commands.onCommand.addListener(function (command) {
+  console.log(command);
+  chrome.storage.local.get('id', function (data) {
+    if (data['id'] != '-1') {
+      chrome.tabs.sendMessage(parseInt(data['id']), { action: 'send_command', type: command });
+    }
+  });
 });

@@ -34,6 +34,13 @@
     "<all_urls>"
   ],
 
+  "content_scripts": [
+    {
+      "matches": ["*://play.google.com/music*"],
+      "js": ["scripts/jquery.js", "scripts/status.js", "scripts/interface.js"]
+    }
+  ],
+
   "commands": {
     "toggle_play": {
       "suggested_key": {

@@ -11,7 +11,12 @@ function update(data) {
   else {
     chrome.tabs.sendMessage(parseInt(data['id']), {action: 'update_status'},
       function(response) {
-        console.log(response.title);
+        if (chrome.extension.lastError) {
+
+        }
+        else {
+          console.log(response.title);
+        }
       });
   }
 }

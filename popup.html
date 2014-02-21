@@ -2,7 +2,39 @@
 <head>
   <script src='scripts/jquery.js'></script>
   <script src='scripts/popup.js'></script>
+  <link rel="stylesheet" type="text/css" href="styles/popup.css">
 </head>
 <body>
+  <div id='popup'>
+    <div id='album-art' class='big-art'>
+      <img id="album_art_img" src="http://play.google.com/music/default_album_med.png" height="128" width="128" />
+    </div>
+    <div id='song-info'>
+      <div id='title'></div>
+      <div id='artist'></div>
+      <div id='album'></div>
+    </div>
+    <div id='time-and-slider'>
+      <div id='time'>
+        <span id='current-time'>0:00</span> / <span id='total-time'>0:00</span>
+      </div>
+      <div id='slider' class='slider' role='slider'>
+        <div id='slider-background'>
+          <div id='played-slider'></div>
+        </div>
+        <div id='slider-thumb'></div>
+      </div>
+    </div>
+    <div id='controls'>
+      <div id='repeat' class='control medium left' title='Repeat songs' role='button'></div>
+      <div id='rew' class='control large left' title='Previous song' role='button'></div>
+      <div id='play' class='control large left' title='Play' role='button'></div>
+      <div id='ff' class='control large left' title='Next song' role='button'></div>
+      <div id='shuffle' class='control medium left' title='Shuffle songs' role='button'></div>
+
+      <div id='down' class='control medium opaque right' title='Thumbs down' role='button'></div>
+      <div id='up' class='control medium opaque right' title='Thumbs up' role='button'></div>
+    </div>
+  </div>
 </body>
 </html>

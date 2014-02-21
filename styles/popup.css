@@ -1,0 +1,206 @@
+#popup {
+  font-family: 'Roboto', arial, sans-serif;
+  padding: 11px 30px 22px 10px;
+  width: 450px;
+  height: 220px;
+  background-color: #e5e5e5;
+  position: absolute;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 450px;
+  min-height: 220px;
+  border-radius: 20px;
+  font-family: 'Roboto', arial, sans-serif;
+  overflow: hidden;
+}
+
+.big-art {
+  float: left;
+  margin-right: 20px;
+  border: 1px solid #a7a7a7;
+  padding: 1px;
+  background: no-repeat url(../img/default_album.png);
+}
+
+#controls {
+  position:absolute;
+  bottom:33px;
+  left:0px;
+  background-color: #fafafa;
+  width: 450px;
+  outline: none;
+  z-index:1;
+}
+
+#title {
+  color: #333;
+  font-size: 20px;
+  font-weight: 300px;
+  margin-bottom: 5px;
+}
+
+#artist, #album {
+  font-size: 14px;
+  color: #707070;
+}
+
+.control {
+  outline: none;
+  opacity: 0.8;
+  transition: background-color 0.218s;
+}
+
+.control:hover {
+  background-color: #e8e8e8!important;
+  opacity: 1;
+}
+
+.control:active {
+  background-color: #d5d5d5!important;
+  opacity: 1;
+}
+
+.large {
+  width: 62px;
+  height: 53px;
+}
+
+.medium {
+  width: 53px;
+  height: 53px;
+}
+
+.opaque {
+  opacity: 1;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+#repeat.control {
+  background: no-repeat url(../img/sprites.png) -2056px -25px;
+  background-size: 3079px 727px;
+}
+
+#repeat.control-list {
+  background: no-repeat url(../img/sprites.png) -691px -27px;
+  background-size: 3079px 727px;
+}
+
+#repeat.control-single {
+  background: no-repeat url(../img/sprites.png) -1354px -266px;
+  background-size: 3079px 727px;
+}
+
+#shuffle.control {
+  background: no-repeat url(../img/sprites.png) -1503px -369px;
+  background-size: 3079px 727px;
+}
+
+#shuffle.control-checked {
+  background: no-repeat url(../img/sprites.png) -1603px 0;
+  background-size: 3079px 727px;
+}
+
+#rew.control {
+  background: no-repeat url(../img/sprites.png) 0 -513px;
+  background-size: 3079px 727px;
+}
+
+#play.control {
+  background: no-repeat url(../img/sprites.png) -2443px -562px;
+  background-size: 3079px 727px;
+}
+
+#play.control-checked {
+  background: no-repeat url(../img/sprites.png) -2860px -50px;
+  background-size: 3079px 727px;
+}
+
+#ff.control {
+  background: no-repeat url(../img/sprites.png) -2128px -463px;
+  background-size: 3079px 727px;
+}
+
+#down.control {
+  background: no-repeat url(../img/sprites.png) -1735px -468px;
+  background-size: 3079px 727px;
+}
+
+#down.control-checked {
+  background: no-repeat url(../img/sprites.png) -451px -11px;
+  background-size: 3079px 727px;
+}
+
+#up.control {
+  background: no-repeat url(../img/sprites.png) -1300px -266px;
+  background-size: 3079px 727px;
+}
+
+#up.control-checked {
+  background: no-repeat url(../img/sprites.png) -414px -513px;
+  background-size: 3079px 727px;
+}
+
+#time {
+  font-size: 0.75em;
+  line-height: 20px;
+  color: #7f7f7f;
+  text-align: right;
+  margin-right: 55px;
+  position: relative;
+  top: 23px;
+}
+
+#played-slider {
+  background-color: #fd8500;
+  width: 0;
+  height: 3px;
+  padding-left: 1em;
+/*  cursor: pointer;*/
+}
+
+#slider {
+  outline: none;
+/*  cursor: pointer;*/
+  height: 3px;
+  padding: 5px 0;
+  margin-top: 22px;
+}
+
+#slider-background {
+  background-color: #eaeaea;
+  height: 3px;
+  box-shadow: 0px -2px 2px #bbbbbb;
+}
+
+#slider-thumb {
+  width: 12px;
+  height: 12px;
+  margin-top:-7px;
+  margin-left: 5px;
+  position:relative;
+
+  background: no-repeat url(../img/sprites.png) -2862px -476px;
+  background-size: 3079px 727px;
+}
+
+#time-and-slider {
+  position:absolute;
+  right:0px;
+  left:0px;
+  bottom:80px;
+  z-index:1000;
+}
+
+#song_info {
+  margin-top:18px;
+}

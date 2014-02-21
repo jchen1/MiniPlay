@@ -2,7 +2,7 @@
   font-family: 'Roboto', arial, sans-serif;
   padding: 11px 30px 22px 10px;
   width: 450px;
-  height: 220px;
+  height: 210px;
   background-color: #e5e5e5;
   position: absolute;
 }
@@ -11,18 +11,40 @@ body {
   margin: 0;
   padding: 0;
   min-width: 450px;
-  min-height: 220px;
+  min-height: 210px;
   border-radius: 20px;
   font-family: 'Roboto', arial, sans-serif;
   overflow: hidden;
 }
 
+#card {
+  border-radius: 2px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, .2);
+  background: white;
+  font-weight: 300;
+  cursor: default;
+  height: 128px;
+  width: 430px;
+  -webkit-user-select: none;
+}
+
 .big-art {
   float: left;
   margin-right: 20px;
-  border: 1px solid #a7a7a7;
-  padding: 1px;
-  background: no-repeat url(../img/default_album.png);
+  border-radius: 2px 0 0 2px;
+  -webkit-user-select: none;
+}
+
+#album-art-img {
+  border-radius: 2px 0 0 2px;
+  -webkit-user-select: none;
+}
+
+#song-info {
+  position: absolute;
+  left: 140px;
+  width: 255px;
+  padding: 15px;
 }
 
 #controls {
@@ -38,8 +60,10 @@ body {
 #title {
   color: #333;
   font-size: 20px;
-  font-weight: 300px;
+  font-weight: 300;
   margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #f1f1f1;
 }
 
 #artist, #album {
@@ -155,17 +179,15 @@ body {
   line-height: 20px;
   color: #7f7f7f;
   text-align: right;
-  margin-right: 55px;
+  margin-right: 60px;
   position: relative;
-  top: 23px;
+  top: 7px;
 }
 
 #played-slider {
   background-color: #fd8500;
   width: 0;
   height: 3px;
-  padding-left: 1em;
-/*  cursor: pointer;*/
 }
 
 #slider {
@@ -186,7 +208,6 @@ body {
   width: 12px;
   height: 12px;
   margin-top:-7px;
-  margin-left: 5px;
   position:relative;
 
   background: no-repeat url(../img/sprites.png) -2862px -476px;

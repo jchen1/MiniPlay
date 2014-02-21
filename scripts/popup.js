@@ -104,8 +104,8 @@ function set_slider(current, total) {
   var current_secs = (parseInt(current.split(':')[0]) * 60) +
                       parseInt(current.split(':')[1]);
   var width = Math.round((current_secs/total_secs) * total_width);
-  $('#played-slider').attr('style', 'width:' + Math.max(0, width - 19) + 'px;');
-  $('#slider-thumb').attr('style', 'left:' + Math.max(2, width - 17) + 'px;');
+  $('#played-slider').attr('style', 'width:' + width + 'px;');
+  $('#slider-thumb').attr('style', 'left:' + width + 'px;');
   $('#slider-thumb').show();
 }
 

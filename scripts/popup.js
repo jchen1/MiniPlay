@@ -1,6 +1,10 @@
 //changes the popup window
 chrome.storage.local.get('id', update);
 
+window.setInterval(function() {
+  chrome.storage.local.get('id', update);
+}, 1000);
+
 function tab_not_found() {
   $('#title').html('No Google Music tab found');
   $('#artist').html('<a href="#">Click to open a new tab</a>');

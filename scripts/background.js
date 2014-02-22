@@ -33,10 +33,11 @@ chrome.storage.onChanged.addListener(function (changes, area) {
         var blob = this.response;
         chrome.notifications.create("MiniPlayNot",
           {
-            type:'basic',
-            title:newValue.title,
-            message:newValue.artist,
-            iconUrl:window.URL.createObjectURL(blob)
+            type: 'basic',
+            title: newValue.title,
+            message: newValue.artist,
+            contextMessage: newValue.album,
+            iconUrl: window.URL.createObjectURL(blob),
           }, function(id){});
       };
       xhr.send(null);

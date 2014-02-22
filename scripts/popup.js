@@ -193,50 +193,38 @@ function update_act(type) {
   }
 }
 
-function act(type) {
-  chrome.storage.local.get('id', function(data) {
-    chrome.tabs.sendMessage(parseInt(data['id']),
-    {
-      'action': 'send_command',
-      'type': type
-    }, function() { update_act(type); });
-  });
+function act(selector) {
+  if (!$(selector).is(':disabled')) {
+    chrome.storage.local.get('id', function(data) {
+      chrome.tabs.sendMessage(parseInt(data['id']),
+      {
+        'action': 'send_command',
+        'type': selector.substring(1)
+      }, function() { update_act(selector.substring(1)); });
+    });
+  }
 }
 
 $(function() {
   $('#play').on('click', function() {
-    if (!$('#play').is(':disabled')) {
-      act('play');
-    }
+    act('#play');
   });
   $('#rew').on('click', function() {
-    if (!$('#rew').is(':disabled')) {
-      act('rew');
-    }
+    act('#rew');
   });
   $('#ff').on('click', function() {
-    if (!$('#ff').is(':disabled')) {
-      act('ff');
-    }
+    act('#ff');
   });
   $('#up').on('click', function() {
-    if (!$('#up').is(':disabled')) {
-      act('up');
-    }
+    act('#up');
   });
   $('#down').on('click', function() {
-    if (!$('#down').is(':disabled')) {
-      act('down');
-    }
+    act('#down');
   });
   $('#shuffle').on('click', function() {
-    if (!$('#shuffle').is(':disabled')) {
-      act('shuffle');
-    }
+    act('#shuffle');
   });
   $('#repeat').on('click', function() {
-    if (!$('#repeat').is(':disabled')) {
-      act('repeat');
-    }
+    act('#repeat');
   });
 })

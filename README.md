@@ -1,4 +1,12 @@
-MiniPlay
-========
+## MiniPlay for Google Play Music
+MiniPlay adds a miniplayer and global keyboard shortcuts to [Google Play Music](https://play.google.com/music/listen).
 
-Control Google Play Music from anywhere in Chrome
+Note: You need to have a Google Play Music account to use this extension. After installing the extension, you will have to refresh your Google Play Music tab due to a Chrome extension limitation.
+
+### Features 
+
+- Control playback from a popup
+- Global (Chrome-wide) shortcuts
+- More (including notifications, Last.fm scrobbling, and lyrics) coming soon!
+
+The extension does not collect any information, but requires access to your other tabs for functionality. 

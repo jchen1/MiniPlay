@@ -14,6 +14,7 @@ function tab_not_found() {
     chrome.tabs.create({url: "https://play.google.com/music"});
   });
   disable_buttons();
+  $('#equalizer').hide();
 }
 
 function disable_buttons() {
@@ -71,6 +72,7 @@ function update(data) {
           toggle_thumb(response.thumb);
           toggle_repeat(response.repeat);
           toggle_shuffle(response.shuffle); 
+          $('#equalizer').show();
         }
       });
   }

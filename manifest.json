@@ -28,6 +28,7 @@
   },
 
   "permissions": [
+    "notifications",
     "storage",
     "tabs",
     "*://play.google.com/music*"

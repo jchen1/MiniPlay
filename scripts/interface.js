@@ -1,17 +1,21 @@
 // Interfaces with the Google Play Music tab
 
 chrome.extension.onMessage.addListener(function(message, sender, callback) {
-  if (message.action == 'update_status') {
-    update_status(callback);
+  if (message.action == 'get_status') {
+    get_status(callback);
   }
   if (message.action == 'send_command') {
     send_command(message.type, callback);
   }
 });
 
-function update_status(callback) {
-  callback(music_status.update());
+function get_status(callback) {
+  callback(music_status);
 }
+
+window.setInterval(function() {
+  chrome.storage.local.set({'music_status' : music_status.update()});
+}, 1000);
 
 function send_command(type, callback) {
   var $button;

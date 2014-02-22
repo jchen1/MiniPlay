@@ -17,6 +17,33 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   });
 });
 
+chrome.storage.onChanged.addListener(function (changes, area) {
+  if (changes['music_status'] && changes['music_status'].newValue) {
+    var oldValue = changes['music_status'].oldValue
+    var newValue = changes['music_status'].newValue;
+
+    if ((oldValue === undefined ||
+        oldValue.title != newValue.title ||
+        oldValue.artist != newValue.artist ||
+        oldValue.album_art != newValue.album_art) && newValue.title != '') {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", newValue.album_art);
+      xhr.responseType = "blob";
+      xhr.onload = function(){
+        var blob = this.response;
+        chrome.notifications.create("MiniPlayNot",
+          {
+            type:'basic',
+            title:newValue.title,
+            message:newValue.artist,
+            iconUrl:window.URL.createObjectURL(blob)
+          }, function(id){});
+      };
+      xhr.send(null);
+    }
+  }
+});
+
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
   chrome.storage.local.get('id', function (data) {
     if (data['id'] == tabId) {

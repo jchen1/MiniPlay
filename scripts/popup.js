@@ -1,9 +1,4 @@
 //changes the popup window
-
-window.setInterval(function() {
-  chrome.storage.local.get('id', update);
-}, 1000);
-
 chrome.storage.local.get('id', update);
 
 function tab_not_found() {
@@ -43,7 +38,7 @@ function update(data) {
     tab_not_found();
   }
   else {
-    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'update_status'},
+    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'},
       function(response) {
         if (chrome.extension.lastError) {
           chrome.storage.local.set('id', '-1');

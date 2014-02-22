@@ -76,6 +76,7 @@ body {
 
 .control {
   outline: none;
+  border: none;
   opacity: 0.8;
   transition: background-color 0.218s;
   background: no-repeat url(../img/sprites.png);
@@ -90,6 +91,21 @@ body {
 .control:active {
   background-color: #d5d5d5!important;
   opacity: 1;
+}
+
+.control[disabled] {
+  opacity: 0.2 !important;
+  background-color: transparent !important;
+}
+
+#up.control[disabled] {
+  opacity: 0 !important;
+  background-color: transparent !important;
+}
+
+#down.control[disabled] {
+  opacity: 0 !important;
+  background-color: transparent !important;
 }
 
 .large {

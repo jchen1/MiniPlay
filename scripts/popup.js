@@ -6,35 +6,57 @@ window.setInterval(function() {
 
 chrome.storage.local.get('id', update);
 
+function tab_not_found() {
+  $('#title').html('No Google Music tab found');
+  $('#artist').html('<a href="#">Click to open a new tab</a>');
+  $('#artist a').css('outline', 'none');
+  $('#artist a').on('click', function() {
+    chrome.tabs.create({url: "https://play.google.com/music"});
+  });
+  disable_buttons();
+}
+
+function disable_buttons() {
+  $('#play').prop('disabled', true);
+  $('#rew').prop('disabled', true);
+  $('#ff').prop('disabled', true);
+  $('#down').prop('disabled', true);
+  $('#up').prop('disabled', true);
+  $('#shuffle').prop('disabled', true);
+  $('#repeat').prop('disabled', true);
+}
+
+function enable_buttons() {
+  $('#play').prop('disabled', false);
+  $('#rew').prop('disabled', false);
+  $('#ff').prop('disabled', false);
+  $('#down').prop('disabled', false);
+  $('#up').prop('disabled', false);
+  $('#shuffle').prop('disabled', false);
+  $('#repeat').prop('disabled', false);  
+}
+
 function update(data) {
   if (data['id'] === undefined || data['id'] == '-1') {
-    $('#title').html('No Google Music tab found');
-    $('#artist').html('<a href="#">Click to open a new tab</a>');
-    $('#artist a').css('outline', 'none');
-    $('#artist a').on('click', function() {
-      chrome.tabs.create({url: "https://play.google.com/music"});
-    });
+    tab_not_found();
   }
   else {
     chrome.tabs.sendMessage(parseInt(data['id']), {action: 'update_status'},
       function(response) {
         if (chrome.extension.lastError) {
           chrome.storage.local.set('id', '-1');
-          $('#title').html('No Google Music tab found');
-          $('#artist').html('<a href="#">Click to open a new tab</a>');
-          $('#artist a').css('outline', 'none');
-          $('#artist a').on('click', function() {
-            chrome.tabs.create({url: "https://play.google.com/music"});
-          });
+          tab_not_found();
         }
         else {
           if (response.title == '') {
             $('#title').html('No song selected');
+            disable_buttons();
           }
           else {
             $('#title').html(response.title);
             $('#artist').html(response.artist);
-            $('#album').html(response.album);            
+            $('#album').html(response.album); 
+            enable_buttons();           
           }
 
           if (response.album_art == 'http://undefined') {
@@ -44,7 +66,7 @@ function update(data) {
           $('#current-time').html(response.current_time);
           $('#total-time').html(response.total_time);
 
-          set_slider(response.current_time, response.total_time);
+          set_slider(response.current_time, response.total_time, response.status);
           toggle_play(response.status);
           toggle_thumb(response.thumb);
           toggle_repeat(response.repeat);
@@ -104,7 +126,7 @@ function toggle_play(status) {
   }
 }
 
-function set_slider(current, total) {
+function set_slider(current, total, status) {
   var total_width = 450;
   var total_secs = (parseInt(total.split(':')[0]) * 60) +
                     parseInt(total.split(':')[1]);
@@ -113,7 +135,12 @@ function set_slider(current, total) {
   var width = Math.round((current_secs/total_secs) * total_width);
   $('#played-slider').attr('style', 'width:' + width + 'px;');
   $('#slider-thumb').attr('style', 'left:' + width + 'px;');
-  $('#slider-thumb').show();
+  if (status == 'playing') {
+    $('#slider-thumb').show();
+  }
+  else {
+    $('#slider-thumb').hide();
+  }
 }
 
 function act(storage, type) {
@@ -176,24 +203,38 @@ function update_act(type) {
 
 $(function() {
   $('#play').on('click', function() {
-    chrome.storage.local.get('id', function(data) { act(data, 'play'); });
+    if (!$('#play').is(':disabled')) {
+      chrome.storage.local.get('id', function(data) { act(data, 'play'); });
+    }
   });
   $('#rew').on('click', function() {
-    chrome.storage.local.get('id', function(data) { act(data, 'rew'); });
+    if (!$('#rew').is(':disabled')) {
+      chrome.storage.local.get('id', function(data) { act(data, 'rew'); });
+    }
   });
   $('#ff').on('click', function() {
-    chrome.storage.local.get('id', function(data) { act(data, 'ff'); });
+    if (!$('#ff').is(':disabled')) {
+      chrome.storage.local.get('id', function(data) { act(data, 'ff'); });
+    }
   });
   $('#up').on('click', function() {
-    chrome.storage.local.get('id', function(data) { act(data, 'up'); });
+    if (!$('#up').is(':disabled')) {
+      chrome.storage.local.get('id', function(data) { act(data, 'up'); });
+    }
   });
   $('#down').on('click', function() {
-    chrome.storage.local.get('id', function(data) { act(data, 'down'); });
+    if (!$('#down').is(':disabled')) {
+      chrome.storage.local.get('id', function(data) { act(data, 'down'); });
+    }
   });
   $('#shuffle').on('click', function() {
-    chrome.storage.local.get('id', function(data) { act(data, 'shuffle'); });
+    if (!$('#shuffle').is(':disabled')) {
+      chrome.storage.local.get('id', function(data) { act(data, 'shuffle'); });
+    }
   });
   $('#repeat').on('click', function() {
-    chrome.storage.local.get('id', function(data) { act(data, 'repeat'); });
+    if (!$('#repeat').is(':disabled')) {
+      chrome.storage.local.get('id', function(data) { act(data, 'repeat'); });
+    }
   });
 })

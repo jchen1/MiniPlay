@@ -135,7 +135,7 @@ function set_slider(current, total, status) {
   var width = Math.round((current_secs/total_secs) * total_width);
   $('#played-slider').attr('style', 'width:' + width + 'px;');
   $('#slider-thumb').attr('style', 'left:' + width + 'px;');
-  if (status == 'playing') {
+  if (status == 'playing' || width != 0) {
     $('#slider-thumb').show();
   }
   else {

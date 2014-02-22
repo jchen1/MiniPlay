@@ -60,7 +60,7 @@ function update(data) {
           }
 
           if (response.album_art == 'http://undefined') {
-            response.album_art = 'http://play.google.com/music/default_album_med.png';
+            response.album_art = 'img/default_album.png';
           }
           $('#album-art-img').attr('src', response.album_art);
           $('#current-time').html(response.current_time);

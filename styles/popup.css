@@ -67,6 +67,20 @@ body {
   overflow: hidden;
 }
 
+.equalizer {
+  background: no-repeat url(../img/eq-paused.png);
+  width: 48px;
+  height: 48px;
+  opacity: 0.8;
+  float: right;
+  margin-top: -45px;
+  margin-right: -19px;
+}
+
+.equalizer-checked {
+  background: no-repeat url(../img/eq-play.gif);
+}
+
 #artist, #album {
   font-size: 14px;
   font-weight: 300;

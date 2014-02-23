@@ -1,6 +1,7 @@
 //background tab, always running
 
 chrome.storage.local.set({'id': '-1'});
+chrome.storage.local.set({'last_notification': ''});
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   chrome.storage.local.get('id', function (data) {
@@ -30,7 +31,6 @@ window.setInterval(function() {
 
 chrome.storage.onChanged.addListener(function (changes, area) {
   if (changes['music_status'] && changes['music_status'].newValue) {
-    console.log('hi');
     var oldValue = changes['music_status'].oldValue
     var newValue = changes['music_status'].newValue;
 
@@ -43,14 +43,22 @@ chrome.storage.onChanged.addListener(function (changes, area) {
       xhr.responseType = "blob";
       xhr.onload = function(){
         var blob = this.response;
-        chrome.notifications.create("MiniPlayNot",
+        chrome.notifications.create('',
           {
             type: 'basic',
             title: newValue.title,
             message: newValue.artist,
             contextMessage: newValue.album,
             iconUrl: window.URL.createObjectURL(blob),
-          }, function(id){});
+          }, function(id){
+            chrome.storage.local.get('last_notification', function (data) {
+              if (data['last_notification']) {
+                chrome.notifications.clear(data['last_notification'],
+                  function (wasCleared) {});
+              }   
+            });
+            chrome.storage.local.set({'last_notification': id});
+          });
       };
       xhr.send(null);
     }

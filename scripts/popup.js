@@ -1,19 +1,20 @@
 //changes the popup window
+chrome.storage.local.get('id', update);
 
 window.setInterval(function() {
   chrome.storage.local.get('id', update);
 }, 1000);
 
-chrome.storage.local.get('id', update);
-
 function tab_not_found() {
   $('#title').html('No Google Music tab found');
   $('#artist').html('<a href="#">Click to open a new tab</a>');
   $('#artist a').css('outline', 'none');
+  $('#artist a').css('text-decoration', 'none');
   $('#artist a').on('click', function() {
     chrome.tabs.create({url: "https://play.google.com/music"});
   });
   disable_buttons();
+  $('#equalizer').hide();
 }
 
 function disable_buttons() {
@@ -24,6 +25,7 @@ function disable_buttons() {
   $('#up').prop('disabled', true);
   $('#shuffle').prop('disabled', true);
   $('#repeat').prop('disabled', true);
+  $('#slider-thumb').hide();
 }
 
 function enable_buttons() {
@@ -41,42 +43,41 @@ function update(data) {
     tab_not_found();
   }
   else {
-    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'update_status'},
-      function(response) {
-        if (chrome.extension.lastError) {
-          chrome.storage.local.set('id', '-1');
-          tab_not_found();
+    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'},
+    function(response) {
+      if (chrome.extension.lastError) {
+        chrome.storage.local.set({'id': '-1'});
+        tab_not_found();
+      }
+      else {
+        if (response.title == '') {
+          $('#title').html('No song selected');
+          disable_buttons();
         }
         else {
-          if (response.title == '') {
-            $('#title').html('No song selected');
-            disable_buttons();
-          }
-          else {
-            $('#title').html(response.title);
-            $('#artist').html(response.artist);
-            $('#album').html(response.album); 
-            enable_buttons();           
-          }
-
-          if (response.album_art == 'http://undefined') {
-            response.album_art = 'img/default_album.png';
-          }
-          $('#album-art-img').attr('src', response.album_art);
-          $('#current-time').html(response.current_time);
-          $('#total-time').html(response.total_time);
-
-          set_slider(response.current_time, response.total_time, response.status);
-          toggle_play(response.status);
-          toggle_thumb(response.thumb);
-          toggle_repeat(response.repeat);
-          toggle_shuffle(response.shuffle); 
+          $('#title').html(response.title);
+          $('#artist').html(response.artist);
+          $('#album').html(response.album); 
+          enable_buttons();           
         }
-      });
+
+        if (response.album_art == 'http://undefined') {
+          response.album_art = 'img/default_album.png';
+        }
+        $('#album-art-img').attr('src', response.album_art);
+        $('#current-time').html(response.current_time);
+        $('#total-time').html(response.total_time);
+        toggle_play(response.status);
+        set_slider(response.current_time, response.total_time);
+        toggle_thumb(response.thumb);
+        toggle_repeat(response.repeat);
+        toggle_shuffle(response.shuffle); 
+        $('#equalizer').show();
+      }
+    });
   }
 }
 function toggle_repeat(status) {
-  //console.log(status);
   if (status == 'single') {
     $("#repeat").addClass('control-single');
     $("#repeat").removeClass('control-list');
@@ -118,37 +119,33 @@ function toggle_thumb(status) {
 function toggle_play(status) {
   if (status == 'playing') {
     $('#play').addClass('control-checked');
-    $("#play").attr('title', 'Pause');
+    $('#play').attr('title', 'Pause');
+    $('#equalizer').addClass('equalizer-checked');
   }
   else if (status == 'paused') {
     $('#play').removeClass('control-checked');
-    $("#play").attr('title', 'Play');
+    $('#play').attr('title', 'Play');
+    $('#equalizer').removeClass('equalizer-checked');
   }
 }
 
-function set_slider(current, total, status) {
-  var total_width = 450;
-  var total_secs = (parseInt(total.split(':')[0]) * 60) +
-                    parseInt(total.split(':')[1]);
-  var current_secs = (parseInt(current.split(':')[0]) * 60) +
-                      parseInt(current.split(':')[1]);
-  var width = Math.round((current_secs/total_secs) * total_width);
+function get_time(time) {
+  return (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
+}
+
+function set_slider(current, total) {
+  var width = (get_time(current)/get_time(total)) * $('#popup').width();
+  if (isNaN(width)) {
+    width = 0;
+  }
   $('#played-slider').attr('style', 'width:' + width + 'px;');
   $('#slider-thumb').attr('style', 'left:' + width + 'px;');
-  if (status == 'playing') {
+  if ($('#play').hasClass('control-checked') || Math.round(width) != 0) {
     $('#slider-thumb').show();
   }
   else {
     $('#slider-thumb').hide();
   }
-}
-
-function act(storage, type) {
-  chrome.tabs.sendMessage(parseInt(storage['id']),
-    {
-      'action': 'send_command',
-      'type': type
-    }, function() { update_act(type); });
 }
 
 function update_act(type) {
@@ -164,19 +161,15 @@ function update_act(type) {
   }
   else if (type == 'up') {
     $('#up').addClass('control-checked');
-    if ($('#down').hasClass("control-checked")) {
-      $('#down').removeClass("control-checked");
-    }
+    $('#down').removeClass("control-checked");
   }
 
   if (type == 'down' && $('#down').hasClass('control-checked')) {
     $('#down').removeClass('control-checked');
   }
-  else if (type == 'control') {
+  else if (type == 'down') {
     $('#down').addClass('control-checked');
-    if ($('#up').hasClass('control-checked')) {
-      $('#up').removeClass('control-checked');
-    }
+    $('#up').removeClass('control-checked');
   }
 
   if (type == 'repeat') {
@@ -201,40 +194,38 @@ function update_act(type) {
   }
 }
 
+function act(selector) {
+  if (!$(selector).is(':disabled')) {
+    chrome.storage.local.get('id', function(data) {
+      chrome.tabs.sendMessage(parseInt(data['id']),
+      {
+        'action': 'send_command',
+        'type': selector.substring(1)
+      }, function() { update_act(selector.substring(1)); });
+    });
+  }
+}
+
 $(function() {
   $('#play').on('click', function() {
-    if (!$('#play').is(':disabled')) {
-      chrome.storage.local.get('id', function(data) { act(data, 'play'); });
-    }
+    act('#play');
   });
   $('#rew').on('click', function() {
-    if (!$('#rew').is(':disabled')) {
-      chrome.storage.local.get('id', function(data) { act(data, 'rew'); });
-    }
+    act('#rew');
   });
   $('#ff').on('click', function() {
-    if (!$('#ff').is(':disabled')) {
-      chrome.storage.local.get('id', function(data) { act(data, 'ff'); });
-    }
+    act('#ff');
   });
   $('#up').on('click', function() {
-    if (!$('#up').is(':disabled')) {
-      chrome.storage.local.get('id', function(data) { act(data, 'up'); });
-    }
+    act('#up');
   });
   $('#down').on('click', function() {
-    if (!$('#down').is(':disabled')) {
-      chrome.storage.local.get('id', function(data) { act(data, 'down'); });
-    }
+    act('#down');
   });
   $('#shuffle').on('click', function() {
-    if (!$('#shuffle').is(':disabled')) {
-      chrome.storage.local.get('id', function(data) { act(data, 'shuffle'); });
-    }
+    act('#shuffle');
   });
   $('#repeat').on('click', function() {
-    if (!$('#repeat').is(':disabled')) {
-      chrome.storage.local.get('id', function(data) { act(data, 'repeat'); });
-    }
+    act('#repeat');
   });
 })

@@ -52,6 +52,7 @@ body {
   left: 0px;
   background-color: #fafafa;
   width: 450px;
+  height: 56px;
   outline: none;
   z-index: 1;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);
@@ -67,6 +68,20 @@ body {
   overflow: hidden;
 }
 
+.equalizer {
+  background: no-repeat url(../img/eq-paused.png);
+  width: 48px;
+  height: 48px;
+  opacity: 0.8;
+  float: right;
+  margin-top: -45px;
+  margin-right: -19px;
+}
+
+.equalizer-checked {
+  background: no-repeat url(../img/eq-play.gif);
+}
+
 #artist, #album {
   font-size: 14px;
   font-weight: 300;
@@ -78,9 +93,10 @@ body {
   outline: none;
   border: none;
   opacity: 0.8;
+  margin-top: 3px;
   transition: background-color 0.218s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 3079px 727px;
+  background-size: 737px 53px;
 }
 
 .control:hover {
@@ -131,55 +147,55 @@ body {
 }
 
 #repeat.control {
-  background-position: -2056px -25px;
+  background-position: 0px 0px;
 }
 
 #repeat.control-list {
-  background-position: -691px -27px;
+  background-position: -53px 0px;
 }
 
 #repeat.control-single {
-  background-position: -1354px -266px;
+  background-position: -106px 0px;
 }
 
 #shuffle.control {
-  background-position: -1503px -369px;
+  background-position: -159px 0px;
 }
 
 #shuffle.control-checked {
-  background-position: -1603px 0;
+  background-position: -212px 0;
 }
 
 #rew.control {
-  background-position: 0 -513px;
+  background-position: -265px 0px;
 }
 
 #play.control {
-  background-position: -2443px -562px;
+  background-position: -327px 0px; 
 }
 
 #play.control-checked {
-  background-position: -2860px -50px;
+  background-position: -389px 0px; 
 }
 
 #ff.control {
-  background-position: -2128px -463px;
+  background-position: -451px 0px; 
 }
 
 #down.control {
-  background-position: -1735px -468px;
+  background-position: -513px 0px; 
 }
 
 #down.control-checked {
-  background-position: -451px -11px;
+  background-position: -566px 0px; 
 }
 
 #up.control {
-  background-position: -1300px -266px;
+  background-position: -619px 0px; 
 }
 
 #up.control-checked {
-  background-position: -414px -513px;
+  background-position: -672px 0px; 
 }
 
 #time {
@@ -189,7 +205,7 @@ body {
   text-align: right;
   margin-right: 60px;
   position: relative;
-  top: 5px;
+  top: 8px;
 }
 
 #played-slider {
@@ -202,7 +218,7 @@ body {
   outline: none;
   height: 3px;
   padding: 5px 0;
-  margin-top: 22px;
+  margin-top: 25px;
 }
 
 #slider-background {
@@ -216,14 +232,14 @@ body {
   margin-top: -7px;
   position: relative;
 
-  background: no-repeat url(../img/sprites.png) -2862px -476px;
-  background-size: 3079px 727px;
+  background: no-repeat url(../img/sprites.png) -725px 0;
+  background-size: 737px 53px;
 }
 
 #time-and-slider {
   position:absolute;
   right: 0px;
   left: 0px;
-  bottom: 78px;
+  bottom: 81px;
   z-index: 1000;
 }

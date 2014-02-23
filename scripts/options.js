@@ -5,33 +5,27 @@ $(function() {
 
   chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled'],
     function (data) {
-      if (data['notifications-enabled'] == 'true') {
+      if (data['notifications-enabled'] == true) {
         $('#enable-notifications').prop('checked', true);
       }
-      if (data['shortcuts-enabled'] == 'true') {
+      if (data['shortcuts-enabled'] == true) {
         $('#enable-shortcuts').prop('checked', true);
       }
     });
 
   $('#enable-shortcuts').click(function() {
-    if ($('#enable-shortcuts').is(':checked')) {
-      chrome.storage.sync.set({'shortcuts-enabled' : 'true'});
-    }
-    else {
-      chrome.storage.sync.set({'shortcuts-enabled' : 'false'});
-    }
+    chrome.storage.sync.set(
+      {
+        'shortcuts-enabled' : $('enable-shortcuts').is(':checked')
+      });
   });
 
 
   $('#enable-notifications').click(function() {
-    if ($('#enable-notifications').is(':checked')) {
-      chrome.storage.sync.set({'notifications-enabled' : 'true'});
-      console.log('hi');
-    }
-    else {
-      chrome.storage.sync.set({'notifications-enabled' : 'false'});
-      console.log('bye');
-    }
+    chrome.storage.sync.set(
+      {
+        'notifications-enabled' : $('enable-notifications').is(':checked')
+      });
   });
 
   $('.menu a').click(function(ev) {

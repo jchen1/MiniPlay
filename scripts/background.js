@@ -52,7 +52,7 @@ chrome.storage.onChanged.addListener(function (changes, area) {
                     title: newValue.title,
                     message: newValue.artist,
                     contextMessage: newValue.album,
-                    iconUrl: window.URL.createObjectURL(blob),
+                    iconUrl: window.URL.createObjectURL(blob)
                   }, function(id){
                     chrome.storage.local.get('last_notification', function (data) {
                       if (data['last_notification']) {

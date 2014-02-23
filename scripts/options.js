@@ -3,28 +3,35 @@ $(function() {
     chrome.tabs.create({url: "chrome://chrome/extensions"});
   });
 
-  chrome.storage.sync.get(['enable-shortcuts', 'enable-notifications'],
+  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled'],
     function (data) {
-      if (data['enable-notifications'] === undefined ||
-          data['enable-notifications'] == true) {
+      if (data['notifications-enabled'] == 'true') {
         $('#enable-notifications').prop('checked', true);
-        chrome.storage.sync.set({'enable-notifications' : true});
       }
-      if (data['enable-shortcuts'] === undefined ||
-          data['enable-shortcuts'] == true) {
+      if (data['shortcuts-enabled'] == 'true') {
         $('#enable-shortcuts').prop('checked', true);
-        chrome.storage.sync.set({'enable-shortcuts' : true});
       }
     });
 
   $('#enable-shortcuts').click(function() {
-    chrome.storage.sync.set(
-      {'enable-shortcuts' : $('#enable-shortcuts').is(':checked')});
+    if ($('#enable-shortcuts').is(':checked')) {
+      chrome.storage.sync.set({'shortcuts-enabled' : 'true'});
+    }
+    else {
+      chrome.storage.sync.set({'shortcuts-enabled' : 'false'});
+    }
   });
 
+
   $('#enable-notifications').click(function() {
-    chrome.storage.sync.set(
-      {'enable-notifications' : $('#enable-notifications').is(':checked')});
+    if ($('#enable-notifications').is(':checked')) {
+      chrome.storage.sync.set({'notifications-enabled' : 'true'});
+      console.log('hi');
+    }
+    else {
+      chrome.storage.sync.set({'notifications-enabled' : 'false'});
+      console.log('bye');
+    }
   });
 
   $('.menu a').click(function(ev) {

@@ -46,7 +46,7 @@ function update(data) {
     chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'},
     function(response) {
       if (chrome.extension.lastError) {
-        chrome.storage.local.set('id', '-1');
+        chrome.storage.local.set({'id': '-1'});
         tab_not_found();
       }
       else {

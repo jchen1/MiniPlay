@@ -38,29 +38,34 @@ chrome.storage.onChanged.addListener(function (changes, area) {
         oldValue.title != newValue.title ||
         oldValue.artist != newValue.artist ||
         oldValue.album_art != newValue.album_art) && newValue.title != '') {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", newValue.album_art);
-      xhr.responseType = "blob";
-      xhr.onload = function(){
-        var blob = this.response;
-        chrome.notifications.create('',
-          {
-            type: 'basic',
-            title: newValue.title,
-            message: newValue.artist,
-            contextMessage: newValue.album,
-            iconUrl: window.URL.createObjectURL(blob),
-          }, function(id){
-            chrome.storage.local.get('last_notification', function (data) {
-              if (data['last_notification']) {
-                chrome.notifications.clear(data['last_notification'],
-                  function (wasCleared) {});
-              }   
-            });
-            chrome.storage.local.set({'last_notification': id});
+          chrome.storage.sync.get('notifications-enabled', function (ans) {
+            if (ans['notifications-enabled'] == true) {
+              console.log(ans['notifications-enabled']);
+              var xhr = new XMLHttpRequest();
+              xhr.open("GET", newValue.album_art);
+              xhr.responseType = "blob";
+              xhr.onload = function(){
+                var blob = this.response;
+                chrome.notifications.create('',
+                  {
+                    type: 'basic',
+                    title: newValue.title,
+                    message: newValue.artist,
+                    contextMessage: newValue.album,
+                    iconUrl: window.URL.createObjectURL(blob),
+                  }, function(id){
+                    chrome.storage.local.get('last_notification', function (data) {
+                      if (data['last_notification']) {
+                        chrome.notifications.clear(data['last_notification'],
+                          function (wasCleared) {});
+                      }   
+                    });
+                    chrome.storage.local.set({'last_notification': id});
+                  });
+              };
+              xhr.send(null);
+            }
           });
-      };
-      xhr.send(null);
     }
   }
 });
@@ -81,12 +86,25 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
   });
 });
 
-chrome.commands.onCommand.addListener(function (command) {
-  console.log(command);
-  chrome.storage.local.get('id', function (data) {
-    if (data['id'] != '-1') {
-      chrome.tabs.sendMessage(parseInt(data['id']),
-        { action: 'send_command', type: command });
+chrome.runtime.onInstalled.addListener(function (details) {
+  chrome.storage.sync.get(['notifications-enabled', 'shortcuts-enabled'], function (data) {
+    if (data['notifications-enabled'] === undefined) {
+      chrome.storage.sync.set({'notifications-enabled': true});
     }
+    if (data['shortcuts-enabled'] === undefined) {
+      chrome.storage.sync.set({'shortcuts-enabled': true});
+    }
+  });
+});
+
+chrome.commands.onCommand.addListener(function (command) {
+  chrome.storage.local.get('id', function (data) {
+    chrome.storage.sync.get('shortcuts-enabled', function (res) {
+      if (res['shortcuts-enabled'] == true &&
+          data['id'] != '-1') {
+          chrome.tabs.sendMessage(parseInt(data['id']),
+            { action: 'send_command', type: command });
+        }
+    });
   });
 });

@@ -41,6 +41,8 @@
     }
   ],
 
+  "options_page": "options.html",
+
   "commands": {
     "play": {
       "suggested_key": {

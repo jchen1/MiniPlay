@@ -1,0 +1,60 @@
+<html>
+<head>
+  <title>MiniPlay Options</title>
+  <link rel="stylesheet" type="text/css" href="styles/chrome-bootstrap.css" />
+  <script src='scripts/jquery.js' type='text/javascript'></script>
+  <script src='scripts/options.js' type='text/javascript'></script>
+</head>
+<body class='chrome-bootstrap'>
+  <div class='frame'>
+    <div class='navigation'>
+      <h1>
+        MiniPlay
+      </h1>
+      <ul class='menu'>
+        <li class='selected'>
+          <a href='#notifications'>Notifications</a>
+        </li>
+        <li class>
+          <a href='#shortcuts'>Shortcuts</a>
+        </li>
+      </ul>
+    </div>
+    <div class='mainview view'>
+      <div id='notifications' class='selected' style='display: block;'>
+        <header>
+          <h1>
+            Notifications
+          </h1>
+        </header>
+        <div class='content'>
+          <div class='checkbox'>
+            <label>
+              <input type='checkbox' id='enable-notifications'>
+              <span>Enable notifications</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id='shortcuts' class style='display: none;'>
+        <header>
+          <h1>
+            Shortcuts
+          </h1>
+        </header>
+        <div class='content'>
+          <p>
+            Modify individual shortcuts by clicking on Keyboard Shortcuts in <a href='#' id='extension'>chrome://extensions</a>.
+          </p>
+          <div class='checkbox'>
+            <label>
+              <input type='checkbox' id='enable-shortcuts'>
+              <span>Enable shortcuts</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,10 +1,9 @@
 //changes the popup window
+chrome.storage.local.get('id', update);
 
 window.setInterval(function() {
   chrome.storage.local.get('id', update);
 }, 1000);
-
-chrome.storage.local.get('id', update);
 
 function tab_not_found() {
   $('#title').html('No Google Music tab found');
@@ -15,6 +14,7 @@ function tab_not_found() {
     chrome.tabs.create({url: "https://play.google.com/music"});
   });
   disable_buttons();
+  $('#equalizer').hide();
 }
 
 function disable_buttons() {
@@ -43,37 +43,38 @@ function update(data) {
     tab_not_found();
   }
   else {
-    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'update_status'},
-      function(response) {
-        if (chrome.extension.lastError) {
-          chrome.storage.local.set('id', '-1');
-          tab_not_found();
+    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'},
+    function(response) {
+      if (chrome.extension.lastError) {
+        chrome.storage.local.set({'id': '-1'});
+        tab_not_found();
+      }
+      else {
+        if (response.title == '') {
+          $('#title').html('No song selected');
+          disable_buttons();
         }
         else {
-          if (response.title == '') {
-            $('#title').html('No song selected');
-            disable_buttons();
-          }
-          else {
-            $('#title').html(response.title);
-            $('#artist').html(response.artist);
-            $('#album').html(response.album); 
-            enable_buttons();           
-          }
-
-          if (response.album_art == 'http://undefined') {
-            response.album_art = 'img/default_album.png';
-          }
-          $('#album-art-img').attr('src', response.album_art);
-          $('#current-time').html(response.current_time);
-          $('#total-time').html(response.total_time);
-          toggle_play(response.status);
-          set_slider(response.current_time, response.total_time);
-          toggle_thumb(response.thumb);
-          toggle_repeat(response.repeat);
-          toggle_shuffle(response.shuffle); 
+          $('#title').html(response.title);
+          $('#artist').html(response.artist);
+          $('#album').html(response.album); 
+          enable_buttons();           
         }
-      });
+
+        if (response.album_art == 'http://undefined') {
+          response.album_art = 'img/default_album.png';
+        }
+        $('#album-art-img').attr('src', response.album_art);
+        $('#current-time').html(response.current_time);
+        $('#total-time').html(response.total_time);
+        toggle_play(response.status);
+        set_slider(response.current_time, response.total_time);
+        toggle_thumb(response.thumb);
+        toggle_repeat(response.repeat);
+        toggle_shuffle(response.shuffle); 
+        $('#equalizer').show();
+      }
+    });
   }
 }
 function toggle_repeat(status) {

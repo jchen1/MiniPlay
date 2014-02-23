@@ -7,6 +7,7 @@ Note: You need to have a Google Play Music account to use this extension. After 
 
 - Control playback from a popup
 - Global (Chrome-wide) shortcuts
-- More (including notifications, Last.fm scrobbling, and lyrics) coming soon!
+- Rich notifications
+- More, including Last.fm scrobbling and lyrics, coming soon!
 
 The extension does not collect any information, but requires access to your other tabs for functionality. 

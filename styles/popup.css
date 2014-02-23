@@ -96,7 +96,7 @@ body {
   margin-top: 3px;
   transition: background-color 0.218s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 3079px 727px;
+  background-size: 717px 53px;
 }
 
 .control:hover {
@@ -147,55 +147,55 @@ body {
 }
 
 #repeat.control {
-  background-position: -2056px -25px;
+  background-position: 0px 0px;
 }
 
 #repeat.control-list {
-  background-position: -691px -27px;
+  background-position: -53px 0px; 1382 54 106 106
 }
 
 #repeat.control-single {
-  background-position: -1354px -266px;
+  background-position: -106px 0px;  2708 532 106 106
 }
 
 #shuffle.control {
-  background-position: -1503px -369px;
+  background-position: -159px 0px;  3006 738 106 106
 }
 
 #shuffle.control-checked {
-  background-position: -1603px 0;
+  background-position: -212px 0; 3206 0 106 106
 }
 
 #rew.control {
-  background-position: 0 -513px;
+  background-position: -265 0px; 
 }
 
 #play.control {
-  background-position: -2443px -562px;
+  background-position: -327px 0px; 
 }
 
 #play.control-checked {
-  background-position: -2860px -50px;
+  background-position: -389px 0px; 
 }
 
 #ff.control {
-  background-position: -2128px -463px;
+  background-position: -451px 0px; 
 }
 
 #down.control {
-  background-position: -1735px -468px;
+  background-position: -513px 0px; 
 }
 
 #down.control-checked {
-  background-position: -451px -11px;
+  background-position: -566px 0px; 
 }
 
 #up.control {
-  background-position: -1300px -266px;
+  background-position: -619px 0px; 
 }
 
 #up.control-checked {
-  background-position: -414px -513px;
+  background-position: -672px 0px; 
 }
 
 #time {
@@ -232,8 +232,8 @@ body {
   margin-top: -7px;
   position: relative;
 
-  background: no-repeat url(../img/sprites.png) -2862px -476px;
-  background-size: 3079px 727px;
+  background: no-repeat url(../img/sprites.png) -725px 0;
+  background-size: 717px 53px;
 }
 
 #time-and-slider {

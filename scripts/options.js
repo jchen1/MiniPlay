@@ -18,9 +18,6 @@ $(function() {
       else {
         $('#login').hide();
       }
-      if (data['lastfm_token'] !== undefined && data['lastfm_token'] != '') {
-        $('#login').html('Logged in.');
-      }
     });
 
   $('#enable-shortcuts').click(function() {
@@ -53,11 +50,7 @@ $(function() {
   })
 
   $('#login a').click(function () {
-    chrome.runtime.sendMessage({type: 'auth'}, function (response) {
-      if (response == true) {
-        $('#login').html('Logged in.');
-      }
-    });
+    chrome.runtime.sendMessage({type: 'auth'}, function (response) {});
   })
 
   $('.menu a').click(function(ev) {

@@ -1,7 +1,7 @@
 var apiKey = '8acdad46ec761ef21ba93ce72a888f1b';
 var apiURL = "https://ws.audioscrobbler.com/2.0/?";
 
-function auth(cb) {
+function auth() {
   var request = new XMLHttpRequest();  
   request.open("GET", apiURL + 'method=auth.gettoken&api_key=' + apiKey, false);
   request.setRequestHeader('Content-Type', 'application/xml');
@@ -16,12 +16,9 @@ function auth(cb) {
     {
       url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + $(xml).find('token').text())
     });
-
-    cb(true);
   }
   else {
     chrome.storage.sync.set({'lastfm_token': ''});
-    cb(false);
   }
 }
 
@@ -128,7 +125,18 @@ function scrobble(details) {
           var api_sig = get_signature(params);
           var url = apiURL + get_query_string(params) + '&api_sig=' + api_sig;
 
-          $.post(url, params);
+          $.post(url, params).always(function(data) {
+            var status = $(data).find('lfm').attr('status');
+            if (status == 'failed') {
+              chrome.notifications.create('',
+              {
+                type: 'basic',
+                title: "Scrobbling failed!",
+                message: "Reauthenticate Last.fm account in the settings page",
+                iconUrl: "../img/icon-128.png"
+              }, function(id){});
+            }
+          })
         }
       });
     }
@@ -137,6 +145,6 @@ function scrobble(details) {
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.type == 'auth') {
-    auth(sendResponse);
+    auth();
   }
 });

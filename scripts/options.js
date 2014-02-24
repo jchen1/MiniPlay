@@ -3,7 +3,7 @@ $(function() {
     chrome.tabs.create({url: "chrome://chrome/extensions"});
   });
 
-  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled'],
+  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_token'],
     function (data) {
       if (data['notifications-enabled'] == true) {
         $('#enable-notifications').prop('checked', true);
@@ -11,12 +11,22 @@ $(function() {
       if (data['shortcuts-enabled'] == true) {
         $('#enable-shortcuts').prop('checked', true);
       }
+      if (data['scrobbling-enabled'] == true) {
+        $('#enable-scrobbling').prop('checked', true);
+        $('#login').show();
+      }
+      else {
+        $('#login').hide();
+      }
+      if (data['lastfm_token'] !== undefined && data['lastfm_token'] != '') {
+        $('#login').html('Logged in.');
+      }
     });
 
   $('#enable-shortcuts').click(function() {
     chrome.storage.sync.set(
       {
-        'shortcuts-enabled' : $('enable-shortcuts').is(':checked')
+        'shortcuts-enabled' : $('#enable-shortcuts').is(':checked')
       });
   });
 
@@ -24,9 +34,31 @@ $(function() {
   $('#enable-notifications').click(function() {
     chrome.storage.sync.set(
       {
-        'notifications-enabled' : $('enable-notifications').is(':checked')
+        'notifications-enabled' : $('#enable-notifications').is(':checked')
       });
   });
+
+  $('#enable-scrobbling').click(function() {
+    var a = $('#enable-scrobbling').is(':checked');
+    chrome.storage.sync.set(
+    {
+      'scrobbling-enabled' : a
+    });
+    if (a) {
+      $('#login').show();
+    }
+    else {
+      $('#login').hide();
+    }
+  })
+
+  $('#login a').click(function () {
+    chrome.runtime.sendMessage({type: 'auth'}, function (response) {
+      if (response == true) {
+        $('#login').html('Logged in.');
+      }
+    });
+  })
 
   $('.menu a').click(function(ev) {
     ev.preventDefault();

@@ -29,6 +29,37 @@ window.setInterval(function() {
   });
 }, 1000);
 
+function create_notification(details) {
+  chrome.storage.sync.get('notifications-enabled', function (ans) {
+    if (ans['notifications-enabled'] == true) {
+      console.log(ans['notifications-enabled']);
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", details.album_art);
+      xhr.responseType = "blob";
+      xhr.onload = function(){
+        var blob = this.response;
+        chrome.notifications.create('',
+          {
+            type: 'basic',
+            title: details.title,
+            message: details.artist,
+            contextMessage: details.album,
+            iconUrl: window.URL.createObjectURL(blob)
+          }, function(id){
+            chrome.storage.local.get('last_notification', function (data) {
+              if (data['last_notification']) {
+                chrome.notifications.clear(data['last_notification'],
+                  function (wasCleared) {});
+              }   
+            });
+            chrome.storage.local.set({'last_notification': id});
+          });
+      };
+      xhr.send(null);
+    }
+  });
+}
+
 chrome.storage.onChanged.addListener(function (changes, area) {
   if (changes['music_status'] && changes['music_status'].newValue) {
     var oldValue = changes['music_status'].oldValue
@@ -38,34 +69,8 @@ chrome.storage.onChanged.addListener(function (changes, area) {
         oldValue.title != newValue.title ||
         oldValue.artist != newValue.artist ||
         oldValue.album_art != newValue.album_art) && newValue.title != '') {
-          chrome.storage.sync.get('notifications-enabled', function (ans) {
-            if (ans['notifications-enabled'] == true) {
-              console.log(ans['notifications-enabled']);
-              var xhr = new XMLHttpRequest();
-              xhr.open("GET", newValue.album_art);
-              xhr.responseType = "blob";
-              xhr.onload = function(){
-                var blob = this.response;
-                chrome.notifications.create('',
-                  {
-                    type: 'basic',
-                    title: newValue.title,
-                    message: newValue.artist,
-                    contextMessage: newValue.album,
-                    iconUrl: window.URL.createObjectURL(blob)
-                  }, function(id){
-                    chrome.storage.local.get('last_notification', function (data) {
-                      if (data['last_notification']) {
-                        chrome.notifications.clear(data['last_notification'],
-                          function (wasCleared) {});
-                      }   
-                    });
-                    chrome.storage.local.set({'last_notification': id});
-                  });
-              };
-              xhr.send(null);
-            }
-          });
+          create_notification(newValue);
+          scrobble(oldValue);
     }
   }
 });

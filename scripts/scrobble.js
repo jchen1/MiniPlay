@@ -4,16 +4,17 @@ var apiURL = "https://ws.audioscrobbler.com/2.0/?";
 function auth() {
   $.get(apiURL + 'method=auth.gettoken&api_key=' + apiKey, function (data) {
     if ($(data).find('lfm').attr('status') == 'ok') {
-        chrome.storage.sync.set({'lastfm_token': $(data).find('token').text()});
+      var token = $(data).find('token').text();
+      chrome.storage.sync.set({'lastfm_token': token});
 
-        chrome.tabs.create(
-        {
-          url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + $(data).find('token').text())
-        });
-      }
-      else {
-        chrome.storage.sync.set({'lastfm_token': ''});
-      }
+      chrome.tabs.create(
+      {
+        url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + token)
+      });
+    }
+    else {
+      chrome.storage.sync.set({'lastfm_token': ''});
+    }
   });
 }
 
@@ -32,8 +33,7 @@ function getSessionID(cb) {
         api_key: apiKey,
         token: data['lastfm_token']
       };
-      var signature = get_signature(params);
-      var url = apiURL + get_query_string(params) + '&api_sig=' + signature;
+      var url = apiURL + get_query_string(params);
 
       $.get(url, function (data) {
         var status = $(data).find('lfm').attr('status');
@@ -54,35 +54,25 @@ function getSessionID(cb) {
 }
 
 function get_query_string(params) {
-   var parts = new Array();
+  var parts = new Array(), keys = new Array();
+  var o = ''
 
-   for (var x in params)
-      parts.push( x + '=' + encodeURIComponent( params[x] ) );
+  for (var x in params) {
+    parts.push(x + '=' + encodeURIComponent(params[x]));
+    keys.push(x);
+  }
 
-   return parts.join('&');
-}
+  keys.sort();
 
-function get_signature(params) {
-   var keys = new Array();
-   var o = '';
+  for (i = 0; i < keys.length; i++) {
+    if (keys[i] == 'format' || keys[i] == 'callback') {
+      continue;
+    }
+    o = o + keys[i] + params[keys[i]];
+  }
 
-   for (var x in params)
-      keys.push(x);
-
-   // params has to be ordered alphabetically
-   keys.sort();
-
-   for (i = 0; i < keys.length; i++) {
-      if (keys[i] == 'format' || keys[i] == 'callback')
-         continue;
-
-      o = o + keys[i] + params[keys[i]];
-   }
-
-   //console.log('hashing %s', o);
-
-   // append secret
-   return MD5(o + 'de379e5188615868380b23f62068f1e6');
+  return parts.join('&') + '&api_sig=' +
+         MD5(o + 'de379e5188615868380b23f62068f1e6');
 }
 
 function get_time(time) {
@@ -99,7 +89,8 @@ function scrobble(details) {
       var total_time = get_time(details.total_time);
 
       getSessionID(function (session_id) {
-        if (total_time > 30 && (current_time >= 240) || (current_time*2 >= total_time)) {
+        if (total_time > 30 &&
+           (current_time >= 240 || current_time * 2 >= total_time)) {
           var params = {
             method: 'track.scrobble',
             'artist[0]': details.artist,
@@ -110,8 +101,7 @@ function scrobble(details) {
             api_key: apiKey
           };
 
-          var api_sig = get_signature(params);
-          var url = apiURL + get_query_string(params) + '&api_sig=' + api_sig;
+          var url = apiURL + get_query_string(params);
 
           $.post(url, params).always(function(data) {
             var status = $(data).find('lfm').attr('status');

@@ -25,17 +25,17 @@ $(function() {
 
   $('#enable-shortcuts').click(function() {
     chrome.storage.sync.set(
-    {
-      'shortcuts-enabled' : $('enable-shortcuts').is(':checked')
-    });
+      {
+        'shortcuts-enabled' : $('#enable-shortcuts').is(':checked')
+      });
   });
 
 
   $('#enable-notifications').click(function() {
     chrome.storage.sync.set(
-    {
-      'notifications-enabled' : $('enable-notifications').is(':checked')
-    });
+      {
+        'notifications-enabled' : $('#enable-notifications').is(':checked')
+      });
   });
 
   $('#enable-scrobbling').click(function() {

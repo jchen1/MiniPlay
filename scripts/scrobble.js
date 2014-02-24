@@ -2,24 +2,19 @@ var apiKey = '8acdad46ec761ef21ba93ce72a888f1b';
 var apiURL = "https://ws.audioscrobbler.com/2.0/?";
 
 function auth() {
-  var request = new XMLHttpRequest();  
-  request.open("GET", apiURL + 'method=auth.gettoken&api_key=' + apiKey, false);
-  request.setRequestHeader('Content-Type', 'application/xml');
-  request.send(null);
+  $.get(apiURL + 'method=auth.gettoken&api_key=' + apiKey, function (data) {
+    if ($(data).find('lfm').attr('status') == 'ok') {
+        chrome.storage.sync.set({'lastfm_token': $(data).find('token').text()});
 
-  var xml = $.parseXML(request.responseText);
-
-  if ($(xml).find('lfm').attr('status') == 'ok') {
-    chrome.storage.sync.set({'lastfm_token': $(xml).find('token').text()});
-
-    chrome.tabs.create(
-    {
-      url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + $(xml).find('token').text())
-    });
-  }
-  else {
-    chrome.storage.sync.set({'lastfm_token': ''});
-  }
+        chrome.tabs.create(
+        {
+          url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + $(data).find('token').text())
+        });
+      }
+      else {
+        chrome.storage.sync.set({'lastfm_token': ''});
+      }
+  });
 }
 
 function getSessionID(cb) {
@@ -27,41 +22,34 @@ function getSessionID(cb) {
     if (data['lastfm_token'] === undefined || data['lastfm_token'] == '') {
       auth();
       cb(false);
-      return;
     }
-    if (data['lastfm_sessionID'] !== undefined && data['lastfm_sessionID'] != '') {
+    else if (data['lastfm_sessionID'] !== undefined && data['lastfm_sessionID'] != '') {
       cb(data['lastfm_sessionID']);
-      return;
-    }
-
-    var params = {
-      method: 'auth.getsession',
-      api_key: apiKey,
-      token: data['lastfm_token']
-    };
-    var signature = get_signature(params);
-    var url = apiURL + get_query_string(params) + '&api_sig=' + signature;
-
-    var request = new XMLHttpRequest();
-    request.open('GET', url, false);
-    request.setRequestHeader('Content-Type', 'application/xml');
-    request.send(null);
-
-    var xml = $.parseXML(request.responseText);
-    var status = $(xml).find('lfm').attr('status');
-
-    if (status == 'ok') {
-      var key = $(xml).find('key').text();
-      chrome.storage.sync.set({'lastfm_sessionID': key});
-      cb(key);
-      return;
     }
     else {
-      chrome.storage.sync.set({'lastfm_sessionID': ''});
-      auth();
-    }
+      var params = {
+        method: 'auth.getsession',
+        api_key: apiKey,
+        token: data['lastfm_token']
+      };
+      var signature = get_signature(params);
+      var url = apiURL + get_query_string(params) + '&api_sig=' + signature;
 
-    cb(false);
+      $.get(url, function (data) {
+        var status = $(data).find('lfm').attr('status');
+
+        if (status == 'ok') {
+          var key = $(data).find('key').text();
+          chrome.storage.sync.set({'lastfm_sessionID': key});
+          cb(key);
+        }
+        else {
+          chrome.storage.sync.set({'lastfm_sessionID': ''});
+          auth();
+          cb(false);
+        }  
+      });
+    }
   });
 }
 

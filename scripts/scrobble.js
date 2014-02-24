@@ -1,7 +1,7 @@
 var apiKey = '8acdad46ec761ef21ba93ce72a888f1b';
 var apiURL = "https://ws.audioscrobbler.com/2.0/?";
 
-function auth() {
+function auth(cb) {
   var request = new XMLHttpRequest();  
   request.open("GET", apiURL + 'method=auth.gettoken&api_key=' + apiKey, false);
   request.setRequestHeader('Content-Type', 'application/xml');
@@ -13,12 +13,15 @@ function auth() {
     chrome.storage.sync.set({'lastfm_token': $(xml).find('token').text()});
 
     chrome.tabs.create(
-      {
-        url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + $(xml).find('token').text())
-      });
+    {
+      url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + $(xml).find('token').text())
+    });
+
+    cb(true);
   }
   else {
     chrome.storage.sync.set({'lastfm_token': ''});
+    cb(false);
   }
 }
 
@@ -102,40 +105,38 @@ function get_time(time) {
 }
 
 function scrobble(details) {
-  if (details === undefined || details.title == '') {
-    return;
-  }
-  var current_time = get_time(details.current_time);
-  var total_time = get_time(details.total_time);
-
-  getSessionID(function (session_id) {
-    if (total_time > 30 && (current_time >= 240) || (current_time*2 >= total_time)) {
-      var params = {
-        method: 'track.scrobble',
-        'artist[0]': details.artist,
-        'track[0]': details.title,
-        'timestamp[0]': Math.round(((new Date().getTime() / 1000) - get_time(details.total_time))),
-        'album[0]': details.album,
-        sk: session_id,
-        api_key: apiKey
-      };
-
-      var api_sig = get_signature(params);
-      var url = apiURL + get_query_string(params) + '&api_sig=' + api_sig;
-
-      var request = new XMLHttpRequest();
-      request.open('POST', url, false);
-      request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      request.send(params);
-
-      //TODO: check if the scrobble worked
-      if (request.status == 200) {
-        //scrobbled
+  chrome.storage.sync.get('scrobbling-enabled', function(response) {
+    if (response['scrobbling-enabled'] == true) {
+      if (details === undefined || details.title == '') {
+        return;
       }
-      else {
-        
-      }
+      var current_time = get_time(details.current_time);
+      var total_time = get_time(details.total_time);
+
+      getSessionID(function (session_id) {
+        if (total_time > 30 && (current_time >= 240) || (current_time*2 >= total_time)) {
+          var params = {
+            method: 'track.scrobble',
+            'artist[0]': details.artist,
+            'track[0]': details.title,
+            'timestamp[0]': Math.round(((new Date().getTime() / 1000) - get_time(details.total_time))),
+            'album[0]': details.album,
+            sk: session_id,
+            api_key: apiKey
+          };
+
+          var api_sig = get_signature(params);
+          var url = apiURL + get_query_string(params) + '&api_sig=' + api_sig;
+
+          $.post(url, params);
+        }
+      });
     }
-  });
-
+  })
 }
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.type == 'auth') {
+    auth(sendResponse);
+  }
+});

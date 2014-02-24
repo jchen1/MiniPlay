@@ -27,12 +27,12 @@ function auth(cb) {
 
 function getSessionID(cb) {
   chrome.storage.sync.get(['lastfm_token', 'lastfm_sessionID'], function (data) {
-    if (!data['lastfm_token'] || data['lastfm_token'] == '') {
+    if (data['lastfm_token'] === undefined || data['lastfm_token'] == '') {
       auth();
       cb(false);
       return;
     }
-    if (data['lastfm_sessionID'] && data['lastfm_sessionID'] != '') {
+    if (data['lastfm_sessionID'] !== undefined && data['lastfm_sessionID'] != '') {
       cb(data['lastfm_sessionID']);
       return;
     }

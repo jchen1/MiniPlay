@@ -32,7 +32,6 @@ window.setInterval(function() {
 function create_notification(details) {
   chrome.storage.sync.get('notifications-enabled', function (ans) {
     if (ans['notifications-enabled'] == true) {
-      console.log(ans['notifications-enabled']);
       var xhr = new XMLHttpRequest();
       xhr.open("GET", details.album_art);
       xhr.responseType = "blob";

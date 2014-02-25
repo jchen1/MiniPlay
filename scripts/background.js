@@ -91,12 +91,15 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 });
 
 chrome.runtime.onInstalled.addListener(function (details) {
-  chrome.storage.sync.get(['notifications-enabled', 'shortcuts-enabled'], function (data) {
+  chrome.storage.sync.get(['notifications-enabled', 'shortcuts-enabled', 'scrobbling-enabled'], function (data) {
     if (data['notifications-enabled'] === undefined) {
       chrome.storage.sync.set({'notifications-enabled': true});
     }
     if (data['shortcuts-enabled'] === undefined) {
       chrome.storage.sync.set({'shortcuts-enabled': true});
+    }
+    if (data['scrobbling-enabled'] === undefined) {
+      chrome.storage.sync.set({'scrobbling-enabled': false});
     }
   });
 });

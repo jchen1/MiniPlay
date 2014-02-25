@@ -91,17 +91,24 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 });
 
 chrome.runtime.onInstalled.addListener(function (details) {
-  chrome.storage.sync.get(['notifications-enabled', 'shortcuts-enabled', 'scrobbling-enabled'], function (data) {
-    if (data['notifications-enabled'] === undefined) {
-      chrome.storage.sync.set({'notifications-enabled': true});
-    }
-    if (data['shortcuts-enabled'] === undefined) {
-      chrome.storage.sync.set({'shortcuts-enabled': true});
-    }
-    if (data['scrobbling-enabled'] === undefined) {
-      chrome.storage.sync.set({'scrobbling-enabled': false});
-    }
-  });
+  if (details.reason == 'install') {
+    chrome.storage.sync.get(['notifications-enabled', 'shortcuts-enabled', 'scrobbling-enabled'], function (data) {
+      if (data['notifications-enabled'] === undefined ||
+         !data['notifications-enabled']) {
+        chrome.storage.sync.set({'notifications-enabled': true});
+      }
+      if (data['shortcuts-enabled'] === undefined ||
+         !data['shortcuts-enabled']) {
+        chrome.storage.sync.set({'shortcuts-enabled': true});
+      }
+      if (data['scrobbling-enabled'] === undefined ||
+         !data['scrobbling-enabled']) {
+        chrome.storage.sync.set({'scrobbling-enabled': false});
+      }
+
+      chrome.tabs.create({url: chrome.extension.getURL('options.html')});
+    });
+  }
 });
 
 chrome.commands.onCommand.addListener(function (command) {

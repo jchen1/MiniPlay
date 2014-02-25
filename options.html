@@ -19,6 +19,9 @@
         <li class>
           <a href='#shortcuts'>Shortcuts</a>
         </li>
+        <li class>
+          <a href='#lastfm'>Last.fm</a>
+        </li>
       </ul>
     </div>
     <div class='mainview view'>
@@ -53,6 +56,28 @@
               <span>Enable shortcuts</span>
             </label>
           </div>
+        </div>
+      </div>
+      <div id='lastfm' class style='display: none;'>
+        <header>
+          <h1>
+            Last.fm
+          </h1>
+        </header>
+        <div class='content'>
+          <p>
+          <font color='red'>This feature is currently experimental and may not function correctly. Proceed with caution.</font>
+          </p>
+          <div class='checkbox'>
+            <label>
+              <input type='checkbox' id='enable-scrobbling'>
+              <span>Enable Last.fm scrobbling (BETA)</span>
+            </label>
+          </div>
+          <p id='login'>
+            <a href='#'>Authorize Last.fm account</a> <br><br>
+            Sometimes, re-authorizing will fix scrobbling issues.
+          </p>
         </div>
       </div>
     </div>

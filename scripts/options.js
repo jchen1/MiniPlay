@@ -3,13 +3,20 @@ $(function() {
     chrome.tabs.create({url: "chrome://chrome/extensions"});
   });
 
-  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled'],
+  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_token'],
     function (data) {
       if (data['notifications-enabled'] == true) {
         $('#enable-notifications').prop('checked', true);
       }
       if (data['shortcuts-enabled'] == true) {
         $('#enable-shortcuts').prop('checked', true);
+      }
+      if (data['scrobbling-enabled'] == true) {
+        $('#enable-scrobbling').prop('checked', true);
+        $('#login').show();
+      }
+      else {
+        $('#login').hide();
       }
     });
 
@@ -27,6 +34,24 @@ $(function() {
         'notifications-enabled' : $('#enable-notifications').is(':checked')
       });
   });
+
+  $('#enable-scrobbling').click(function() {
+    var a = $('#enable-scrobbling').is(':checked');
+    chrome.storage.sync.set(
+    {
+      'scrobbling-enabled' : a
+    });
+    if (a) {
+      $('#login').show();
+    }
+    else {
+      $('#login').hide();
+    }
+  })
+
+  $('#login a').click(function () {
+    chrome.runtime.sendMessage({type: 'auth'}, function (response) {});
+  })
 
   $('.menu a').click(function(ev) {
     ev.preventDefault();

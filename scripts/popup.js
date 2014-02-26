@@ -14,6 +14,7 @@ function tab_not_found() {
     chrome.tabs.create({url: "https://play.google.com/music"});
   });
   disable_buttons();
+  reset_titles();
   $('#equalizer').hide();
 }
 
@@ -38,6 +39,12 @@ function enable_buttons() {
   $('#repeat').prop('disabled', false);  
 }
 
+function reset_titles() {
+  $('#title').attr('title', '');
+  $('#artist').attr('title', '');
+  $('#album').attr('title', ''); 
+}
+
 function update(data) {
   if (data['id'] === undefined || data['id'] == '-1') {
     tab_not_found();
@@ -53,11 +60,16 @@ function update(data) {
         if (response.title == '') {
           $('#title').html('No song selected');
           disable_buttons();
+          reset_titles();
         }
         else {
           $('#title').html(response.title);
           $('#artist').html(response.artist);
           $('#album').html(response.album); 
+
+          $('#title').attr('title', response.title);
+          $('#artist').attr('title', response.artist);
+          $('#album').attr('title', response.album); 
           enable_buttons();           
         }
 

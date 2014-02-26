@@ -144,14 +144,12 @@ function toggle_play(status) {
 }
 
 function get_time(time) {
-  return (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
+  var time = (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
+  return (isNaN(time) ? 0 : time);
 }
 
 function set_slider(current, total) {
   var width = (get_time(current)/get_time(total)) * $('#popup').width();
-  if (isNaN(width)) {
-    width = 0;
-  }
   $('#played-slider').attr('style', 'width:' + width + 'px;');
   $('#slider-thumb').attr('style', 'left:' + width + 'px;');
   if ($('#play').hasClass('control-checked') || Math.round(width) != 0) {

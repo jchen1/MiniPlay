@@ -3,7 +3,7 @@ $(function() {
     chrome.tabs.create({url: "chrome://chrome/extensions"});
   });
 
-  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_token'],
+  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'],
     function (data) {
       if (data['notifications-enabled'] == true) {
         $('#enable-notifications').prop('checked', true);
@@ -17,6 +17,12 @@ $(function() {
       }
       else {
         $('#login').hide();
+      }
+      if (data['lastfm_sessionID'] !== undefined) {
+        $('#auth').show();
+      }
+      else {
+        $('#auth').hide();
       }
     });
 

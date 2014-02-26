@@ -1,9 +1,10 @@
 //changes the popup window
 chrome.storage.local.get('id', update);
-
-window.setInterval(function() {
-  chrome.storage.local.get('id', update);
-}, 1000);
+chrome.storage.onChanged.addListener(function (changes, area) {
+  if (changes['music_status'] && changes['music_status'].newValue) {
+    update_response(changes['music_status'].newValue);
+  }
+});
 
 function tab_not_found() {
   $('#title').html('No Google Music tab found');
@@ -45,48 +46,49 @@ function reset_titles() {
   $('#album').attr('title', ''); 
 }
 
+function update_response(response) {
+  if (chrome.extension.lastError) {
+    chrome.storage.local.set({'id': '-1'});
+    tab_not_found();
+  }
+  else {
+    if (response.title == '') {
+      $('#title').html('No song selected');
+      disable_buttons();
+      reset_titles();
+    }
+    else {
+      $('#title').html(response.title);
+      $('#artist').html(response.artist);
+      $('#album').html(response.album);
+
+      $('#title').attr('title', response.title);
+      $('#artist').attr('title', response.artist);
+      $('#album').attr('title', response.album);
+      enable_buttons();
+    }
+
+    if (response.album_art == 'http://undefined') {
+      response.album_art = 'img/default_album.png';
+    }
+    $('#album-art-img').attr('src', response.album_art);
+    $('#current-time').html(response.current_time);
+    $('#total-time').html(response.total_time);
+    toggle_play(response.status);
+    set_slider(response.current_time, response.total_time);
+    toggle_thumb(response.thumb);
+    toggle_repeat(response.repeat);
+    toggle_shuffle(response.shuffle);
+    $('#equalizer').show();
+  }
+}
+
 function update(data) {
   if (data['id'] === undefined || data['id'] == '-1') {
     tab_not_found();
   }
   else {
-    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'},
-    function(response) {
-      if (chrome.extension.lastError) {
-        chrome.storage.local.set({'id': '-1'});
-        tab_not_found();
-      }
-      else {
-        if (response.title == '') {
-          $('#title').html('No song selected');
-          disable_buttons();
-          reset_titles();
-        }
-        else {
-          $('#title').html(response.title);
-          $('#artist').html(response.artist);
-          $('#album').html(response.album); 
-
-          $('#title').attr('title', response.title);
-          $('#artist').attr('title', response.artist);
-          $('#album').attr('title', response.album); 
-          enable_buttons();           
-        }
-
-        if (response.album_art == 'http://undefined') {
-          response.album_art = 'img/default_album.png';
-        }
-        $('#album-art-img').attr('src', response.album_art);
-        $('#current-time').html(response.current_time);
-        $('#total-time').html(response.total_time);
-        toggle_play(response.status);
-        set_slider(response.current_time, response.total_time);
-        toggle_thumb(response.thumb);
-        toggle_repeat(response.repeat);
-        toggle_shuffle(response.shuffle); 
-        $('#equalizer').show();
-      }
-    });
+    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'}, update_response);
   }
 }
 function toggle_repeat(status) {
@@ -142,14 +144,12 @@ function toggle_play(status) {
 }
 
 function get_time(time) {
-  return (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
+  var time = (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
+  return (isNaN(time) ? 0 : time);
 }
 
 function set_slider(current, total) {
   var width = (get_time(current)/get_time(total)) * $('#popup').width();
-  if (isNaN(width)) {
-    width = 0;
-  }
   $('#played-slider').attr('style', 'width:' + width + 'px;');
   $('#slider-thumb').attr('style', 'left:' + width + 'px;');
   if ($('#play').hasClass('control-checked') || Math.round(width) != 0) {

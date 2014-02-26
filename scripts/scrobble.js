@@ -21,7 +21,7 @@ function getSessionID(cb) {
   chrome.storage.sync.get(['lastfm_token', 'lastfm_sessionID'], function (data) {
     if (data['lastfm_token'] === undefined) {
       auth();
-      cb(false);
+      cb('');
     }
     else if (data['lastfm_sessionID'] !== undefined) {
       cb(data['lastfm_sessionID']);
@@ -41,7 +41,7 @@ function getSessionID(cb) {
         else {
           chrome.storage.sync.remove('lastfm_sessionID');
           auth();
-          cb(false);
+          cb('');
         }  
       });
     }
@@ -59,7 +59,7 @@ function scrobble(details) {
 
       if (total_time > 30 && (current_time >= 240 || 2*current_time >= total_time)) {
         getSessionID(function (session_id) {
-          if (session_id != false) {
+          if (session_id != '') {
             var params = {
               method: 'track.scrobble',
               'artist[0]': details.artist,
@@ -115,8 +115,8 @@ function fail_notification() {
   chrome.notifications.create('lastfm_fail',
   {
     type: 'basic',
-    title: "Scrobbling failed!",
-    message: "Reauthenticate Last.fm account in the settings page",
+    title: "Last.fm authentication failed!",
+    message: "Click here to reauthenticate.",
     iconUrl: "../img/icon-128.png"
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});
@@ -126,5 +126,8 @@ function fail_notification() {
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   if (message.type == 'auth') {
     auth();
+  }
+  else if (message.type == 'session') {
+    getSessionID(sendResponse);
   }
 });

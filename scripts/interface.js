@@ -1,5 +1,7 @@
 // Interfaces with the Google Play Music tab
 
+chrome.runtime.sendMessage({type: 'session'}, function (response) {});
+
 chrome.extension.onMessage.addListener(function(message, sender, callback) {
   if (message.action == 'get_status') {
     get_status(callback);

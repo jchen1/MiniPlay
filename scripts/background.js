@@ -75,14 +75,14 @@ chrome.storage.onChanged.addListener(function (changes, area) {
 });
 
 chrome.notifications.onClicked.addListener(function (id) {
-  chrome.storage.local.get(['id', 'lastfm_fail_id', function (data) {
+  chrome.storage.local.get(['id', 'lastfm_fail_id'], function (data) {
     if (data['id'] && data['id'] != '-1') {
       chrome.tabs.update(parseInt(data['id']), {selected: true});
     }
     if (data['lastfm_fail_id'] == id) {
       chrome.tabs.create({url: chrome.extension.getURL('options.html')});
     }
-  })
+  });
 });
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {

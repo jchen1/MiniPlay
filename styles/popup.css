@@ -44,6 +44,28 @@ body {
   left: 140px;
   width: 255px;
   padding: 10px 15px 15px 15px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#title-fade {
+  left: 210px;
+  height: 20pt;
+  width: 100px;
+  position: absolute;
+
+  background-image: -webkit-linear-gradient(left,rgba(255,255,255,0) 0%,#fff 30px, #fff 100%);
+}
+
+#info-fade {
+  top: 50px;
+  left: 240px;
+  height: 50px;
+  width: 30px;
+  position: absolute;
+
+  background-image: -webkit-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,1));
+  background: linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,1));
 }
 
 #controls {

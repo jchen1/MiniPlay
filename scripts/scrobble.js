@@ -79,6 +79,18 @@ function get_time(time) {
   return (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
 }
 
+function fail_notification() {
+  chrome.notifications.create('lastfm_fail',
+  {
+    type: 'basic',
+    title: "Scrobbling failed!",
+    message: "Reauthenticate Last.fm account in the settings page",
+    iconUrl: "../img/icon-128.png"
+  }, function(id){
+    chrome.storage.local.set({'lastfm_fail_id': id});
+  });
+}
+
 function scrobble(details) {
   chrome.storage.sync.get('scrobbling-enabled', function(response) {
     if (response['scrobbling-enabled'] == true) {
@@ -89,32 +101,31 @@ function scrobble(details) {
       var total_time = get_time(details.total_time);
 
       getSessionID(function (session_id) {
-        if (total_time > 30 &&
-           (current_time >= 240 || current_time * 2 >= total_time)) {
-          var params = {
-            method: 'track.scrobble',
-            'artist[0]': details.artist,
-            'track[0]': details.title,
-            'timestamp[0]': Math.round(((new Date().getTime() / 1000) - get_time(details.total_time))),
-            'album[0]': details.album,
-            sk: session_id,
-            api_key: apiKey
-          };
+        if (session_id != false) {
+          if (total_time > 30 &&
+             (current_time >= 240 || current_time * 2 >= total_time)) {
+            var params = {
+              method: 'track.scrobble',
+              'artist[0]': details.artist,
+              'track[0]': details.title,
+              'timestamp[0]': Math.round(((new Date().getTime() / 1000) - get_time(details.total_time))),
+              'album[0]': details.album,
+              sk: session_id,
+              api_key: apiKey
+            };
 
-          var url = apiURL + get_query_string(params);
+            var url = apiURL + get_query_string(params);
 
-          $.post(url, params).always(function(data) {
-            var status = $(data).find('lfm').attr('status');
-            if (status == 'failed') {
-              chrome.notifications.create('',
-              {
-                type: 'basic',
-                title: "Scrobbling failed!",
-                message: "Reauthenticate Last.fm account in the settings page",
-                iconUrl: "../img/icon-128.png"
-              }, function(id){});
-            }
-          })
+            $.post(url, params).always(function(data) {
+              var status = $(data).find('lfm').attr('status');
+              if (status == 'failed') {
+                fail_notification();
+              }
+            })
+          }
+        }
+        else {
+          fail_notification();
         }
       });
     }

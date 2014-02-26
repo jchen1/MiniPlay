@@ -6,25 +6,24 @@ function auth() {
     if ($(data).find('lfm').attr('status') == 'ok') {
       var token = $(data).find('token').text();
       chrome.storage.sync.set({'lastfm_token': token});
-
       chrome.tabs.create(
       {
         url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + token)
       });
     }
     else {
-      chrome.storage.sync.set({'lastfm_token': ''});
+      chrome.storage.sync.remove('lastfm_token');
     }
   });
 }
 
 function getSessionID(cb) {
   chrome.storage.sync.get(['lastfm_token', 'lastfm_sessionID'], function (data) {
-    if (data['lastfm_token'] === undefined || data['lastfm_token'] == '') {
+    if (data['lastfm_token'] === undefined) {
       auth();
       cb(false);
     }
-    else if (data['lastfm_sessionID'] !== undefined && data['lastfm_sessionID'] != '') {
+    else if (data['lastfm_sessionID'] !== undefined) {
       cb(data['lastfm_sessionID']);
     }
     else {
@@ -33,22 +32,55 @@ function getSessionID(cb) {
         api_key: apiKey,
         token: data['lastfm_token']
       };
-      var url = apiURL + get_query_string(params);
-
-      $.get(url, function (data) {
-        var status = $(data).find('lfm').attr('status');
-
-        if (status == 'ok') {
-          var key = $(data).find('key').text();
+      $.get(apiURL + get_query_string(params), function (xml) {
+        if ($(xml).find('lfm').attr('status') == 'ok') {
+          var key = $(xml).find('key').text();
           chrome.storage.sync.set({'lastfm_sessionID': key});
           cb(key);
         }
         else {
-          chrome.storage.sync.set({'lastfm_sessionID': ''});
+          chrome.storage.sync.remove('lastfm_sessionID');
           auth();
           cb(false);
         }  
       });
+    }
+  });
+}
+
+function scrobble(details) {
+  chrome.storage.sync.get('scrobbling-enabled', function(response) {
+    if (response['scrobbling-enabled'] == true) {
+      if (details === undefined || details.title == '') {
+        return;
+      }
+      var current_time = get_time(details.current_time);
+      var total_time = get_time(details.total_time);
+
+      if (total_time > 30 && (current_time >= 240 || 2*current_time >= total_time)) {
+        getSessionID(function (session_id) {
+          if (session_id != false) {
+            var params = {
+              method: 'track.scrobble',
+              'artist[0]': details.artist,
+              'track[0]': details.title,
+              'timestamp[0]': Math.round((new Date().getTime() / 1000) - total_time),
+              'album[0]': details.album,
+              sk: session_id,
+              api_key: apiKey
+            };
+            $.post(apiURL + get_query_string(params), params).always(function(data) {
+              var status = $(data).find('lfm').attr('status');
+              if (status != 'ok') {
+                fail_notification();
+              }
+            });
+          }
+          else {
+            fail_notification();
+          }
+        });
+      }
     }
   });
 }
@@ -89,47 +121,6 @@ function fail_notification() {
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});
   });
-}
-
-function scrobble(details) {
-  chrome.storage.sync.get('scrobbling-enabled', function(response) {
-    if (response['scrobbling-enabled'] == true) {
-      if (details === undefined || details.title == '') {
-        return;
-      }
-      var current_time = get_time(details.current_time);
-      var total_time = get_time(details.total_time);
-
-      getSessionID(function (session_id) {
-        if (session_id != false) {
-          if (total_time > 30 &&
-             (current_time >= 240 || current_time * 2 >= total_time)) {
-            var params = {
-              method: 'track.scrobble',
-              'artist[0]': details.artist,
-              'track[0]': details.title,
-              'timestamp[0]': Math.round(((new Date().getTime() / 1000) - get_time(details.total_time))),
-              'album[0]': details.album,
-              sk: session_id,
-              api_key: apiKey
-            };
-
-            var url = apiURL + get_query_string(params);
-
-            $.post(url, params).always(function(data) {
-              var status = $(data).find('lfm').attr('status');
-              if (status == 'failed') {
-                fail_notification();
-              }
-            })
-          }
-        }
-        else {
-          fail_notification();
-        }
-      });
-    }
-  })
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {

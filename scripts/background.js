@@ -111,6 +111,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
       chrome.tabs.create({url: chrome.extension.getURL('options.html')});
     });
+    chrome.storage.sync.remove(['lastfm_token', 'lastfm_sessionID']);
   }
 });
 

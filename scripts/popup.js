@@ -17,6 +17,7 @@ function tab_not_found() {
   disable_buttons();
   reset_titles();
   $('#equalizer').hide();
+
 }
 
 function disable_buttons() {
@@ -28,6 +29,8 @@ function disable_buttons() {
   $('#shuffle').prop('disabled', true);
   $('#repeat').prop('disabled', true);
   $('#slider-thumb').hide();
+
+  $('#title-fade').hide();
 }
 
 function enable_buttons() {
@@ -38,6 +41,8 @@ function enable_buttons() {
   $('#up').prop('disabled', false);
   $('#shuffle').prop('disabled', false);
   $('#repeat').prop('disabled', false);  
+
+  $('#title-fade').show();
 }
 
 function reset_titles() {

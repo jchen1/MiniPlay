@@ -18,6 +18,8 @@
     "page": "background.html"
   },
 
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+  
   "browser_action": {
     "default_icon": {
       "19": "img/icon-19.png",

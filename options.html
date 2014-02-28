@@ -14,72 +14,77 @@
       </h1>
       <ul class='menu'>
         <li class='selected'>
-          <a href='#notifications'>Notifications</a>
+          <a href='#settings'>Settings</a>
         </li>
         <li class>
-          <a href='#shortcuts'>Shortcuts</a>
-        </li>
-        <li class>
-          <a href='#lastfm'>Last.fm</a>
+          <a href='#about'>About</a>
         </li>
       </ul>
     </div>
     <div class='mainview view'>
-      <div id='notifications' class='selected' style='display: block;'>
+      <div id='settings' class='selected' style='display: block;'>
         <header>
           <h1>
-            Notifications
+            Settings
           </h1>
         </header>
         <div class='content'>
-          <div class='checkbox'>
-            <label>
-              <input type='checkbox' id='enable-notifications'>
-              <span>Enable notifications</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div id='shortcuts' class style='display: none;'>
-        <header>
-          <h1>
-            Shortcuts
-          </h1>
-        </header>
-        <div class='content'>
-          <p>
-            Modify individual shortcuts by clicking on Keyboard Shortcuts in <a href='#' id='extension'>chrome://extensions</a>.
-          </p>
-          <div class='checkbox'>
-            <label>
-              <input type='checkbox' id='enable-shortcuts'>
-              <span>Enable shortcuts</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div id='lastfm' class style='display: none;'>
-        <header>
-          <h1>
-            Last.fm
-          </h1>
-        </header>
-        <div class='content'>
-          <p>
-          <font color='red'>This feature is currently experimental and may not function correctly.</font>
-          </p>
-          <div class='checkbox'>
-            <label>
-              <input type='checkbox' id='enable-scrobbling'>
-              <span>Enable Last.fm scrobbling (BETA)</span>
-            </label>
-          </div>
-          <p id='login'>
-            <a href='#'>Authorize Last.fm account</a>
-            <p id='auth'>
-              You appear to be logged in. If you are having problems scrobbling, reauthorizing may fix the issue.
+          <section>
+            <h3>
+              Notifications
+            </h3>
+            <div class='checkbox'>
+              <label>
+                <input type='checkbox' id='enable-notifications'>
+                <span>Enable notifications</span>
+              </label>
+            </div>
+          </section>
+          <section>
+            <h3>
+              Shortcuts
+            </h3>
+            <p>
+              Modify individual shortcuts by clicking on Keyboard Shortcuts in <a href='#' id='extension'>chrome://extensions</a>.
             </p>
-          </p>
+            <div class='checkbox'>
+              <label>
+                <input type='checkbox' id='enable-shortcuts'>
+                <span>Enable shortcuts</span>
+              </label>
+            </div>
+          </section>
+          <section>
+            <h3>
+              <font color='red'>(BETA)</font> Last.fm
+            </h3>
+            <div class='checkbox'>
+              <label>
+                <input type='checkbox' id='enable-scrobbling'>
+                <span>Enable Last.fm scrobbling</span>
+              </label>
+            </div>
+            <p id='login'>
+              <a href='#'>Authorize Last.fm account</a>
+              <p id='auth'>
+                You appear to be logged in. If you are having problems scrobbling, reauthorizing may fix the issue.
+              </p>
+            </p>
+          </section>
+        </div>
+      </div>
+      <div id='about' class style='display: none;'>
+        <header>
+          <h1>
+            About
+          </h1>
+        </header>
+        <div class='content'>
+        <p>
+          MiniPlay (version 0.3.3) is open source!
+          Contribute code or report issues in its <a href="https://github.com/iambald/MiniPlay" target="_blank">Github repo</a>. <br><br>
+          MiniPlay was created by <a href="https://github.com/iambald" target="_blank">Jeff Chen</a>.
+        </p>
         </div>
       </div>
     </div>

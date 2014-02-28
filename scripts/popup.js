@@ -245,6 +245,9 @@ $(function() {
   $('#repeat').on('click', function() {
     act('#repeat');
   });
+  $('#setting').on('click', function() {
+    chrome.tabs.create({url: chrome.extension.getURL('options.html')});
+  });
 })
 
 //analytics

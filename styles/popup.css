@@ -96,8 +96,8 @@ body {
   height: 48px;
   opacity: 0.8;
   float: right;
-  margin-top: -45px;
-  margin-right: -19px;
+  margin-top: 4px;
+  margin-right: 218px;
 }
 
 .equalizer-checked {
@@ -118,7 +118,7 @@ body {
   margin-top: 3px;
   transition: background-color 0.218s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 737px 53px;
+  background-size: 742px 53px;
 }
 
 .control:hover {
@@ -128,6 +128,30 @@ body {
 
 .control:active {
   background-color: #d5d5d5!important;
+  opacity: 1;
+}
+
+.setting {
+  background: no-repeat url(../img/sprites.png) -725px -12px;
+  background-size: 742px 53px;
+  outline: none;
+  border: none;
+  width: 17px;
+  height: 17px;
+  margin-top: 5px;
+  margin-left: 238px;
+  opacity: 0.55;
+  position: absolute;
+  transition: background-color 0.218s;
+}
+
+.setting:hover {
+  background-color: transparent !important;
+  opacity: 1;
+}
+
+.setting:active {
+  background-color: transparent !important;
   opacity: 1;
 }
 

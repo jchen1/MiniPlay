@@ -18,7 +18,7 @@ $(function() {
       else {
         $('#login').hide();
       }
-      if (data['lastfm_sessionID'] !== undefined) {
+      if (data['lastfm_sessionID'] !== undefined && data['scrobbling-enabled'] == true) {
         $('#auth').show();
       }
       else {
@@ -52,6 +52,7 @@ $(function() {
     }
     else {
       $('#login').hide();
+      $('#auth').hide();
     }
   })
 

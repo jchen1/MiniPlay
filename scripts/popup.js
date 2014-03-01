@@ -17,7 +17,7 @@ function tab_not_found() {
   disable_buttons();
   reset_titles();
   $('#equalizer').hide();
-
+  $('#setting').hide();
 }
 
 function disable_buttons() {
@@ -57,6 +57,7 @@ function update_response(response) {
     tab_not_found();
   }
   else {
+    $('#setting').show();
     if (response.title == '') {
       $('#title').html('No song selected');
       disable_buttons();

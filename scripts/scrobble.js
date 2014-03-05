@@ -1,14 +1,14 @@
-var apiKey = '8acdad46ec761ef21ba93ce72a888f1b';
-var apiURL = "https://ws.audioscrobbler.com/2.0/?";
+var api_key = '8acdad46ec761ef21ba93ce72a888f1b';
+var api_url = "https://ws.audioscrobbler.com/2.0/?";
 
 function auth() {
-  $.get(apiURL + 'method=auth.gettoken&api_key=' + apiKey, function (data) {
+  $.get(api_url + 'method=auth.gettoken&api_key=' + api_key, function (data) {
     if ($(data).find('lfm').attr('status') == 'ok') {
       var token = $(data).find('token').text();
       chrome.storage.sync.set({'lastfm_token': token});
       chrome.tabs.create(
       {
-        url: ('https://www.last.fm/api/auth/?api_key=' + apiKey + '&token=' + token)
+        url: ('https://www.last.fm/api/auth/?api_key=' + api_key + '&token=' + token)
       });
     }
     else {
@@ -17,7 +17,7 @@ function auth() {
   });
 }
 
-function getSessionID(cb) {
+function get_session_id(cb) {
   chrome.storage.sync.get(['lastfm_token', 'lastfm_sessionID'], function (data) {
     if (data['lastfm_token'] === undefined) {
       auth();
@@ -29,10 +29,10 @@ function getSessionID(cb) {
     else {
       var params = {
         method: 'auth.getsession',
-        api_key: apiKey,
+        api_key: api_key,
         token: data['lastfm_token']
       };
-      $.get(apiURL + get_query_string(params), function (xml) {
+      $.get(api_url + get_query_string(params), function (xml) {
         if ($(xml).find('lfm').attr('status') == 'ok') {
           var key = $(xml).find('key').text();
           chrome.storage.sync.set({'lastfm_sessionID': key});
@@ -58,7 +58,7 @@ function scrobble(details) {
       var total_time = get_time(details.total_time);
 
       if (total_time > 30 && (current_time >= 240 || 2*current_time >= total_time)) {
-        getSessionID(function (session_id) {
+        get_session_id(function (session_id) {
           if (session_id != '') {
             var params = {
               method: 'track.scrobble',
@@ -67,9 +67,9 @@ function scrobble(details) {
               'timestamp[0]': Math.round((new Date().getTime() / 1000) - total_time),
               'album[0]': details.album,
               sk: session_id,
-              api_key: apiKey
+              api_key: api_key
             };
-            $.post(apiURL + get_query_string(params), params).always(function(data) {
+            $.post(api_url + get_query_string(params), params).always(function(data) {
               var status = $(data).find('lfm').attr('status');
               if (status != 'ok') {
                 fail_notification();
@@ -128,6 +128,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     auth();
   }
   else if (message.type == 'session') {
-    getSessionID(sendResponse);
+    get_session_id(sendResponse);
   }
 });

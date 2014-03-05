@@ -118,8 +118,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 chrome.commands.onCommand.addListener(function (command) {
   chrome.storage.local.get('id', function (data) {
     chrome.storage.sync.get('shortcuts-enabled', function (res) {
-      if (res['shortcuts-enabled'] == true &&
-          data['id'] != '-1') {
+      if (res['shortcuts-enabled'] == true && data['id'] != '-1') {
           chrome.tabs.sendMessage(parseInt(data['id']),
             { action: 'send_command', type: command });
         }

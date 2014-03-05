@@ -18,30 +18,29 @@ var music_status = {
     this.album_art = "http://" + $("#playingAlbumArt").attr('src');
     this.current_time = $("#time_container_current").text();
     this.total_time = $("#time_container_duration").text();
-    var status = 'paused', thumb = 'None', repeat = 'none', shuffle = 'off';
+    this.status = 'paused';
+    this.thumb = 'None';
+    this.repeat = 'none';
+    this.shuffle = 'off;'
     if ($('button[data-id="play-pause"]').hasClass('playing')) {
-      status = 'playing';
+      this.status = 'playing';
     }
     if ($('li[title="Thumbs up"]').hasClass('selected')) {
-      thumb = 'Up';
+      this.thumb = 'Up';
     }
     if ($('li[title="Thumbs down"]').hasClass('selected')) {
-      thumb = 'Down';
+      this.thumb = 'Down';
     }
 
     if ($('button[data-id="shuffle"]').attr("value") == "ALL_SHUFFLE") {
-      shuffle = 'on';
+      this.shuffle = 'on';
     }
     if ($('button[data-id="repeat"]').attr("value") == "LIST_REPEAT") {
-      repeat = 'list';
+      this.repeat = 'list';
     }
     if ($('button[data-id="repeat"]').attr("value") == "SINGLE_REPEAT") {
-      repeat = 'single';
+      this.repeat = 'single';
     }
-    this.status = status;
-    this.thumb = thumb;
-    this.shuffle = shuffle;
-    this.repeat = repeat;
 
     return this;
   }

@@ -255,6 +255,19 @@ $(function() {
   $('#setting').on('click', function() {
     chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
+  $('#album-art-img').on('click', function() {
+    chrome.storage.local.get('id', function (data) {
+      if (data['id'] && data['id'] != '-1') {
+        chrome.tabs.update(parseInt(data['id']), {selected: true});
+        chrome.tabs.get(parseInt(data['id']), function (tab) {
+          chrome.windows.update(tab.windowId, {focused: true});
+        });
+      }
+      else {
+        chrome.tabs.create({url: "https://play.google.com/music"});
+      }
+    });
+  });
 })
 
 (function() {

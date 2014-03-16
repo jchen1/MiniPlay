@@ -1,3 +1,9 @@
+//analytics
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-48472705-1']);
+_gaq.push(['_trackPageview']);
+
 //changes the popup window
 chrome.storage.local.get('id', update);
 chrome.storage.onChanged.addListener(function (changes, area) {
@@ -249,13 +255,20 @@ $(function() {
   $('#setting').on('click', function() {
     chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
+  $('#album-art-img').on('click', function() {
+    chrome.storage.local.get('id', function (data) {
+      if (data['id'] && data['id'] != '-1') {
+        chrome.tabs.update(parseInt(data['id']), {selected: true});
+        chrome.tabs.get(parseInt(data['id']), function (tab) {
+          chrome.windows.update(tab.windowId, {focused: true});
+        });
+      }
+      else {
+        chrome.tabs.create({url: "https://play.google.com/music"});
+      }
+    });
+  });
 })
-
-//analytics
-
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-48472705-1']);
-_gaq.push(['_trackPageview']);
 
 (function() {
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

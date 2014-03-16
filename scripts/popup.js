@@ -1,3 +1,9 @@
+//analytics
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-48472705-1']);
+_gaq.push(['_trackPageview']);
+
 //changes the popup window
 chrome.storage.local.get('id', update);
 chrome.storage.onChanged.addListener(function (changes, area) {
@@ -250,12 +256,6 @@ $(function() {
     chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
 })
-
-//analytics
-
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-48472705-1']);
-_gaq.push(['_trackPageview']);
 
 (function() {
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

@@ -13,7 +13,6 @@ chrome.storage.onChanged.addListener(function (changes, area) {
 });
 
 function update_scrobble(value) {
-  console.log('update_scrobble');
   if (value) {
     $('#lastfm').removeClass('lastfm-checked');
     $('#lastfm').attr('title', 'Scrobbling enabled');
@@ -107,8 +106,7 @@ function update_response(response) {
     $('#equalizer').show();
     $('#lastfm').show();
     chrome.storage.sync.get('scrobbling-enabled', function (data) {
-      console.log(data[scrobbling-enabled]);
-      if (data[scrobbling-enabled]) {
+      if (data['scrobbling-enabled']) {
         $('#lastfm').removeClass('lastfm-checked');
         $('#lastfm').attr('title', 'Scrobbling enabled');
       }
@@ -297,13 +295,10 @@ $(function() {
     if ($('#lastfm').hasClass('lastfm-checked')) {  //disabled, should enable
       chrome.storage.sync.set({'scrobbling-enabled': true});
       update_scrobble(true);
-      console.log('enable scrobble');
     }
     else {
       chrome.storage.sync.set({'scrobbling-enabled': false});
       update_scrobble(false);
-      console.log('disable scrobble');
-
     }
   });
 });

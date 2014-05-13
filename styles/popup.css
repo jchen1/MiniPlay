@@ -94,8 +94,8 @@ body {
   float: left;
   display: inline-block;
   margin-left: 145px;
-  position: relative;
-  top: -22px;
+  position: absolute;
+  bottom: 23px;
 }
 
 
@@ -272,9 +272,9 @@ body {
   line-height: 20px;
   color: #7f7f7f;
   text-align: right;
-  margin-right: 60px;
-  position: relative;
-  top: 8px;
+  position: absolute;
+  bottom: 45px;
+  right: 60px;
 }
 
 #played-slider {
@@ -287,7 +287,8 @@ body {
   outline: none;
   height: 3px;
   padding: 5px 0;
-  margin-top: 25px;
+  position: absolute;
+  bottom: 14px;
 }
 
 #slider-background {

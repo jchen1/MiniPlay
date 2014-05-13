@@ -12,6 +12,17 @@ chrome.storage.onChanged.addListener(function (changes, area) {
   }
 });
 
+function update_scrobble(value) {
+  if (value) {
+    $('#lastfm').removeClass('lastfm-checked');
+    $('#lastfm').attr('title', 'Scrobbling enabled');
+  }
+  else {
+    $('#lastfm').addClass('lastfm-checked');
+    $('#lastfm').attr('title', 'Scrobbling disabled');
+  }
+}
+
 function tab_not_found() {
   $('#title').html('No Google Music tab found');
   $('#artist').html('<a href="#">Click to open a new tab</a>');
@@ -24,6 +35,7 @@ function tab_not_found() {
   reset_titles();
   $('#equalizer').hide();
   $('#setting').hide();
+  $('#lastfm').hide();
 }
 
 function disable_buttons() {
@@ -92,6 +104,17 @@ function update_response(response) {
     toggle_repeat(response.repeat);
     toggle_shuffle(response.shuffle);
     $('#equalizer').show();
+    $('#lastfm').show();
+    chrome.storage.sync.get('scrobbling-enabled', function (data) {
+      if (data['scrobbling-enabled']) {
+        $('#lastfm').removeClass('lastfm-checked');
+        $('#lastfm').attr('title', 'Scrobbling enabled');
+      }
+      else {
+        $('#lastfm').addClass('lastfm-checked');
+        $('#lastfm').attr('title', 'Scrobbling disabled');
+      }
+    });
   }
 }
 
@@ -268,7 +291,17 @@ $(function() {
       }
     });
   });
-})
+  $('#lastfm').on('click', function() {
+    if ($('#lastfm').hasClass('lastfm-checked')) {  //disabled, should enable
+      chrome.storage.sync.set({'scrobbling-enabled': true});
+      update_scrobble(true);
+    }
+    else {
+      chrome.storage.sync.set({'scrobbling-enabled': false});
+      update_scrobble(false);
+    }
+  });
+});
 
 (function() {
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

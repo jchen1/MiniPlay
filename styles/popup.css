@@ -90,20 +90,41 @@ body {
   overflow: hidden;
 }
 
-.equalizer {
+#iconbar {
+  float: left;
+  display: inline-block;
+  margin-left: 145px;
+  position: relative;
+  top: -22px;
+}
+
+
+#equalizer {
   background: no-repeat url(../img/eq-paused.png);
   background-size: 40 40;
   width: 48px;
   height: 48px;
   opacity: 0.8;
-  float: right;
-  margin-top: 4px;
-  margin-right: 218px;
+  display: inline-block;
+  margin-right: -25px;
 }
 
 .equalizer-checked {
   background: no-repeat url(../img/eq-play.gif);
   background-size: 40 40;
+}
+
+#lastfm {
+  background: no-repeat url(../img/lastfm.png);
+  background-size: 40 40;
+  width: 48px;
+  height: 48px;
+  opacity: 0.8;
+  display: inline-block;
+}
+
+.lastfm-checked {
+  opacity: 0.5!important;
 }
 
 #artist, #album {

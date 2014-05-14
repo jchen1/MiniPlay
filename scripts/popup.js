@@ -14,12 +14,12 @@ chrome.storage.onChanged.addListener(function (changes, area) {
 
 function update_scrobble(value) {
   if (value) {
-    $('#lastfm').removeClass('lastfm-checked');
-    $('#lastfm').attr('title', 'Scrobbling enabled');
+    $('#lastfm-toggle').removeClass('lastfm-checked');
+    $('#lastfm-toggle').attr('title', 'Scrobbling enabled');
   }
   else {
-    $('#lastfm').addClass('lastfm-checked');
-    $('#lastfm').attr('title', 'Scrobbling disabled');
+    $('#lastfm-toggle').addClass('lastfm-checked');
+    $('#lastfm-toggle').attr('title', 'Scrobbling disabled');
   }
 }
 
@@ -35,7 +35,7 @@ function tab_not_found() {
   reset_titles();
   $('#equalizer').hide();
   $('#setting').hide();
-  $('#lastfm').hide();
+  $('#lastfm-toggle').hide();
 }
 
 function disable_buttons() {
@@ -104,15 +104,15 @@ function update_response(response) {
     toggle_repeat(response.repeat);
     toggle_shuffle(response.shuffle);
     $('#equalizer').show();
-    $('#lastfm').show();
+    $('#lastfm-toggle').show();
     chrome.storage.sync.get('scrobbling-enabled', function (data) {
       if (data['scrobbling-enabled']) {
-        $('#lastfm').removeClass('lastfm-checked');
-        $('#lastfm').attr('title', 'Scrobbling enabled');
+        $('#lastfm-toggle').removeClass('lastfm-checked');
+        $('#lastfm-toggle').attr('title', 'Scrobbling enabled');
       }
       else {
-        $('#lastfm').addClass('lastfm-checked');
-        $('#lastfm').attr('title', 'Scrobbling disabled');
+        $('#lastfm-toggle').addClass('lastfm-checked');
+        $('#lastfm-toggle').attr('title', 'Scrobbling disabled');
       }
     });
   }
@@ -291,8 +291,8 @@ $(function() {
       }
     });
   });
-  $('#lastfm').on('click', function() {
-    if ($('#lastfm').hasClass('lastfm-checked')) {  //disabled, should enable
+  $('#lastfm-toggle').on('click', function() {
+    if ($('#lastfm-toggle').hasClass('lastfm-checked')) {  //disabled, should enable
       chrome.storage.sync.set({'scrobbling-enabled': true});
       update_scrobble(true);
     }

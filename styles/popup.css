@@ -11,26 +11,20 @@
 
 body {
   margin: 0;
-  padding: 0;
   min-width: 450px;
   min-height: 210px;
-  border-radius: 20px;
-  font-family: 'Roboto', arial, sans-serif;
-  overflow: hidden;
 }
 
 #card {
   border-radius: 2px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, .2);
   background: white;
-  font-weight: 300;
   height: 128px;
   width: 430px;
 }
 
 #album-art {
   float: left;
-  margin-right: 20px;
   border-radius: 2px 0 0 2px;
 }
 
@@ -53,7 +47,6 @@ body {
   height: 20pt;
   width: 100px;
   position: absolute;
-
   background-image: -webkit-linear-gradient(left,rgba(255,255,255,0) 0%,#fff 30px, #fff 100%);
 }
 
@@ -63,7 +56,6 @@ body {
   height: 50px;
   width: 30px;
   position: absolute;
-
   background-image: -webkit-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,1));
   background: linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,1));
 }
@@ -74,9 +66,6 @@ body {
   left: 0px;
   background-color: #fafafa;
   width: 450px;
-  height: 56px;
-  outline: none;
-  z-index: 1;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -112,8 +101,8 @@ body {
 }
 
 .equalizer-checked {
-  background: no-repeat url(../img/eq-play.gif);
-  background-size: 40 40;
+  background: no-repeat url(../img/eq-play.gif)!important;
+  background-size: 40 40!important;
 }
 
 #lastfm-toggle {

@@ -28,7 +28,7 @@ body {
   width: 430px;
 }
 
-.big-art {
+#album-art {
   float: left;
   margin-right: 20px;
   border-radius: 2px 0 0 2px;
@@ -39,7 +39,7 @@ body {
   -webkit-user-drag: none;
 }
 
-#song-info {
+#card-right {
   position: absolute;
   left: 140px;
   width: 255px;
@@ -107,6 +107,8 @@ body {
   opacity: 0.8;
   display: inline-block;
   margin-right: -25px;
+  margin-left: -10px;
+  margin-top: 5px;
 }
 
 .equalizer-checked {
@@ -114,7 +116,7 @@ body {
   background-size: 40 40;
 }
 
-#lastfm {
+#lastfm-toggle {
   background: no-repeat url(../img/lastfm.png);
   background-size: 40 40;
   width: 48px;
@@ -154,7 +156,7 @@ body {
   opacity: 1;
 }
 
-.setting {
+#setting {
   background: no-repeat url(../img/sprites.png) -725px -12px;
   background-size: 742px 53px;
   outline: none;
@@ -168,12 +170,12 @@ body {
   transition: background-color 0.218s;
 }
 
-.setting:hover {
+#setting:hover {
   background-color: transparent !important;
   opacity: 1;
 }
 
-.setting:active {
+#setting:active {
   background-color: transparent !important;
   opacity: 1;
 }
@@ -273,8 +275,8 @@ body {
   color: #7f7f7f;
   text-align: right;
   position: absolute;
-  bottom: 45px;
-  right: 60px;
+  bottom: 35px;
+  right: 0px;
 }
 
 #played-slider {
@@ -288,12 +290,13 @@ body {
   height: 3px;
   padding: 5px 0;
   position: absolute;
-  bottom: 14px;
+  top: -5px;
 }
 
 #slider-background {
   background-color: #eaeaea;
   height: 3px;
+  width: 450px;
 }
 
 #slider-thumb {

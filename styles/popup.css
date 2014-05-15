@@ -9,6 +9,11 @@
   -webkit-user-select: none;
 }
 
+#artist a {
+  outline: none;
+  text-decoration: none;
+}
+
 body {
   margin: 0;
   min-width: 450px;

@@ -35,6 +35,7 @@ $(function() {
         $('.interface').prop('disabled', true);
         $('#slider-thumb').hide();
         $('#title').html('No song selected');
+        $('#slider').attr('style', '');
       }
       else {
         $('.interface').prop('disabled', false);
@@ -83,6 +84,7 @@ $(function() {
     $('#equalizer').hide();
     $('#lastfm-toggle').hide();
     $('#time').hide();
+    $('#slider').attr('style', '');
   }
 
   function toggle_repeat(status) {
@@ -152,6 +154,7 @@ $(function() {
     else {
       $('#slider-thumb').hide();
     }
+    $('#slider').attr('style', 'cursor: pointer;');
   }
 
   $('.interface').on('click', function(e) {

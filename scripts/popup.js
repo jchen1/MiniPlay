@@ -49,7 +49,7 @@ $(function() {
         $('#current-time').html(response.current_time);
         $('#total-time').html(response.total_time);
         toggle_play(response.status);
-        set_slider(response.current_time, response.total_time);
+        set_slider(get_time(response.current_time), get_time(response.total_time));
       }
 
       toggle_thumb(response.thumb);
@@ -143,61 +143,14 @@ $(function() {
   }
 
   function set_slider(current, total) {
-    var width = (get_time(current)/get_time(total)) * $('#popup').width();
+    var width = Math.round((current / total) * $('#popup').width());
     $('#played-slider').attr('style', 'width:' + width + 'px;');
     $('#slider-thumb').attr('style', 'left:' + width + 'px;');
-    if ($('#play').hasClass('control-checked') || Math.round(width) != 0) {
+    if ($('#play').hasClass('control-checked') || width != 0) {
       $('#slider-thumb').show();
     }
     else {
       $('#slider-thumb').hide();
-    }
-  }
-
-  function update_act(type) {
-    if (type === 'play') {
-      if ($('#play').hasClass('control-checked')) {
-        toggle_play('playing');
-      }
-      else {
-        toggle_play('paused');
-      }
-    }
-    if (type === 'up' && $('#up').hasClass('control-checked')) {
-      $('#up').removeClass('control-checked');
-    }
-    else if (type === 'up') {
-      $('#up').addClass('control-checked');
-      $('#down').removeClass("control-checked");
-    }
-
-    if (type === 'down' && $('#down').hasClass('control-checked')) {
-      $('#down').removeClass('control-checked');
-    }
-    else if (type === 'down') {
-      $('#down').addClass('control-checked');
-      $('#up').removeClass('control-checked');
-    }
-
-    if (type === 'repeat') {
-      if ($("#repeat").hasClass('control-list')) {
-        toggle_repeat('SINGLE_REPEAT');
-      }
-      else if ($("#repeat").hasClass('control-single')) {
-        toggle_repeat('NO_REPEAT');
-      }
-      else {
-        toggle_repeat('LIST_REPEAT');
-      }
-    }
-
-    if (type === 'shuffle') {
-      if ($("#shuffle").hasClass('control-checked')) {
-        $('shuffle').removeClass('control-checked');
-      }
-      else {
-        $('shuffle').addClass('control-checked');
-      }
     }
   }
 
@@ -209,7 +162,7 @@ $(function() {
         {
           'action': 'send_command',
           'type': name
-        }, function() { update_act(name); });
+        }, update);
       });
     });
     $('#setting').on('click', function() {
@@ -230,6 +183,15 @@ $(function() {
     });
     $('#lastfm-toggle').on('click', function() {
       chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
+    });
+    $('#slider').on('click', function(e) {
+      chrome.storage.local.get('id', function(data) {
+        chrome.tabs.sendMessage(parseInt(data['id']),
+        {
+          'action': 'update_slider',
+          'position': Math.round(100 * e.offsetX / $('#slider').width())
+        }, update);
+      });
     });
   });
 });

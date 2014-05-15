@@ -93,16 +93,13 @@ chrome.notifications.onClicked.addListener(function (id) {
 chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason == 'install') {
     chrome.storage.sync.get(['notifications-enabled', 'shortcuts-enabled', 'scrobbling-enabled'], function (data) {
-      if (data['notifications-enabled'] === undefined ||
-         !data['notifications-enabled']) {
+      if (data['notifications-enabled'] === undefined) {
         chrome.storage.sync.set({'notifications-enabled': true});
       }
-      if (data['shortcuts-enabled'] === undefined ||
-         !data['shortcuts-enabled']) {
+      if (data['shortcuts-enabled'] === undefined) {
         chrome.storage.sync.set({'shortcuts-enabled': true});
       }
-      if (data['scrobbling-enabled'] === undefined ||
-         !data['scrobbling-enabled']) {
+      if (data['scrobbling-enabled'] === undefined) {
         chrome.storage.sync.set({'scrobbling-enabled': true});
       }
 

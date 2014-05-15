@@ -12,6 +12,9 @@ chrome.extension.onMessage.addListener(function(message, sender, callback) {
   if (message.action == 'send_command') {
     send_command(message.type, callback);
   }
+  if (message.action == 'update_slider') {
+    update_slider(message.position, callback);
+  }
 });
 
 function get_status(callback) {
@@ -19,6 +22,18 @@ function get_status(callback) {
 }
 
 function update_status(callback) {
+  callback(music_status.update());
+}
+
+function update_slider(position, callback) {  //position is in %
+  var slider = document.getElementById('slider');
+  var newWidth = Math.round((position * slider.offsetWidth) / 100);
+  var rect = slider.getBoundingClientRect();
+
+  slider.dispatchEvent(new MouseEvent('click', {
+    clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
+    clientY: rect.top + slider.clientTop - slider.scrollTop
+  }));
   callback(music_status.update());
 }
 
@@ -49,5 +64,5 @@ function send_command(type, callback) {
     $button = $('button[data-id="repeat"]');
   }
   $button.click();
-  callback();
+  callback(music_status.update());
 }

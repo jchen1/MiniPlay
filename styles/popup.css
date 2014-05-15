@@ -252,9 +252,14 @@ body {
   text-align: right;
 }
 
+@-webkit-keyframes progressBar {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
 #played-slider {
   background-color: #fd8500;
-  width: 0;
+  width: 0px;
   height: 3px;
 }
 
@@ -263,6 +268,9 @@ body {
   height: 3px;
   position: absolute;
   z-index: 1000;
+  padding: 7px 0 7px 0;
+  margin-top: -7px;
+  cursor: pointer;
 }
 
 #slider-background {

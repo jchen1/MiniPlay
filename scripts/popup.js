@@ -4,16 +4,65 @@ var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-48472705-1']);
 _gaq.push(['_trackPageview']);
 
-//changes the popup window
-chrome.storage.local.get('id', update);
-chrome.storage.onChanged.addListener(function (changes, area) {
-  if (changes['music_status'] && changes['music_status'].newValue) {
-    update_response(changes['music_status'].newValue);
+chrome.storage.local.get('id', function(data) {
+  if (data['id'] && data['id'] !== -1) {
+    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'}, update);
+  }
+  else {
+    tab_not_found();
   }
 });
 
+chrome.storage.sync.get('scrobbling-enabled', function(data) {
+  update_scrobble(data['scrobbling-enabled']);
+});
+
+chrome.storage.onChanged.addListener(function (changes, area) {
+  if (changes['music_status'] && changes['music_status'].newValue) {
+    update(changes['music_status'].newValue);
+  }
+  if (changes['scrobbling-enabled'] && changes['scrobbling-enabled'].newValue !== undefined) {
+    update_scrobble(changes['scrobbling-enabled'].newValue);
+  }
+});
+
+function update(response) {
+  if (chrome.extension.lastError) {
+    chrome.storage.local.set({'id' : -1});
+    tab_not_found();
+  }
+  else {
+    if (response.title === '') {
+      disable_buttons();
+      $('#title').html('No song selected');
+    }
+    else {
+      enable_buttons();
+      $('#title').html(response.title);
+      $('#artist').html(response.artist);
+      $('#album').html(response.album);
+
+      if (response.album_art == 'http://undefined') {
+        response.album_art = 'img/default_album.png';
+      }
+      $('#album-art-img').attr('src', response.album_art);
+      $('#current-time').html(response.current_time);
+      $('#total-time').html(response.total_time);
+      toggle_play(response.status);
+      set_slider(response.current_time, response.total_time);
+    }
+
+    toggle_thumb(response.thumb);
+    toggle_repeat(response.repeat);
+    toggle_shuffle(response.shuffle);
+    $('#equalizer').show();
+    $('#lastfm-toggle').show();
+    $('#time').show();
+  }
+}
+
 function update_scrobble(value) {
-  if (value) {
+  if (value === true) {
     $('#lastfm-toggle').removeClass('lastfm-checked');
     $('#lastfm-toggle').attr('title', 'Scrobbling enabled');
   }
@@ -32,10 +81,9 @@ function tab_not_found() {
     chrome.tabs.create({url: "https://play.google.com/music"});
   });
   disable_buttons();
-  reset_titles();
   $('#equalizer').hide();
-  $('#setting').hide();
   $('#lastfm-toggle').hide();
+  $('#time').hide();
 }
 
 function disable_buttons() {
@@ -47,7 +95,6 @@ function disable_buttons() {
   $('#shuffle').prop('disabled', true);
   $('#repeat').prop('disabled', true);
   $('#slider-thumb').hide();
-
   $('#title-fade').hide();
 }
 
@@ -58,94 +105,30 @@ function enable_buttons() {
   $('#down').prop('disabled', false);
   $('#up').prop('disabled', false);
   $('#shuffle').prop('disabled', false);
-  $('#repeat').prop('disabled', false);  
-
+  $('#repeat').prop('disabled', false);
   $('#title-fade').show();
 }
 
-function reset_titles() {
-  $('#title').attr('title', '');
-  $('#artist').attr('title', '');
-  $('#album').attr('title', ''); 
-}
-
-function update_response(response) {
-  if (chrome.extension.lastError) {
-    chrome.storage.local.set({'id': '-1'});
-    tab_not_found();
-  }
-  else {
-    $('#setting').show();
-    if (response.title == '') {
-      $('#title').html('No song selected');
-      disable_buttons();
-      reset_titles();
-    }
-    else {
-      $('#title').html(response.title);
-      $('#artist').html(response.artist);
-      $('#album').html(response.album);
-
-      $('#title').attr('title', response.title);
-      $('#artist').attr('title', response.artist);
-      $('#album').attr('title', response.album);
-      enable_buttons();
-    }
-
-    if (response.album_art == 'http://undefined') {
-      response.album_art = 'img/default_album.png';
-    }
-    $('#album-art-img').attr('src', response.album_art);
-    $('#current-time').html(response.current_time);
-    $('#total-time').html(response.total_time);
-    toggle_play(response.status);
-    set_slider(response.current_time, response.total_time);
-    toggle_thumb(response.thumb);
-    toggle_repeat(response.repeat);
-    toggle_shuffle(response.shuffle);
-    $('#equalizer').show();
-    $('#lastfm-toggle').show();
-    chrome.storage.sync.get('scrobbling-enabled', function (data) {
-      if (data['scrobbling-enabled']) {
-        $('#lastfm-toggle').removeClass('lastfm-checked');
-        $('#lastfm-toggle').attr('title', 'Scrobbling enabled');
-      }
-      else {
-        $('#lastfm-toggle').addClass('lastfm-checked');
-        $('#lastfm-toggle').attr('title', 'Scrobbling disabled');
-      }
-    });
-  }
-}
-
-function update(data) {
-  if (data['id'] === undefined || data['id'] == '-1') {
-    tab_not_found();
-  }
-  else {
-    chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'}, update_response);
-  }
-}
 function toggle_repeat(status) {
-  if (status == 'single') {
+  if (status == 'SINGLE_REPEAT') {
     $("#repeat").addClass('control-single');
     $("#repeat").removeClass('control-list');
   }
-  else if (status == 'list') {
+  else if (status == 'LIST_REPEAT') {
     $("#repeat").addClass('control-list');
     $("#repeat").removeClass('control-single');
   }
-  else if (status == 'none') {
+  else if (status == 'NO_REPEAT') {
     $("#repeat").removeClass('control-single');
     $("#repeat").removeClass('control-list');
   }
 }
 
 function toggle_shuffle(status) {
-  if (status == 'off') {
+  if (status === 'NO_SHUFFLE') {
     $("#shuffle").removeClass('control-checked');
   }
-  if (status == 'on') {
+  else if (status === 'ALL_SHUFFLE') {
     $("#shuffle").addClass('control-checked');
   }
 }
@@ -221,66 +204,43 @@ function update_act(type) {
 
   if (type == 'repeat') {
     if ($("#repeat").hasClass('control-list')) {
-      toggle_repeat('single');
+      toggle_repeat('SINGLE_REPEAT');
     }
     else if ($("#repeat").hasClass('control-single')) {
-      toggle_repeat('none');
+      toggle_repeat('NO_REPEAT');
     }
     else {
-      toggle_repeat('list');
+      toggle_repeat('LIST_REPEAT');
     }
   }
 
   if (type == 'shuffle') {
     if ($("#shuffle").hasClass('control-checked')) {
-      toggle_shuffle('off');
+      toggle_shuffle('NO_SHUFFLE');
     }
     else {
-      toggle_shuffle('on');
+      toggle_shuffle('ALL_SHUFFLE');
     }
-  }
-}
-
-function act(selector) {
-  if (!$(selector).is(':disabled')) {
-    chrome.storage.local.get('id', function(data) {
-      chrome.tabs.sendMessage(parseInt(data['id']),
-      {
-        'action': 'send_command',
-        'type': selector.substring(1)
-      }, function() { update_act(selector.substring(1)); });
-    });
   }
 }
 
 $(function() {
-  $('#play').on('click', function() {
-    act('#play');
-  });
-  $('#rew').on('click', function() {
-    act('#rew');
-  });
-  $('#ff').on('click', function() {
-    act('#ff');
-  });
-  $('#up').on('click', function() {
-    act('#up');
-  });
-  $('#down').on('click', function() {
-    act('#down');
-  });
-  $('#shuffle').on('click', function() {
-    act('#shuffle');
-  });
-  $('#repeat').on('click', function() {
-    act('#repeat');
+  $('.interface').on('click', function(e) {
+    var name = $(e.currentTarget).attr('id');
+    chrome.storage.local.get('id', function(data) {
+      chrome.tabs.sendMessage(parseInt(data['id']),
+      {
+        'action': 'send_command',
+        'type': name
+      }, function() { update_act(name); });
+    });
   });
   $('#setting').on('click', function() {
     chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
   $('#album-art-img').on('click', function() {
     chrome.storage.local.get('id', function (data) {
-      if (data['id'] && data['id'] != '-1') {
+      if (data['id'] && data['id'] != -1) {
         chrome.tabs.update(parseInt(data['id']), {selected: true});
         chrome.tabs.get(parseInt(data['id']), function (tab) {
           chrome.windows.update(tab.windowId, {focused: true});
@@ -292,14 +252,7 @@ $(function() {
     });
   });
   $('#lastfm-toggle').on('click', function() {
-    if ($('#lastfm-toggle').hasClass('lastfm-checked')) {  //disabled, should enable
-      chrome.storage.sync.set({'scrobbling-enabled': true});
-      update_scrobble(true);
-    }
-    else {
-      chrome.storage.sync.set({'scrobbling-enabled': false});
-      update_scrobble(false);
-    }
+    chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
   });
 });
 

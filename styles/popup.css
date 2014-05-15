@@ -36,8 +36,8 @@ body {
 #card-right {
   position: absolute;
   left: 140px;
-  width: 255px;
-  padding: 10px 15px 15px 15px;
+  width: 268px;
+  padding: 10px 2px 15px 15px;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -52,12 +52,20 @@ body {
 
 #info-fade {
   top: 50px;
-  left: 240px;
+  right: 0px;
   height: 50px;
   width: 30px;
   position: absolute;
   background-image: -webkit-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,1));
   background: linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,1));
+}
+
+#infobar {
+  list-style-type: none;
+  padding: 0;
+  width: 268px;
+  position: fixed;
+  bottom: 42px;
 }
 
 #controls {
@@ -94,10 +102,8 @@ body {
   width: 48px;
   height: 48px;
   opacity: 0.8;
-  display: inline-block;
-  margin-right: -25px;
-  margin-left: -10px;
-  margin-top: 5px;
+  margin: -10 -25 0 -10;
+  float: left;
 }
 
 .equalizer-checked {
@@ -111,7 +117,8 @@ body {
   width: 48px;
   height: 48px;
   opacity: 0.8;
-  display: inline-block;
+  float: left;
+  margin-top: -8px;
 }
 
 .lastfm-checked {
@@ -132,7 +139,7 @@ body {
   margin-top: 3px;
   transition: background-color 0.218s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 742px 53px;
+  background-size: 766px 53px;
 }
 
 .control:hover {
@@ -146,27 +153,13 @@ body {
 }
 
 #setting {
-  background: no-repeat url(../img/sprites.png) -725px -12px;
-  background-size: 742px 53px;
+  background: no-repeat url(../img/sprites.png) -742px 0px;
+  background-size: 766px 53px;
   outline: none;
   border: none;
-  width: 17px;
-  height: 17px;
-  margin-top: 5px;
-  margin-left: 238px;
-  opacity: 0.55;
-  position: absolute;
+  width: 24px;
+  height: 53px;
   transition: background-color 0.218s;
-}
-
-#setting:hover {
-  background-color: transparent !important;
-  opacity: 1;
-}
-
-#setting:active {
-  background-color: transparent !important;
-  opacity: 1;
 }
 
 .control[disabled] {
@@ -231,31 +224,31 @@ body {
 }
 
 #play.control {
-  background-position: -327px 0px; 
+  background-position: -327px 0px;
 }
 
 #play.control-checked {
-  background-position: -389px 0px; 
+  background-position: -389px 0px;
 }
 
 #ff.control {
-  background-position: -451px 0px; 
+  background-position: -451px 0px;
 }
 
 #down.control {
-  background-position: -513px 0px; 
+  background-position: -513px 0px;
 }
 
 #down.control-checked {
-  background-position: -566px 0px; 
+  background-position: -566px 0px;
 }
 
 #up.control {
-  background-position: -619px 0px; 
+  background-position: -619px 0px;
 }
 
 #up.control-checked {
-  background-position: -672px 0px; 
+  background-position: -672px 0px;
 }
 
 #time {
@@ -263,9 +256,6 @@ body {
   line-height: 20px;
   color: #7f7f7f;
   text-align: right;
-  position: absolute;
-  bottom: 35px;
-  right: 0px;
 }
 
 #played-slider {
@@ -277,9 +267,8 @@ body {
 #slider {
   outline: none;
   height: 3px;
-  padding: 5px 0;
   position: absolute;
-  top: -5px;
+  z-index: 1000;
 }
 
 #slider-background {
@@ -295,7 +284,7 @@ body {
   position: relative;
 
   background: no-repeat url(../img/sprites.png) -725px 0;
-  background-size: 742px 53px;
+  background-size: 766px 53px;
 }
 
 #time-and-slider {

@@ -3,7 +3,7 @@
 
   "name": "MiniPlay",
   "description": "Control Google Play Music from anywhere in Chrome",
-  "version": "0.3.6",
+  "version": "0.4.0",
 
   "icons": {
      "16": "img/icon-16.png",
@@ -19,7 +19,7 @@
   },
 
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
-  
+
   "browser_action": {
     "default_icon": {
       "19": "img/icon-19.png",
@@ -48,24 +48,24 @@
   "commands": {
     "play": {
       "suggested_key": {
-        "default": "Ctrl+Shift+P",
-        "windows": "MediaPlayPause"
+        "default": "MediaPlayPause"
       },
-      "description": "Play/Pause"
+      "description": "Play/Pause",
+      "global": true
     },
     "ff": {
       "suggested_key": {
-        "default": "Ctrl+Shift+Right",
-        "windows": "MediaNextTrack"
+        "default": "MediaNextTrack"
       },
-      "description": "Play next song"
+      "description": "Play next song",
+      "global": true
     },
     "rew": {
       "suggested_key": {
-        "default": "Ctrl+Shift+Left",
-        "windows": "MediaPrevTrack"
+        "default": "MediaPrevTrack"
       },
-      "description": "Play previous song"
+      "description": "Play previous song",
+      "global": true
     },
     "up": {
       "description": "Thumbs up"

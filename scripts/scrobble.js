@@ -42,7 +42,7 @@ function get_session_id(cb) {
           chrome.storage.sync.remove('lastfm_sessionID');
           auth();
           cb('');
-        }  
+        }
       });
     }
   });
@@ -72,12 +72,18 @@ function scrobble(details) {
             $.post(api_url + get_query_string(params), params).always(function(data) {
               var status = $(data).find('lfm').attr('status');
               if (status != 'ok') {
-                fail_notification();
+                var code = $(data).find('error').attr('code');
+                if (code == '9' || code == '4') {
+                  fail_auth();
+                }
+                else {
+                  fail_scrobble($(data).find('error').text());
+                }
               }
             });
           }
           else {
-            fail_notification();
+            fail_auth();
           }
         });
       }
@@ -111,12 +117,24 @@ function get_time(time) {
   return (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
 }
 
-function fail_notification() {
+function fail_auth() {
   chrome.notifications.create('lastfm_fail',
   {
     type: 'basic',
     title: "Last.fm authentication failed!",
     message: "Click here to reauthenticate.",
+    iconUrl: "../img/icon-128.png"
+  }, function(id){
+    chrome.storage.local.set({'lastfm_fail_id': id});
+  });
+}
+
+function fail_scrobble(text) {
+  chrome.notifications.create('lastfm_fail_scrobble',
+  {
+    type: 'basic',
+    title: "Scrobbling failed!",
+    message: text,
     iconUrl: "../img/icon-128.png"
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});

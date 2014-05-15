@@ -12,6 +12,9 @@ chrome.extension.onMessage.addListener(function(message, sender, callback) {
   if (message.action == 'send_command') {
     send_command(message.type, callback);
   }
+  if (message.action == 'update_slider') {
+    update_slider(message.position, callback);
+  }
 });
 
 function get_status(callback) {
@@ -22,10 +25,25 @@ function update_status(callback) {
   callback(music_status.update());
 }
 
+function update_slider(position, callback) {  //position is in %
+  var slider = document.getElementById('slider');
+  var newWidth = Math.round((position * slider.offsetWidth) / 100);
+  var rect = slider.getBoundingClientRect();
+
+  slider.dispatchEvent(new MouseEvent('click', {
+    clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
+    clientY: rect.top + slider.clientTop - slider.scrollTop
+  }));
+  callback(music_status.update());
+}
+
 function send_command(type, callback) {
   var $button;
   if (type == 'play') {
     $button = $('button[data-id="play-pause"]');
+    if ($button.attr('disabled')) {
+      $button = $('.description-overlay');
+    }
   }
   else if (type == 'rew') {
     $button = $('button[data-id="rewind"]');
@@ -45,15 +63,6 @@ function send_command(type, callback) {
   else if (type == 'repeat') {
     $button = $('button[data-id="repeat"]');
   }
-  if ($('button[data-id="play-pause"]').attr('disabled')) {
-    $instant_mix = $('li[data-type="rd"]').click();
-    setTimeout(function() {
-      $('div[data-type="im"] .radio-icon').first().click();
-    }, 1000);
-  }
-  else {
-    $button.click();
-  }
-
-  callback();
+  $button.click();
+  callback(music_status.update());
 }

@@ -3,28 +3,29 @@ $(function() {
     chrome.tabs.create({url: "chrome://chrome/extensions"});
   });
 
-  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'],
-    function (data) {
-      if (data['notifications-enabled'] == true) {
-        $('#enable-notifications').prop('checked', true);
-      }
-      if (data['shortcuts-enabled'] == true) {
-        $('#enable-shortcuts').prop('checked', true);
-      }
-      if (data['scrobbling-enabled'] == true) {
-        $('#enable-scrobbling').prop('checked', true);
-        $('#login').show();
-      }
-      else {
-        $('#login').hide();
-      }
-      if (data['lastfm_sessionID'] !== undefined && data['scrobbling-enabled'] == true) {
-        $('#auth').show();
-      }
-      else {
-        $('#auth').hide();
-      }
-    });
+  chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'], function (data) {
+    if (data['notifications-enabled'] == true) {
+      $('#enable-notifications').prop('checked', true);
+    }
+    if (data['shortcuts-enabled'] == true) {
+      $('#enable-shortcuts').prop('checked', true);
+    }
+    if (data['scrobbling-enabled'] == true) {
+      $('#enable-scrobbling').prop('checked', true);
+      $('#login').show();
+    }
+    else {
+      $('#login').hide();
+    }
+    if (data['lastfm_sessionID'] !== undefined && data['scrobbling-enabled'] == true) {
+      $('#auth').show();
+    }
+    else {
+      $('#auth').hide();
+    }
+  });
+
+  $('#version').html("MiniPlay v" + chrome.app.getDetails().version + " by <a href='https://github.com/iambald'>Jeff Chen</a>.");
 
   $('#enable-shortcuts').click(function() {
     chrome.storage.sync.set(

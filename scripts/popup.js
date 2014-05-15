@@ -154,50 +154,47 @@ $(function() {
     }
   }
 
-  $(function() {
-    $('.interface').on('click', function(e) {
-      var name = $(e.currentTarget).attr('id');
-      chrome.storage.local.get('id', function(data) {
-        chrome.tabs.sendMessage(parseInt(data['id']),
-        {
-          'action': 'send_command',
-          'type': name
-        }, update);
-      });
-    });
-    $('#setting').on('click', function() {
-      chrome.tabs.create({url: chrome.extension.getURL('options.html')});
-    });
-    $('#album-art-img').on('click', function() {
-      chrome.storage.local.get('id', function (data) {
-        if (data['id'] && data['id'] != -1) {
-          chrome.tabs.update(parseInt(data['id']), {selected: true});
-          chrome.tabs.get(parseInt(data['id']), function (tab) {
-            chrome.windows.update(tab.windowId, {focused: true});
-          });
-        }
-        else {
-          chrome.tabs.create({url: "https://play.google.com/music"});
-        }
-      });
-    });
-    $('#lastfm-toggle').on('click', function() {
-      chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
-    });
-    $('#slider').on('click', function(e) {
-      chrome.storage.local.get('id', function(data) {
-        chrome.tabs.sendMessage(parseInt(data['id']),
-        {
-          'action': 'update_slider',
-          'position': Math.round(100 * e.offsetX / $('#slider').width())
-        }, update);
-      });
+  $('.interface').on('click', function(e) {
+    var name = $(e.currentTarget).attr('id');
+    chrome.storage.local.get('id', function(data) {
+      chrome.tabs.sendMessage(parseInt(data['id']),
+      {
+        'action': 'send_command',
+        'type': name
+      }, update);
     });
   });
-});
+  $('#setting').on('click', function() {
+    chrome.tabs.create({url: chrome.extension.getURL('options.html')});
+  });
+  $('#album-art-img').on('click', function() {
+    chrome.storage.local.get('id', function (data) {
+      if (data['id'] && data['id'] != -1) {
+        chrome.tabs.update(parseInt(data['id']), {selected: true});
+        chrome.tabs.get(parseInt(data['id']), function (tab) {
+          chrome.windows.update(tab.windowId, {focused: true});
+        });
+      }
+      else {
+        chrome.tabs.create({url: "https://play.google.com/music"});
+      }
+    });
+  });
+  $('#lastfm-toggle').on('click', function() {
+    chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
+  });
 
-(function() {
+  $('#slider').on('click', function (e) {
+    chrome.storage.local.get('id', function(data) {
+      chrome.tabs.sendMessage(parseInt(data['id']),
+      {
+        'action': 'update_slider',
+        'position': Math.round(100 * e.offsetX / $('#slider').width())
+      }, update);
+    });
+  });
+
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
   ga.src = 'https://ssl.google-analytics.com/ga.js';
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
+});

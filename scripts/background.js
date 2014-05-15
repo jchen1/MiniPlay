@@ -5,14 +5,12 @@ chrome.storage.local.set({'last_notification': ''});
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   chrome.storage.local.get('id', function (data) {
-    if (changeInfo.url &&
-        changeInfo.url.search('play.google.com/music') != -1 &&
-        data['id'] === -1) {
+    if (data['id'] === -1 && changeInfo.url &&
+        changeInfo.url.search('play.google.com/music') != -1) {
       chrome.storage.local.set({'id': tabId});
     }
-    else if (changeInfo.url &&
-             changeInfo.url.search('play.google.com/music') === -1 &&
-             data['id'] === tabId) {
+    else if (data['id'] === tabId && changeInfo.url &&
+             changeInfo.url.search('play.google.com/music') === -1) {
       chrome.storage.local.set({'id': -1});
     }
   });

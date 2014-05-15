@@ -87,26 +87,12 @@ function tab_not_found() {
 }
 
 function disable_buttons() {
-  $('#play').prop('disabled', true);
-  $('#rew').prop('disabled', true);
-  $('#ff').prop('disabled', true);
-  $('#down').prop('disabled', true);
-  $('#up').prop('disabled', true);
-  $('#shuffle').prop('disabled', true);
-  $('#repeat').prop('disabled', true);
+  $('.interface').prop('disabled', true);
   $('#slider-thumb').hide();
-  $('#title-fade').hide();
 }
 
 function enable_buttons() {
-  $('#play').prop('disabled', false);
-  $('#rew').prop('disabled', false);
-  $('#ff').prop('disabled', false);
-  $('#down').prop('disabled', false);
-  $('#up').prop('disabled', false);
-  $('#shuffle').prop('disabled', false);
-  $('#repeat').prop('disabled', false);
-  $('#title-fade').show();
+  $('.interface').prop('disabled', false);
 }
 
 function toggle_repeat(status) {
@@ -149,12 +135,12 @@ function toggle_thumb(status) {
 }
 
 function toggle_play(status) {
-  if (status == 'playing') {
+  if (status === 'playing') {
     $('#play').addClass('control-checked');
     $('#play').attr('title', 'Pause');
     $('#equalizer').addClass('equalizer-checked');
   }
-  else if (status == 'paused') {
+  else if (status === 'paused') {
     $('#play').removeClass('control-checked');
     $('#play').attr('title', 'Play');
     $('#equalizer').removeClass('equalizer-checked');
@@ -179,30 +165,31 @@ function set_slider(current, total) {
 }
 
 function update_act(type) {
-  if (type == 'play' && $('#play').attr('title') == 'Play') {
-    toggle_play('playing');
+  if (type === 'play') {
+    if ($('#play').hasClass('control-checked')) {
+      toggle_play('playing');
+    }
+    else {
+      toggle_play('paused');
+    }
   }
-  else if (type == 'play') {
-    toggle_play('paused');
+  if (type === 'up' && $('#up').hasClass('control-checked')) {
+    $('#up').removeClass('control-checked');
   }
-
-  if (type == 'up' && $('#up').hasClass('control-checked')) {
-    $('#up').removeClass('up');
-  }
-  else if (type == 'up') {
+  else if (type === 'up') {
     $('#up').addClass('control-checked');
     $('#down').removeClass("control-checked");
   }
 
-  if (type == 'down' && $('#down').hasClass('control-checked')) {
+  if (type === 'down' && $('#down').hasClass('control-checked')) {
     $('#down').removeClass('control-checked');
   }
-  else if (type == 'down') {
+  else if (type === 'down') {
     $('#down').addClass('control-checked');
     $('#up').removeClass('control-checked');
   }
 
-  if (type == 'repeat') {
+  if (type === 'repeat') {
     if ($("#repeat").hasClass('control-list')) {
       toggle_repeat('SINGLE_REPEAT');
     }
@@ -214,12 +201,12 @@ function update_act(type) {
     }
   }
 
-  if (type == 'shuffle') {
+  if (type === 'shuffle') {
     if ($("#shuffle").hasClass('control-checked')) {
-      toggle_shuffle('NO_SHUFFLE');
+      $('shuffle').removeClass('control-checked');
     }
     else {
-      toggle_shuffle('ALL_SHUFFLE');
+      $('shuffle').addClass('control-checked');
     }
   }
 }

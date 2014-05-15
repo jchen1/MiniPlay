@@ -42,22 +42,20 @@ body {
   overflow: hidden;
 }
 
-#title-fade {
-  left: 210px;
-  height: 20pt;
-  width: 100px;
+.fade {
   position: absolute;
+  width: 30px;
+  right: 0;
   background-image: -webkit-linear-gradient(left,rgba(255,255,255,0) 0%,#fff 30px, #fff 100%);
 }
 
+#title-fade {
+  height: 20pt;
+}
+
 #info-fade {
-  top: 50px;
-  right: 0px;
+  top: 45px;
   height: 50px;
-  width: 30px;
-  position: absolute;
-  background-image: -webkit-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,1));
-  background: linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,1));
 }
 
 #infobar {
@@ -86,15 +84,6 @@ body {
   border-bottom: 1px solid #f1f1f1;
   overflow: hidden;
 }
-
-#iconbar {
-  float: left;
-  display: inline-block;
-  margin-left: 145px;
-  position: absolute;
-  bottom: 23px;
-}
-
 
 #equalizer {
   background: no-repeat url(../img/eq-paused.png);
@@ -200,19 +189,19 @@ body {
 }
 
 #repeat.control {
-  background-position: 0px 0px;
+  background-position: 0 0;
 }
 
 #repeat.control-list {
-  background-position: -53px 0px;
+  background-position: -53px 0;
 }
 
 #repeat.control-single {
-  background-position: -106px 0px;
+  background-position: -106px 0;
 }
 
 #shuffle.control {
-  background-position: -159px 0px;
+  background-position: -159px 0;
 }
 
 #shuffle.control-checked {
@@ -220,35 +209,35 @@ body {
 }
 
 #rew.control {
-  background-position: -265px 0px;
+  background-position: -265px 0;
 }
 
 #play.control {
-  background-position: -327px 0px;
+  background-position: -327px 0;
 }
 
 #play.control-checked {
-  background-position: -389px 0px;
+  background-position: -389px 0;
 }
 
 #ff.control {
-  background-position: -451px 0px;
+  background-position: -451px 0;
 }
 
 #down.control {
-  background-position: -513px 0px;
+  background-position: -513px 0;
 }
 
 #down.control-checked {
-  background-position: -566px 0px;
+  background-position: -566px 0;
 }
 
 #up.control {
-  background-position: -619px 0px;
+  background-position: -619px 0;
 }
 
 #up.control-checked {
-  background-position: -672px 0px;
+  background-position: -672px 0;
 }
 
 #time {

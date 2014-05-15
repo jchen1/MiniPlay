@@ -22,7 +22,6 @@ var music_status = {
     this.repeat = $('button[data-id="repeat"]').attr("value");  //NO_REPEAT, SINGLE_REPEAT, LIST_REPEAT
     this.status = 'paused';
     this.thumb = 'None';
-    this.repeat = 'none';
     if ($('button[data-id="play-pause"]').hasClass('playing')) {
       this.status = 'playing';
     }
@@ -31,12 +30,6 @@ var music_status = {
     }
     if ($('li[title="Thumbs down"]').hasClass('selected')) {
       this.thumb = 'Down';
-    }
-    if ($('button[data-id="repeat"]').attr("value") == "LIST_REPEAT") {
-      this.repeat = 'list';
-    }
-    if ($('button[data-id="repeat"]').attr("value") == "SINGLE_REPEAT") {
-      this.repeat = 'single';
     }
 
     return this;

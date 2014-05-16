@@ -27,7 +27,7 @@ function update_status(callback) {
 
 function update_slider(position, callback) {  //position is in %
   var slider = document.getElementById('slider');
-  var newWidth = Math.round((position * slider.offsetWidth) / 100);
+  var newWidth = Math.round(position * slider.offsetWidth);
   var rect = slider.getBoundingClientRect();
 
   slider.dispatchEvent(new MouseEvent('click', {

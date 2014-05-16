@@ -13,20 +13,17 @@ $(function() {
     });
   }
 
-  $('#slider').on('click', function (e) {
-    $('#played-slider').attr('style', 'width:' + (e.offsetX - 6) + 'px;');
-    slider.setValue((e.offsetX-6) / $('#slider').width(), 0, true);
-  });
-
   var slider = new Dragdealer('slider', {
     callback: function(x, y) {
-      sendSliderPct(100 * x);
+      sendSliderPct(x);
     },
     animationCallback: function(x, y) {
-      var width = Math.round(x * $('#popup').width());
+      var width = Math.round(x * ($('#slider').width() - ($('#slider-thumb').width())));
       $('#played-slider').attr('style', 'width:' + width + 'px;');
     },
-    x: $('#played-slider').width() / $('#popup').width()
+    x: $('#played-slider').width() / ($('#slider').width() - ($('#slider-thumb').width())),
+    speed: 1,
+    slide: false
   });
 
   chrome.storage.local.get('id', function(data) {
@@ -174,7 +171,7 @@ $(function() {
   }
 
   function set_slider(current, total) {
-    var width = Math.round((current / total) * $('#popup').width());
+    var width = Math.round((current / total) * ($('#slider').width() - ($('#slider-thumb').width())));
     $('#played-slider').attr('style', 'width:' + width + 'px;');
     $('#slider-thumb').attr('style', 'left:' + width + 'px;');
   }

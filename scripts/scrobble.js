@@ -77,7 +77,7 @@ function scrobble(details) {
                   fail_auth();
                 }
                 else {
-                  fail_scrobble($(data).find('error').text());
+                  fail_scrobble(code);
                 }
               }
             });
@@ -134,7 +134,7 @@ function fail_scrobble(text) {
   {
     type: 'basic',
     title: "Scrobbling failed!",
-    message: text,
+    message: "Error " + text,
     iconUrl: "../img/icon-128.png"
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});

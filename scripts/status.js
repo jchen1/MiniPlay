@@ -25,8 +25,8 @@ var music_status = {
     this.album_art = 'http://' + $('#playingAlbumArt').attr('src');
     this.current_time = $('#time_container_current').text();
     this.total_time = $('#time_container_duration').text();
-    this.current_time_s = get_time(this.current_time);
-    this.total_time_s = get_time(this.total_time);
+    this.current_time_s = this.get_time(this.current_time);
+    this.total_time_s = this.get_time(this.total_time);
     this.shuffle = $('button[data-id="shuffle"]').attr('value');
     this.repeat = $('button[data-id="repeat"]').attr('value');
     this.thumb = $('.thumbs > .selected').attr('data-rating');

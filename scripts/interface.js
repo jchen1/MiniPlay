@@ -7,7 +7,7 @@ chrome.extension.onMessage.addListener(function(message, sender, callback) {
     callback(music_status.update());
   }
   if (message.action === 'send_command') {
-    send_command(message.type, callback);
+    send_command(message, callback);
   }
 });
 
@@ -44,7 +44,7 @@ function send_command(message, callback) {
     case 'repeat':
       $button = $('button[data-id="repeat"]'); break;
     case 'slider':
-      update_slider(message.position);
+      update_slider(message.position); break;
   }
   if ($button !== null) {
     $button.click();

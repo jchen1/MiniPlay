@@ -7,7 +7,8 @@ $(function() {
     chrome.storage.local.get('id', function(data) {
       chrome.tabs.sendMessage(parseInt(data['id']),
       {
-        'action': 'update_slider',
+        'action': 'send_command',
+        'type': 'slider'
         'position': pct
       }, update);
     });
@@ -28,7 +29,7 @@ $(function() {
 
   chrome.storage.local.get('id', function(data) {
     if (data['id'] && data['id'] !== -1) {
-      chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'}, update);
+      chrome.tabs.sendMessage(parseInt(data['id']), {action: 'update_status'}, update);
     }
     else {
       tab_not_found();

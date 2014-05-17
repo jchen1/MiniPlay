@@ -3,6 +3,29 @@ $(function() {
   _gaq.push(['_setAccount', 'UA-48472705-1']);
   _gaq.push(['_trackPageview']);
 
+  function sendSliderPct(pct) {
+    chrome.storage.local.get('id', function(data) {
+      chrome.tabs.sendMessage(parseInt(data['id']),
+      {
+        'action': 'update_slider',
+        'position': pct
+      }, update);
+    });
+  }
+
+  var slider = new Dragdealer('slider', {
+    callback: function(x, y) {
+      sendSliderPct(x);
+    },
+    animationCallback: function(x, y) {
+      var width = Math.round(x * ($('#slider').width() - ($('#slider-thumb').width())));
+      $('#played-slider').attr('style', 'width:' + width + 'px;');
+    },
+    x: $('#played-slider').width() / ($('#slider').width() - ($('#slider-thumb').width())),
+    speed: 1,
+    slide: false
+  });
+
   chrome.storage.local.get('id', function(data) {
     if (data['id'] && data['id'] !== -1) {
       chrome.tabs.sendMessage(parseInt(data['id']), {action: 'get_status'}, update);
@@ -35,6 +58,7 @@ $(function() {
         $('.interface').prop('disabled', true);
         $('#slider-thumb').hide();
         $('#title').html('No song selected');
+        $('#slider').attr('style', '');
       }
       else {
         $('.interface').prop('disabled', false);
@@ -49,7 +73,10 @@ $(function() {
         $('#current-time').html(response.current_time);
         $('#total-time').html(response.total_time);
         toggle_play(response.status);
-        set_slider(get_time(response.current_time), get_time(response.total_time));
+        if (!slider.dragging) {
+          set_slider(get_time(response.current_time), get_time(response.total_time));
+        }
+        $('#slider').attr('style', 'cursor: pointer;');
       }
 
       toggle_thumb(response.thumb);
@@ -83,6 +110,7 @@ $(function() {
     $('#equalizer').hide();
     $('#lastfm-toggle').hide();
     $('#time').hide();
+    $('#slider').attr('style', '');
   }
 
   function toggle_repeat(status) {
@@ -143,15 +171,9 @@ $(function() {
   }
 
   function set_slider(current, total) {
-    var width = Math.round((current / total) * $('#popup').width());
+    var width = Math.round((current / total) * ($('#slider').width() - ($('#slider-thumb').width())));
     $('#played-slider').attr('style', 'width:' + width + 'px;');
     $('#slider-thumb').attr('style', 'left:' + width + 'px;');
-    if ($('#play').hasClass('control-checked') || width != 0) {
-      $('#slider-thumb').show();
-    }
-    else {
-      $('#slider-thumb').hide();
-    }
   }
 
   $('.interface').on('click', function(e) {
@@ -182,16 +204,6 @@ $(function() {
   });
   $('#lastfm-toggle').on('click', function() {
     chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
-  });
-
-  $('#slider').on('click', function (e) {
-    chrome.storage.local.get('id', function(data) {
-      chrome.tabs.sendMessage(parseInt(data['id']),
-      {
-        'action': 'update_slider',
-        'position': Math.round(100 * e.offsetX / $('#slider').width())
-      }, update);
-    });
   });
 
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

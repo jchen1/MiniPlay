@@ -28,7 +28,7 @@ function send_command(message, callback) {
     case 'play':
       $button = $('button[data-id="play-pause"]');
       if ($button.attr('disabled')) {
-        $button = $('.description-overlay');  // I'm feeling lucky radio
+        $button = $('[data-type="imfl"]');  // I'm feeling lucky radio
       }
       break;
     case 'rew':

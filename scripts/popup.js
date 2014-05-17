@@ -61,7 +61,7 @@ $(function() {
         break;
       case 'no_song':
         $('.interface').attr('disabled', true);
-        $('#infobar').show();
+        $('#infobar').hide();
         $('#album-art-img').attr('src', 'img/default_album.png');
         $('#title').html('No song selected');
         $('#artist').html('');
@@ -88,7 +88,6 @@ $(function() {
         $('#title').html(response.title);
         $('#artist').html(response.artist);
         $('#album').html(response.album);
-
         if (response.album_art == 'http://undefined') {
           response.album_art = 'img/default_album.png';
         }
@@ -97,7 +96,9 @@ $(function() {
         if (!slider.dragging) {
           $('#current-time').html(response.current_time);
           $('#total-time').html(response.total_time);
-          set_slider(response.current_time_s, response.total_time_s);
+          var width = Math.round((response.current_time / response.total_time) * ($('#slider').width() - ($('#slider-thumb').width())));
+          $('#played-slider').attr('style', 'width:' + width + 'px;');
+          $('#slider-thumb').attr('style', 'left:' + width + 'px;');
         }
         set_thumb(response.thumb);
         set_repeat(response.repeat);
@@ -165,12 +166,6 @@ $(function() {
       $('#play').attr('title', 'Play');
       $('#equalizer').removeClass('equalizer-checked');
     }
-  }
-
-  function set_slider(current, total) {
-    var width = Math.round((current / total) * ($('#slider').width() - ($('#slider-thumb').width())));
-    $('#played-slider').attr('style', 'width:' + width + 'px;');
-    $('#slider-thumb').attr('style', 'left:' + width + 'px;');
   }
 
   $('.control').on('click', function(e) {

@@ -41,8 +41,8 @@ function create_notification(details) {
   chrome.storage.sync.get('notifications-enabled', function (ans) {
     if (ans['notifications-enabled'] === true) {
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", details.album_art);
-      xhr.responseType = "blob";
+      xhr.open('GET', details.album_art);
+      xhr.responseType = 'blob';
       xhr.onload = function(){
         var blob = this.response;
         chrome.notifications.create('',

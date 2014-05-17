@@ -122,24 +122,24 @@ $(function() {
 
   function set_repeat(status) {
     if (status === 'SINGLE_REPEAT') {
-      $("#repeat").addClass('control-single');
-      $("#repeat").removeClass('control-list');
+      $('#repeat').addClass('control-single');
+      $('#repeat').removeClass('control-list');
     }
     else if (status === 'LIST_REPEAT') {
-      $("#repeat").addClass('control-list');
-      $("#repeat").removeClass('control-single');
+      $('#repeat').addClass('control-list');
+      $('#repeat').removeClass('control-single');
     }
     else if (status === 'NO_REPEAT') {
-      $("#repeat").removeClass('control-single control-list');
+      $('#repeat').removeClass('control-single control-list');
     }
   }
 
   function set_shuffle(status) {
     if (status === 'NO_SHUFFLE') {
-      $("#shuffle").removeClass('control-checked');
+      $('#shuffle').removeClass('control-checked');
     }
     else if (status === 'ALL_SHUFFLE') {
-      $("#shuffle").addClass('control-checked');
+      $('#shuffle').addClass('control-checked');
     }
   }
 
@@ -198,7 +198,7 @@ $(function() {
         });
       }
       else {
-        chrome.tabs.create({url: "https://play.google.com/music"});
+        chrome.tabs.create({url: 'https://play.google.com/music'});
       }
     });
   });
@@ -206,7 +206,7 @@ $(function() {
     chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
   });
   $('#artist a').on('click', function() {
-    chrome.tabs.create({url: "https://play.google.com/music"});
+    chrome.tabs.create({url: 'https://play.google.com/music'});
   });
 
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

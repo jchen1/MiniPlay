@@ -1,5 +1,5 @@
 var api_key = '8acdad46ec761ef21ba93ce72a888f1b';
-var api_url = "https://ws.audioscrobbler.com/2.0/?";
+var api_url = 'https://ws.audioscrobbler.com/2.0/?';
 
 function auth() {
   $.get(api_url + 'method=auth.gettoken&api_key=' + api_key, function (data) {
@@ -51,7 +51,7 @@ function get_session_id(cb) {
 function scrobble(details) {
   chrome.storage.sync.get('scrobbling-enabled', function(response) {
     if (response['scrobbling-enabled'] == true) {
-      if (details === undefined || details.title == '') {
+      if (details === undefined || details.title === '') {
         return;
       }
 
@@ -116,9 +116,9 @@ function fail_auth() {
   chrome.notifications.create('lastfm_fail',
   {
     type: 'basic',
-    title: "Last.fm authentication failed!",
-    message: "Click here to reauthenticate.",
-    iconUrl: "../img/icon-128.png"
+    title: 'Last.fm authentication failed!',
+    message: 'Click here to reauthenticate.',
+    iconUrl: '../img/icon-128.png'
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});
   });
@@ -128,9 +128,9 @@ function fail_scrobble(code) {
   chrome.notifications.create('lastfm_fail_scrobble',
   {
     type: 'basic',
-    title: "Scrobbling failed!",
-    message: "Error " + code,
-    iconUrl: "../img/icon-128.png"
+    title: 'Scrobbling failed!',
+    message: 'Error ' + code,
+    iconUrl: '../img/icon-128.png'
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});
   });

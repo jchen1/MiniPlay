@@ -162,12 +162,12 @@ body {
 }
 
 #up.control[disabled] {
-  opacity: 0 !important;
+  display: none;
   background-color: transparent !important;
 }
 
 #down.control[disabled] {
-  opacity: 0 !important;
+  display: none;
   background-color: transparent !important;
 }
 
@@ -270,6 +270,11 @@ body {
   z-index: 1000;
   padding: 7px 0 7px 0;
   margin-top: -7px;
+  cursor: pointer;
+}
+
+#slider[disabled] {
+  cursor: default;
 }
 
 #slider-background {
@@ -286,6 +291,10 @@ body {
 
   background: no-repeat url(../img/sprites.png) -725px 0;
   background-size: 766px 53px;
+}
+
+#slider-thumb[disabled] {
+  display: none;
 }
 
 #time-and-slider {

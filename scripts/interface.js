@@ -3,17 +3,13 @@
 chrome.runtime.sendMessage({type: 'session'}, function (response) {});
 
 chrome.extension.onMessage.addListener(function(message, sender, callback) {
-  if (message.action == 'update_status') {
-    update_status(callback);
+  if (message.action === 'update_status') {
+    callback(music_status.update());
   }
-  if (message.action == 'send_command') {
+  if (message.action === 'send_command') {
     send_command(message.type, callback);
   }
 });
-
-function update_status(callback) {
-  callback(music_status.update());
-}
 
 function update_slider(position) {  //position is in %
   var slider = document.getElementById('slider');

@@ -54,17 +54,16 @@ function scrobble(details) {
       if (details === undefined || details.title == '') {
         return;
       }
-      var current_time = get_time(details.current_time);
-      var total_time = get_time(details.total_time);
 
-      if (total_time > 30 && (current_time >= 240 || 2*current_time >= total_time)) {
+      if (details.total_time_s > 30 && (details.current_time_s >= 240
+          || 2*details.current_time_s >= details.total_time_s)) {
         get_session_id(function (session_id) {
           if (session_id != '') {
             var params = {
               method: 'track.scrobble',
               'artist[0]': details.artist,
               'track[0]': details.title,
-              'timestamp[0]': Math.round((new Date().getTime() / 1000) - total_time),
+              'timestamp[0]': Math.round((new Date().getTime() / 1000) - details.total_time_s),
               'album[0]': details.album,
               sk: session_id,
               api_key: api_key
@@ -113,10 +112,6 @@ function get_query_string(params) {
          MD5(o + 'de379e5188615868380b23f62068f1e6');
 }
 
-function get_time(time) {
-  return (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
-}
-
 function fail_auth() {
   chrome.notifications.create('lastfm_fail',
   {
@@ -129,12 +124,12 @@ function fail_auth() {
   });
 }
 
-function fail_scrobble(text) {
+function fail_scrobble(code) {
   chrome.notifications.create('lastfm_fail_scrobble',
   {
     type: 'basic',
     title: "Scrobbling failed!",
-    message: "Error " + text,
+    message: "Error " + code,
     iconUrl: "../img/icon-128.png"
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});

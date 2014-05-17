@@ -130,8 +130,7 @@ $(function() {
       $("#repeat").removeClass('control-single');
     }
     else if (status === 'NO_REPEAT') {
-      $("#repeat").removeClass('control-single');
-      $("#repeat").removeClass('control-list');
+      $("#repeat").removeClass('control-single control-list');
     }
   }
 
@@ -146,8 +145,7 @@ $(function() {
 
   function set_thumb(status) {
     if (status === 'None') {
-      $('#down').removeClass('control-checked');
-      $('#up').removeClass('control-checked');
+      $('.thumb').removeClass('control-checked');
     }
     else if (status === 'Up') {
       $('#down').removeClass('control-checked');

@@ -144,26 +144,26 @@ $(function() {
   }
 
   function set_thumb(status) {
-    if (status === 'None') {
+    if (status === '0') {
       $('.thumb').removeClass('control-checked');
     }
-    else if (status === 'Up') {
+    else if (status === '5') {
       $('#down').removeClass('control-checked');
       $('#up').addClass('control-checked');
     }
-    else if (status === 'Down') {
+    else if (status === '1') {
       $('#down').addClass('control-checked');
       $('#up').removeClass('control-checked');
     }
   }
 
   function toggle_play(status) {
-    if (status === 'playing') {
+    if (status === 'Pause') {
       $('#play').addClass('control-checked');
       $('#play').attr('title', 'Pause');
       $('#equalizer').addClass('equalizer-checked');
     }
-    else if (status === 'paused') {
+    else if (status === 'Play') {
       $('#play').removeClass('control-checked');
       $('#play').attr('title', 'Play');
       $('#equalizer').removeClass('equalizer-checked');

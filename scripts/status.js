@@ -29,18 +29,8 @@ var music_status = {
     this.total_time_s = get_time(this.total_time);
     this.shuffle = $('button[data-id="shuffle"]').attr("value");
     this.repeat = $('button[data-id="repeat"]').attr("value");
-    this.status = 'paused';
-    this.thumb = 'None';
-    // TODO: this.thumb = $('.rating-container').children.hasClass('selected').attr('data-rating') or something like that
-    if ($('button[data-id="play-pause"]').hasClass('playing')) {
-      this.status = 'playing';
-    }
-    if ($('li[title="Thumbs up"]').hasClass('selected')) {
-      this.thumb = 'Up';
-    }
-    if ($('li[title="Thumbs down"]').hasClass('selected')) {
-      this.thumb = 'Down';
-    }
+    this.thumb = $('.thumbs > .selected').attr('data-rating');
+    this.status = $('button[data-id="play-pause"]').attr('title');
 
     return this;
   }

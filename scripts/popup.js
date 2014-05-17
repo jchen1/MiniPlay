@@ -28,10 +28,7 @@ $(function() {
         var width = Math.round(x * ($('#slider').width() - ($('#slider-thumb').width())));
         $('#played-slider').attr('style', 'width:' + width + 'px;');
         var current_time_s = Math.round(x * data['music_status'].total_time_s);
-        var current_time = Math.floor(current_time_s / 60) + ':' + (current_time_s % 60);
-        if ((current_time_s % 60) < 10) {
-          current_time += '0';
-        }
+        var current_time = Math.floor(current_time_s / 60) + ':' + (((current_time_s % 60) < 10) ? '0' : '') + (current_time_s % 60);
         $('#current-time').html(current_time);
       });
     },

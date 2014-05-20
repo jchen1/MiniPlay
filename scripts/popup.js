@@ -58,6 +58,9 @@ $(function() {
         $('#album-art-img').attr('src', 'img/default_album.png');
         $('#title').html('No Google Music tab found');
         $('#artist').html('<a href="#">Click to open a new tab</a>');
+        $('#artist a').on('click', function() {
+          chrome.tabs.create({url: 'https://play.google.com/music'});
+        });
         break;
       case 'no_song':
         $('.interface').attr('disabled', true);
@@ -196,9 +199,6 @@ $(function() {
   });
   $('#lastfm-toggle').on('click', function() {
     chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
-  });
-  $('#artist a').on('click', function() {
-    chrome.tabs.create({url: 'https://play.google.com/music'});
   });
 
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

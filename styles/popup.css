@@ -18,6 +18,7 @@ body {
   margin: 0;
   min-width: 450px;
   min-height: 210px;
+  overflow: hidden;
 }
 
 #card {
@@ -66,9 +67,6 @@ body {
 #infobar {
   list-style-type: none;
   padding: 0;
-  width: 268px;
-  position: fixed;
-  bottom: 42px;
 }
 
 #controls {

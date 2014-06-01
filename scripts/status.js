@@ -6,16 +6,17 @@ var music_status = {
   title : '',
   current_time : '',
   total_time : '',
-  current_time_s : '',
-  total_time_s: '',
+  current_time_s : 0,
+  total_time_s: 0,
   thumb : '',
   repeat : '',
   shuffle : '',
   status : '',
 
   get_time : function (time) {
-    var time = (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]);
-    return (isNaN(time) ? 0 : time);
+    return time.split(':').map(function(num, index, arr) {
+      return parseInt(num, 10) * Math.pow(60, arr.length - index - 1);
+    }).reduce(function(a, b) { return a + b; });
   },
 
   update : function() {

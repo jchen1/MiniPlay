@@ -3,6 +3,14 @@ $(function() {
   _gaq.push(['_setAccount', 'UA-48472705-1']);
   _gaq.push(['_trackPageview']);
 
+  function secondsToHms(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
+    return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
+  }
+
   chrome.storage.local.get('id', function(data) {
     if (data['id'] && data['id'] !== -1) {
       chrome.tabs.sendMessage(data['id'], {action: 'update_status'}, update);
@@ -28,8 +36,7 @@ $(function() {
         var width = Math.round(x * ($('#slider').width() - ($('#slider-thumb').width())));
         $('#played-slider').attr('style', 'width:' + width + 'px;');
         var current_time_s = Math.round(x * data['music_status'].total_time_s);
-        var current_time = Math.floor(current_time_s / 60) + ':' + (((current_time_s % 60) < 10) ? '0' : '') + (current_time_s % 60);
-        $('#current-time').html(current_time);
+        $('#current-time').html(secondsToHms(current_time_s));
       });
     },
     x: $('#played-slider').width() / ($('#slider').width() - ($('#slider-thumb').width())),

@@ -9,6 +9,9 @@ chrome.extension.onMessage.addListener(function(message, sender, callback) {
   if (message.action === 'send_command') {
     send_command(message, callback);
   }
+  if (message.action === 'get_email') {
+    return $('a[href="/music/listen?u=0&authuser=0"] > div:contains("(default)") > div:contains("(default)")').text().split(' ')[0];
+  }
 });
 
 function update_slider(position) {  //position is in %

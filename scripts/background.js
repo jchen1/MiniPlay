@@ -71,12 +71,15 @@ chrome.storage.onChanged.addListener(function (changes, area) {
     var oldValue = changes['music_status'].oldValue
     var newValue = changes['music_status'].newValue;
 
-    if ((oldValue === undefined ||
+    if (oldValue === undefined ||
         oldValue.title != newValue.title ||
         oldValue.artist != newValue.artist ||
-        oldValue.album_art != newValue.album_art) && newValue.title != '') {
-      create_notification(newValue);
+        oldValue.album_art != newValue.album_art) {
       scrobble(oldValue);
+      if (newValue.title != '') {
+        create_notification(newValue);
+        now_playing(newValue);
+      }
     }
   }
 });

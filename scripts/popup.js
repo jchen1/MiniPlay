@@ -106,9 +106,9 @@ $(function() {
         if (!slider.dragging) {
           $('#current-time').html(response.current_time);
           $('#total-time').html(response.total_time);
-          var width = Math.round((response.current_time_s / response.total_time_s) * ($('#slider').width() - ($('#slider-thumb').width())));
-          $('#played-slider').attr('style', 'width:' + width + 'px;');
-          $('#slider-thumb').attr('style', 'left:' + width + 'px;');
+          var offset = Math.round((response.current_time_s / response.total_time_s) * ($('#slider').width() - ($('#slider-thumb').width())));
+          $('#played-slider').attr('style', 'width:' + offset + 'px;');
+          $('#slider-thumb').attr('style', 'left:' + offset + 'px;');
         }
         set_thumb(response.thumb);
         set_repeat(response.repeat);

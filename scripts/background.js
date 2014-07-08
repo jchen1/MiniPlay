@@ -8,8 +8,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     if (data['id'] === -1 && changeInfo.url &&
         changeInfo.url.search('play.google.com/music') !== -1) {
       chrome.storage.local.set({'id': tabId});
-      // TODO: test page load time, set timeout accordingly
-      window.setTimeout(background_update, 5000);
     }
     else if (data['id'] === tabId && changeInfo.url &&
              changeInfo.url.search('play.google.com/music') === -1) {
@@ -25,17 +23,6 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     }
   });
 });
-
-function background_update() {
-  chrome.storage.local.get('id', function(data) {
-    if (data['id'] && data['id'] !== -1) {
-      chrome.tabs.sendMessage(data['id'], {action: 'update_status'}, function (response) {
-        chrome.storage.local.set({'music_status': response});
-      });
-      window.setTimeout(background_update, 1000);
-    }
-  })
-}
 
 function create_notification(details) {
   chrome.storage.sync.get('notifications-enabled', function (ans) {

@@ -33,10 +33,8 @@ $(function() {
     },
     animationCallback: function(x, y) {
       chrome.storage.local.get('music_status', function(data) {
-        var width = Math.round(x * ($('#slider').width() - ($('#slider-thumb').width())));
-        $('#played-slider').attr('style', 'width:' + width + 'px;');
-        var current_time_s = Math.round(x * data['music_status'].total_time_s);
-        $('#current-time').html(secondsToHms(current_time_s));
+        $('#played-slider').css('width', $('#slider-thumb').css('left'));
+        $('#current-time').html(secondsToHms(Math.round(x * data['music_status'].total_time_s)));
       });
     },
     x: $('#played-slider').width() / ($('#slider').width() - ($('#slider-thumb').width())),

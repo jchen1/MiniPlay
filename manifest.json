@@ -3,7 +3,7 @@
 
   "name": "MiniPlay",
   "description": "Control Google Play Music from anywhere in Chrome",
-  "version": "0.4.2",
+  "version": "0.5.0",
 
   "icons": {
      "16": "img/icon-16.png",
@@ -39,7 +39,7 @@
   "content_scripts": [
     {
       "matches": ["*://play.google.com/music*"],
-      "js": ["scripts/jquery.js", "scripts/status.js", "scripts/interface.js"]
+      "js": ["scripts/jquery.js", "scripts/status.js", "scripts/interface.js", "scripts/socket.io.js"]
     }
   ],
 

@@ -11,8 +11,8 @@ chrome.extension.onMessage.addListener(function(message, sender, callback) {
   }
 });
 
-function update_slider(position) {  //position is in %
-  var slider = document.getElementById('slider');
+function update_slider(position, slidername) {  //position is in %
+  var slider = document.getElementById(slidername);
   var newWidth = Math.round(position * slider.offsetWidth);
   var rect = slider.getBoundingClientRect();
 
@@ -44,7 +44,9 @@ function send_command(message, callback) {
     case 'repeat':
       $button = $('button[data-id="repeat"]'); break;
     case 'slider':
-      update_slider(message.position); break;
+      update_slider(message.position, 'slider'); break;
+    case 'vslider':
+      update_slider(message.position, 'vslider'); break;
   }
   if ($button !== null) {
     $button.click();

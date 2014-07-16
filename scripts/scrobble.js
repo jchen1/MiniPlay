@@ -48,6 +48,40 @@ function get_session_id(cb) {
   });
 }
 
+function now_playing(details) {
+  chrome.storage.sync.get('scrobbling-enabled', function(response) {
+    if (response['scrobbling-enabled'] == true && !(details === undefined || details.title === '')) {
+      get_session_id(function(session_id) {
+        if (session_id !== '') {
+          var params = {
+            method: 'track.updateNowPlaying',
+            'artist': details.artist,
+            'track': details.title,
+            'album': details.album,
+            sk: session_id,
+            api_key: api_key
+          };
+          $.post(api_url + get_query_string(params), params).always(function(data) {
+            var status = $(data).find('lfm').attr('status');
+            if (status != 'ok') {
+              var code = $(data).find('error').attr('code');
+              if (code == '9' || code == '4') {
+                fail_auth();
+              }
+              else {
+                fail_scrobble(code);
+              }
+            }
+          });
+        }
+        else {
+          fail_auth();
+        }
+      });
+    }
+  });
+}
+
 function scrobble(details) {
   chrome.storage.sync.get('scrobbling-enabled', function(response) {
     if (response['scrobbling-enabled'] == true) {

@@ -3,11 +3,11 @@
 
 Note: You need to have a Google Play Music account to use this extension. After installing the extension, you will have to refresh your Google Play Music tab due to a Chrome extension limitation.
 
-### Features 
+### Features
 
 - Control playback from a popup
 - Global (Chrome-wide) shortcuts
 - Rich notifications
-- More, including Last.fm scrobbling and lyrics, coming soon!
+- Last.fm scrobbling
 
-The extension does not collect any information, but requires access to your other tabs for functionality. 
+The extension does not collect any information, but requires access to your other tabs for functionality.

@@ -12,6 +12,7 @@ var music_status = {
   repeat : '',
   shuffle : '',
   status : '',
+  volume : '',
 
   get_time : function (time) {
     return time.split(':').map(function(num, index, arr) {
@@ -32,6 +33,7 @@ var music_status = {
     this.repeat = $('button[data-id="repeat"]').attr('value');
     this.thumb = $('.thumbs > .selected').attr('data-rating');
     this.status = $('button[data-id="play-pause"]').attr('title');
+    this.volume = parseInt($('.goog-slider-thumb').css('left'), 10) / (parseInt($('.volume-slider-background').css('width'), 10) - parseInt($('.goog-slider-thumb').css('width'), 10));
 
     return this;
   }

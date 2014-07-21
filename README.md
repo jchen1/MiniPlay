@@ -10,4 +10,4 @@ Note: You need to have a Google Play Music account to use this extension. After 
 - Rich notifications
 - Last.fm scrobbling
 
-The extension does not collect any information, but requires access to your other tabs for functionality.
+The extension does not collect any information.

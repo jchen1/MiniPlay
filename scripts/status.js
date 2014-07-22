@@ -13,6 +13,8 @@ var music_status = {
   shuffle : '',
   status : '',
   volume : '',
+  slider_updated : false,
+  vslider_updated : false,
 
   get_time : function (time) {
     return time.split(':').map(function(num, index, arr) {
@@ -34,6 +36,8 @@ var music_status = {
     this.thumb = $('.thumbs > .selected').attr('data-rating');
     this.status = $('button[data-id="play-pause"]').attr('title');
     this.volume = parseInt($('#vslider > .goog-slider-thumb').css('left'), 10) / (parseInt($('.volume-slider-background').css('width'), 10) - parseInt($('.goog-slider-thumb').css('width'), 10));
+    this.slider_updated = false;
+    this.vslider_updated = false;
     return this;
   }
 };

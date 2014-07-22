@@ -20,6 +20,8 @@ function update_slider(position, slidername) {  //position is in %
     clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
     clientY: rect.top + slider.clientTop - slider.scrollTop
   }));
+
+  console.log('sliderclick');
 }
 
 function send_command(message, callback) {
@@ -51,7 +53,16 @@ function send_command(message, callback) {
   if ($button !== null) {
     $button.click();
   }
-  callback(music_status.update());
+  window.setTimeout( function() {
+    var status = music_status.update();
+    if (message.type == 'slider') {
+      status.slider_updated = true;
+    }
+    if (message.type == 'vslider') {
+      status.vslider_updated = true;
+    }
+    callback(status);
+  }, 1);
 }
 
 $(function() {

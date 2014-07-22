@@ -55,7 +55,7 @@ function send_command(message, callback) {
 }
 
 $(function() {
-  var socket = io('http://miniplay.herokuapp.com');
+  var socket = io('https://miniplay.herokuapp.com');
   // var socket = io('http://10.0.0.5:5000');
 
   socket.on('connect', function() {

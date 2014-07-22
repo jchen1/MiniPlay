@@ -33,8 +33,7 @@ var music_status = {
     this.repeat = $('button[data-id="repeat"]').attr('value');
     this.thumb = $('.thumbs > .selected').attr('data-rating');
     this.status = $('button[data-id="play-pause"]').attr('title');
-    this.volume = parseInt($('.goog-slider-thumb').css('left'), 10) / (parseInt($('.volume-slider-background').css('width'), 10) - parseInt($('.goog-slider-thumb').css('width'), 10));
-
+    this.volume = parseInt($('#vslider > .goog-slider-thumb').css('left'), 10) / (parseInt($('.volume-slider-background').css('width'), 10) - parseInt($('.goog-slider-thumb').css('width'), 10));
     return this;
   }
 };

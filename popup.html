@@ -4,7 +4,19 @@
   <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
 </head>
 <body>
+
   <div id='popup'>
+    <menu id='menu' role='menu'>
+      <div id='vslider' role='slider' class='dragdealer'>
+        <div id='vslider-thumb' class='handle'></div>
+        <div id='vslider-background'>
+          <div id='played-vslider'></div>
+        </div>
+      </div>
+      <!-- <button id='lastfm-toggle' class='menuitem' role='menuitem'>Scrobbling enabled</li> -->
+      <div class='menuseparator'></div>
+      <button id='options' class='menuitem' role='menuitem'>Options</button>
+    </menu>
     <div id='card'>
       <div id='album-art'>
         <img id='album-art-img' src='img/default_album.png' height='128' width='128' />

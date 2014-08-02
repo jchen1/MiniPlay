@@ -20,8 +20,6 @@ function update_slider(position, slidername) {  //position is in %
     clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
     clientY: rect.top + slider.clientTop - slider.scrollTop
   }));
-
-  console.log('sliderclick');
 }
 
 function send_command(message, callback) {

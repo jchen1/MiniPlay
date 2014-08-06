@@ -63,29 +63,34 @@ function send_command(message, callback) {
   }, 1);
 }
 
-$(function() {
-  var socket = io('https://miniplay.herokuapp.com');
-  // var socket = io('http://10.0.0.5:5000');
-
-  socket.on('connect', function() {
-    var email = $('a[href="/music/listen?u=0&authuser=0"] > div:contains("(default)") > div:contains("(default)")').text().split(' ')[0];
-    socket.emit('room', {client : 'player', room : email});
-  });
-
-  socket.on('data', function(message) {
-    if (message.action === 'update_status') {
-      socket.emit('data', music_status.update());
-    }
-    if (message.action === 'send_command') {
-      send_command(message, function(status) {
-        socket.emit('data', status);
-      });
-    }
-  });
-
-  window.setInterval(function() {
+window.setInterval(function() {
     var status = music_status.update();
     chrome.storage.local.set({'music_status': status});
-    socket.emit('data', status);
   }, 1000);
-});
+
+// $(function() {
+//   var socket = io('https://miniplay.herokuapp.com');
+//   // var socket = io('http://10.0.0.5:5000');
+
+//   socket.on('connect', function() {
+//     var email = $('a[href="/music/listen?u=0&authuser=0"] > div:contains("(default)") > div:contains("(default)")').text().split(' ')[0];
+//     socket.emit('room', {client : 'player', room : email});
+//   });
+
+//   socket.on('data', function(message) {
+//     if (message.action === 'update_status') {
+//       socket.emit('data', music_status.update());
+//     }
+//     if (message.action === 'send_command') {
+//       send_command(message, function(status) {
+//         socket.emit('data', status);
+//       });
+//     }
+//   });
+
+//   window.setInterval(function() {
+//     var status = music_status.update();
+//     chrome.storage.local.set({'music_status': status});
+//     socket.emit('data', status);
+//   }, 1000);
+// });

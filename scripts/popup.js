@@ -244,6 +244,7 @@ $(function() {
     });
   });
   $('#lastfm-toggle').on('click', function() {
+    update_scrobble($('#lastfm-toggle').hasClass('lastfm-checked'));
     chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
   });
 

@@ -60,13 +60,12 @@ function send_command(message, callback) {
       status.vslider_updated = true;
     }
     callback(status);
-  }, 1);
+  }, 10);
 }
 
 $(function() {
   window.setInterval(function() {
     var status = music_status.update();
     chrome.storage.local.set({'music_status': status});
-    socket.emit('data', status);
   }, 1000);
 });

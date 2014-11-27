@@ -9,6 +9,7 @@ $(function() {
       interface_port.id = msg.id;
       interface_port.onDisconnect.addListener(function() {
         interface_port = null;
+        set_state("no_tab");
       });
       interface_port.onMessage.addListener(function(msg) {
         update(msg);
@@ -118,7 +119,6 @@ $(function() {
 
   function update(response) {
     if (chrome.extension.lastError) {
-      // interfaceID = -1;
       set_state('no_tab');
     }
     else {
@@ -253,6 +253,7 @@ $(function() {
     }
   });
   $('#lastfm-toggle').on('click', function() {
+    update_scrobble($('#lastfm-toggle').hasClass('lastfm-checked'));
     chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
   });
 

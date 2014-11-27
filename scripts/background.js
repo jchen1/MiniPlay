@@ -1,12 +1,8 @@
 //background tab, always running
 
-chrome.storage.local.set({'id': -1});
 chrome.storage.local.set({'last_notification': ''});
 
-var interfaceID = -1, popupID = -1;
 var interface_port = null, popup_port = null;
-
-var ports = []; // interface, popup
 
 chrome.runtime.onConnect.addListener(function(port) {
   if (port.name == "interface") {

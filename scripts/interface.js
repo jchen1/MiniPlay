@@ -1,7 +1,6 @@
 // Interfaces with the Google Play Music tab
 
 $(function() {
-  var popupID = -1;
   var socket = io('https://miniplay.herokuapp.com');
   var port = chrome.runtime.connect({name: "interface"});
   var popup_port = null;
@@ -32,7 +31,6 @@ $(function() {
       if (newValue.title != '') {
         msg.notify = true;
       }
-
       return msg;
     }
     else {
@@ -107,22 +105,11 @@ $(function() {
         popup_port = null;
       });
       port.onMessage.addListener(function(msg) {
-        if (msg.action === 'update_status') {
-          update();
-        }
         if (msg.action === 'send_command') {
           send_command(msg);
         }
       });
-    }
-  });
-
-  port.onMessage.addListener(function(msg) {
-    if (msg.type == 'connect') {
-      popupID = msg.id;
-    }
-    else if (msg.type == 'disconnect') {
-      popupID = -1;
+      update();
     }
   });
 

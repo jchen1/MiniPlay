@@ -3,25 +3,41 @@
 chrome.storage.local.set({'id': -1});
 chrome.storage.local.set({'last_notification': ''});
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  chrome.storage.local.get('id', function (data) {
-    if (data['id'] === -1 && changeInfo.url &&
-        changeInfo.url.search('play.google.com/music') !== -1) {
-      chrome.storage.local.set({'id': tabId});
-    }
-    else if (data['id'] === tabId && changeInfo.url &&
-             changeInfo.url.search('play.google.com/music') === -1) {
-      chrome.storage.local.set({'id': -1});
-    }
-  });
-});
+var interfaceID = -1, popupID = -1;
+var interface_port = null, popup_port = null;
 
-chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
-  chrome.storage.local.get('id', function (data) {
-    if (data['id'] === tabId) {
-      chrome.storage.local.set({'id': -1});
+var ports = []; // interface, popup
+
+chrome.runtime.onConnect.addListener(function(port) {
+  if (port.name == "interface") {
+    interface_port = port;
+    port.onMessage.addListener(function(msg) {
+      if (msg.scrobble == true) {
+        scrobble(msg.oldValue);
+      }
+      if (msg.notify == true) {
+        create_notification(msg.newValue);
+        now_playing(msg.newValue);
+      }
+    });
+    interface_port.id = port.sender.tab.id;
+    if (popup_port) {
+      popup_port.postMessage({type: 'connect', id: interface_port.id});
     }
-  });
+
+    port.onDisconnect.addListener(function() {
+      interface_port = null;
+    });
+  }
+  else if (port.name == "popup") {
+    popup_port = port;
+    port.onDisconnect.addListener(function() {
+      popup_port = null;
+    });
+    if (interface_port) {
+      popup_port.postMessage({type: 'connect', id: interface_port.id});
+    }
+  }
 });
 
 function create_notification(details) {
@@ -72,12 +88,12 @@ chrome.storage.onChanged.addListener(function (changes, area) {
 });
 
 chrome.notifications.onClicked.addListener(function (id) {
-  chrome.storage.local.get(['id', 'lastfm_fail_id'], function (data) {
+  chrome.storage.local.get('lastfm_fail_id', function (data) {
     if (data['lastfm_fail_id'] === id) {
       chrome.tabs.create({url: chrome.extension.getURL('options.html')});
     }
-    else if (data['id'] && data['id'] !== -1) {
-      chrome.tabs.update(data['id'], {selected: true});
+    else if (ports[0] != null) {
+      chrome.tabs.update(ports[0].id, {selected: true});
     }
   });
 });
@@ -100,11 +116,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 chrome.commands.onCommand.addListener(function (command) {
-  chrome.storage.local.get('id', function (local) {
-    chrome.storage.sync.get('shortcuts-enabled', function (sync) {
-      if (sync['shortcuts-enabled'] === true && local['id'] !== -1) {
-          chrome.tabs.sendMessage(local['id'], { action: 'send_command', type: command });
-        }
-    });
+  chrome.storage.sync.get('shortcuts-enabled', function (sync) {
+    if (sync['shortcuts-enabled'] === true && ports[0] != null) {
+        chrome.tabs.sendMessage(ports[0].id, { action: 'send_command', type: command });
+      }
   });
 });

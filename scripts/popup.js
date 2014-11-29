@@ -17,13 +17,16 @@ $(function() {
     }
   });
 
-  setupAnalytics();
   set_state("no_tab");
 
   function setupAnalytics() {
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-48472705-1']);
     _gaq.push(['_trackPageview']);
+
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = 'https://ssl.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   }
 
   function secondsToHms(d) {
@@ -82,12 +85,6 @@ $(function() {
 
   chrome.storage.sync.get('scrobbling-enabled', function(data) {
     update_scrobble(data['scrobbling-enabled']);
-  });
-
-  chrome.storage.onChanged.addListener(function (changes, area) {
-    if (changes['scrobbling-enabled'] && changes['scrobbling-enabled'].newValue) {
-      update_scrobble(changes['scrobbling-enabled'].newValue);
-    }
   });
 
   function set_state(state) {
@@ -243,13 +240,10 @@ $(function() {
   });
   $('#album-art-img').on('click', function() {
     if (interface_port) {
-      chrome.tabs.update(interface_port.id, {selected: true});
+      chrome.tabs.update(interface_port.id, {highlighted: true});
       chrome.tabs.get(interface_port.id, function (tab) {
         chrome.windows.update(tab.windowId, {focused: true});
       });
-    }
-    else {
-      chrome.tabs.create({url: 'https://play.google.com/music'});
     }
   });
   $('#lastfm-toggle').on('click', function() {
@@ -257,7 +251,5 @@ $(function() {
     chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
   });
 
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  setupAnalytics();
 });

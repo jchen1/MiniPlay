@@ -5,7 +5,7 @@ chrome.storage.local.set({'last_notification': ''});
 var interface_port = null, popup_port = null;
 
 chrome.runtime.onConnect.addListener(function(port) {
-  if (port.name == "interface") {
+  if (port.name == "interface" && !interface_port) {
     interface_port = port;
     port.onMessage.addListener(function(msg) {
       if (msg.scrobble == true) {
@@ -88,8 +88,8 @@ chrome.notifications.onClicked.addListener(function (id) {
     if (data['lastfm_fail_id'] === id) {
       chrome.tabs.create({url: chrome.extension.getURL('options.html')});
     }
-    else if (ports[0] != null) {
-      chrome.tabs.update(ports[0].id, {selected: true});
+    else if (interface_port) {
+      chrome.tabs.update(interface_port.id, {highlighted: true});
     }
   });
 });
@@ -113,8 +113,8 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
 chrome.commands.onCommand.addListener(function (command) {
   chrome.storage.sync.get('shortcuts-enabled', function (sync) {
-    if (sync['shortcuts-enabled'] === true && ports[0] != null) {
-        chrome.tabs.sendMessage(ports[0].id, { action: 'send_command', type: command });
-      }
+    if (sync['shortcuts-enabled'] === true && interface_port != null) {
+      interface_port.postMessage({action: 'send_command', type: command});
+    }
   });
 });

@@ -91,14 +91,6 @@ $(function() {
     }
   }
 
-  var socket = io('https://miniplay.herokuapp.com');
-  socket.on('connect', function() {
-    // TODO: find a better selector (user and authuser might not be 0)
-    var email = $('a[href="/music/listen?u=0&authuser=0"] > div:contains("(default)") > div:contains("(default)")').text().split(' ')[0];
-    socket.emit('room', {client : 'player', room : email});
-  });
-  socket.on('data', parseMessage);
-
   background_port.onMessage.addListener(parseMessage);
 
   chrome.runtime.onConnect.addListener(function(port) {

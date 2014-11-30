@@ -1,7 +1,31 @@
 $(function() {
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-48472705-1']);
-  _gaq.push(['_trackPageview']);
+  var background_port = chrome.runtime.connect({name: "popup"});
+  var interface_port = null;
+  var music_status = null;
+
+  background_port.onMessage.addListener(function(msg) {
+    if (msg.type == 'connect') {
+      interface_port = chrome.tabs.connect(msg.id, {name: "popup"});
+      interface_port.id = msg.id;
+      interface_port.onDisconnect.addListener(function() {
+        interface_port = null;
+        set_state("no_tab");
+      });
+      interface_port.onMessage.addListener(update);
+    }
+  });
+
+  set_state("no_tab");
+
+  function setupAnalytics() {
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-48472705-1']);
+    _gaq.push(['_trackPageview']);
+
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = 'https://ssl.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  }
 
   function secondsToHms(d) {
     d = Number(d);
@@ -11,31 +35,22 @@ $(function() {
     return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
   }
 
-  chrome.storage.local.get('id', function(data) {
-    if (data['id'] && data['id'] !== -1) {
-      chrome.tabs.sendMessage(data['id'], {action: 'update_status'}, update);
-    }
-    else {
-      set_state('no_tab');
-    }
-  });
-
   var slider = new Dragdealer('slider', {
     callback: function(x, y) {
-      chrome.storage.local.get('id', function(data) {
-        chrome.tabs.sendMessage(data['id'],
+      if (interface_port) {
+        interface_port.postMessage(
         {
           'action': 'send_command',
           'type': 'slider',
           'position': x
-        }, update);
-      });
+        });
+      }
     },
     animationCallback: function(x, y) {
-      chrome.storage.local.get('music_status', function(data) {
+      if (music_status) {
         $('#played-slider').css('width', $('#slider-thumb').css('left'));
-        $('#current-time').html(secondsToHms(Math.round(x * data['music_status'].total_time_s)));
-      });
+        $('#current-time').html(secondsToHms(Math.round(x * music_status.total_time_s)));
+      }
     },
     x: $('#played-slider').width() / ($('#slider').width() - ($('#slider-thumb').width())),
     speed: 1,
@@ -44,14 +59,14 @@ $(function() {
 
   var vslider = new Dragdealer('vslider', {
     callback: function(x, y) {
-      chrome.storage.local.get('id', function(data) {
-        chrome.tabs.sendMessage(data['id'],
+      if (interface_port) {
+        interface_port.postMessage(
         {
           'action': 'send_command',
           'type': 'vslider',
           'position': 1 - y
-        }, update);
-      });
+        });
+      }
     },
     animationCallback: function(x, y) {
       var height = parseInt($('#vslider-thumb').css('top'), 10);
@@ -68,15 +83,6 @@ $(function() {
 
   chrome.storage.sync.get('scrobbling-enabled', function(data) {
     update_scrobble(data['scrobbling-enabled']);
-  });
-
-  chrome.storage.onChanged.addListener(function (changes, area) {
-    if (changes['music_status'] && changes['music_status'].newValue) {
-      update(changes['music_status'].newValue);
-    }
-    if (changes['scrobbling-enabled'] && changes['scrobbling-enabled'].newValue) {
-      update_scrobble(changes['scrobbling-enabled'].newValue);
-    }
   });
 
   function set_state(state) {
@@ -108,10 +114,10 @@ $(function() {
 
   function update(response) {
     if (chrome.extension.lastError) {
-      chrome.storage.local.set({'id' : -1});
       set_state('no_tab');
     }
     else {
+      music_status = response;
       if (response.title === '') {
         set_state('no_song');
       }
@@ -202,13 +208,13 @@ $(function() {
 
   $('.control').on('click', function(e) {
     var name = $(e.currentTarget).attr('id');
-    chrome.storage.local.get('id', function(data) {
-      chrome.tabs.sendMessage(data['id'],
+    if (interface_port) {
+      interface_port.postMessage(
       {
         'action': 'send_command',
         'type': name
-      }, update);
-    });
+      });
+    }
   });
 
   $('#setting').click(function(ev) {
@@ -231,24 +237,17 @@ $(function() {
     chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
   $('#album-art-img').on('click', function() {
-    chrome.storage.local.get('id', function (data) {
-      if (data['id'] && data['id'] != -1) {
-        chrome.tabs.update(data['id'], {selected: true});
-        chrome.tabs.get(data['id'], function (tab) {
-          chrome.windows.update(tab.windowId, {focused: true});
-        });
-      }
-      else {
-        chrome.tabs.create({url: 'https://play.google.com/music'});
-      }
-    });
+    if (interface_port) {
+      chrome.tabs.update(interface_port.id, {highlighted: true});
+      chrome.tabs.get(interface_port.id, function (tab) {
+        chrome.windows.update(tab.windowId, {focused: true});
+      });
+    }
   });
   $('#lastfm-toggle').on('click', function() {
     update_scrobble($('#lastfm-toggle').hasClass('lastfm-checked'));
     chrome.storage.sync.set({'scrobbling-enabled': $('#lastfm-toggle').hasClass('lastfm-checked')});
   });
 
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = 'https://ssl.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  setupAnalytics();
 });

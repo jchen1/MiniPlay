@@ -1,8 +1,7 @@
 // Interfaces with the Google Play Music tab
 
 $(function() {
-  var socket = io('https://miniplay.herokuapp.com');
-  var port = chrome.runtime.connect({name: "interface"});
+  var background_port = chrome.runtime.connect({name: "interface"});
   var popup_port = null;
   var old_status = null;
 
@@ -14,7 +13,7 @@ $(function() {
     socket.emit('data', music_status);
     var msg = create_background_msg(old_status, music_status);
     if (msg != null) {
-      port.postMessage(msg);
+      background_port.postMessage(msg);
     }
     if (popup_port) {
       popup_port.postMessage(music_status);
@@ -25,8 +24,8 @@ $(function() {
     var msg = {scrobble: false, notify: false};
     msg.oldValue = oldValue;
     msg.newValue = newValue;
-    if (oldValue === undefined || oldValue.title != newValue.title ||
-        oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art) {
+    if (oldValue !== undefined && (oldValue.title != newValue.title ||
+        oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
       msg.scrobble = true;
       if (newValue.title != '') {
         msg.notify = true;
@@ -83,20 +82,24 @@ $(function() {
     }, 30);
   }
 
+  function parseMessage(msg) {
+    if (msg.action === 'update_status') {
+      update();
+    }
+    if (msg.action === 'send_command') {
+      send_command(msg);
+    }
+  }
+
+  var socket = io('https://miniplay.herokuapp.com');
   socket.on('connect', function() {
     // TODO: find a better selector (user and authuser might not be 0)
     var email = $('a[href="/music/listen?u=0&authuser=0"] > div:contains("(default)") > div:contains("(default)")').text().split(' ')[0];
     socket.emit('room', {client : 'player', room : email});
   });
+  socket.on('data', parseMessage);
 
-  socket.on('data', function(message) {
-    if (message.action === 'update_status') {
-      update();
-    }
-    if (message.action === 'send_command') {
-      send_command(message);
-    }
-  });
+  background_port.onMessage.addListener(parseMessage);
 
   chrome.runtime.onConnect.addListener(function(port) {
     if (port.name == 'popup') {

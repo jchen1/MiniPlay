@@ -11,9 +11,7 @@ $(function() {
         interface_port = null;
         set_state("no_tab");
       });
-      interface_port.onMessage.addListener(function(msg) {
-        update(msg);
-      });
+      interface_port.onMessage.addListener(update);
     }
   });
 

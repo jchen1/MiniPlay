@@ -14,10 +14,15 @@
   text-decoration: none;
 }
 
+html {
+  height: 210px;
+}
+
 body {
   margin: 0;
   min-width: 450px;
   min-height: 210px;
+  height: 210px;
   overflow: hidden;
 }
 
@@ -353,7 +358,7 @@ body {
   height: 13pt;
   margin-left: -5pt;
   position: relative;
-  border-radius: 50%;
+  border-radius: 100%;
   background-color: #fd8500;
 }
 

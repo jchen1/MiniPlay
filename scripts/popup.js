@@ -141,6 +141,23 @@ $(function() {
         set_thumb(response.thumb);
         set_repeat(response.repeat);
         set_shuffle(response.shuffle);
+        disable_buttons(response.disabled_buttons);
+      }
+    }
+  }
+
+  function disable_buttons(disabled) {
+    for (var i = 0; i < disabled.length; i++) {
+      switch (disabled[i]) {
+        case 'play': $('#play').attr('disabled', true); break;
+        case 'rew': $('#rew').attr('disabled', true); break;
+        case 'ff': $('#ff').attr('disabled', true); break;
+        case 'up': $('#up').attr('disabled', true); break;
+        case 'down': $('#down').attr('disabled', true); break;
+        case 'shuffle': $('#shuffle').attr('disabled', true); break;
+        case 'repeat': $('#repeat').attr('disabled', true); break;
+        case 'slider': slider.disable(); break;
+        case 'vslider': vslider.disable(); break;
       }
     }
   }

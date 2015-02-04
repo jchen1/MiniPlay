@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "MiniPlay",
-  "description": "Control Google Play Music from anywhere in Chrome",
+  "description": "Control Google Play Music and Pandora from anywhere in Chrome",
   "version": "0.5.0",
 
   "icons": {
@@ -32,13 +32,15 @@
   "permissions": [
     "notifications",
     "storage",
-    "*://play.google.com/music*"
+    "tabs",
+    "*://play.google.com/music*",
+    "*://*.pandora.com/*"
   ],
 
   "content_scripts": [
     {
-      "matches": ["*://play.google.com/music*"],
-      "js": ["scripts/jquery.js", "scripts/status.js", "scripts/interface.js", "scripts/socket.io.js"]
+      "matches": ["*://play.google.com/music*", "*://*.pandora.com/*"],
+      "js": ["scripts/jquery.js", "scripts/loader.js", "scripts/socket.io.js"]
     }
   ],
 

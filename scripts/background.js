@@ -2,11 +2,25 @@
 
 chrome.storage.local.set({'last_notification': ''});
 
-var interface_port = null, popup_port = null;
+var interface_port = null, popup_port = null, loader_port = null;
 
 chrome.runtime.onConnect.addListener(function(port) {
+  if (port.name == "loader" && !loader_port) {
+    loader_port = port;
+    loader_port.id = port.sender.tab.id;
+    port.onMessage.addListener(function(msg) {
+      if (msg.protocol) {
+        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/status.js"});
+        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/interface.js"});
+      }
+    });
+    port.onDisconnect.addListener(function() {
+      loader_port = null;
+    });
+  }
   if (port.name == "interface" && !interface_port) {
     interface_port = port;
+    interface_port.id = port.sender.tab.id;
     port.onMessage.addListener(function(msg) {
       if (msg.scrobble == true) {
         scrobble(msg.oldValue);
@@ -16,7 +30,6 @@ chrome.runtime.onConnect.addListener(function(port) {
         now_playing(msg.newValue);
       }
     });
-    interface_port.id = port.sender.tab.id;
     if (popup_port) {
       popup_port.postMessage({type: 'connect', id: interface_port.id});
     }

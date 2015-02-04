@@ -53,9 +53,6 @@ $(function() {
     switch (message.type) {
       case 'play':
         $button = $('button[data-id="play-pause"]');
-        if ($button.attr('disabled')) {
-          $button = $('[data-type="imfl"]');  // I'm feeling lucky radio
-        }
         break;
       case 'rew':
         $button = $('button[data-id="rewind"]'); break;

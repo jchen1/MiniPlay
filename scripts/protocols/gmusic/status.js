@@ -1,5 +1,6 @@
 var music_status = {
 
+  disabled_buttons : [],
   artist : '',
   album : '',
   album_art : '',
@@ -15,6 +16,7 @@ var music_status = {
   volume : '',
   slider_updated : false,
   vslider_updated : false,
+  protocol : 'gmusic',
 
   get_time : function (time) {
     return time.split(':').map(function(num, index, arr) {

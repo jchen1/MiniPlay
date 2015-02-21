@@ -1,12 +1,18 @@
 #popup {
   font-family: 'Roboto', arial, sans-serif;
-  padding: 11px 30px 22px 10px;
-  width: 450px;
-  height: 210px;
+  width: 320px;
+  height: 376px;
   background-color: #e5e5e5;
   position: absolute;
   cursor: default;
   -webkit-user-select: none;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 376px;
+  overflow: hidden;
 }
 
 #artist a {
@@ -14,43 +20,26 @@
   text-decoration: none;
 }
 
-html {
-  height: 210px;
-}
-
-body {
-  margin: 0;
-  min-width: 450px;
-  min-height: 210px;
-  height: 210px;
-  overflow: hidden;
-}
-
-#card {
-  border-radius: 2px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, .2);
-  background: white;
-  height: 128px;
-  width: 430px;
-}
-
 #album-art {
-  float: left;
-  border-radius: 2px 0 0 2px;
+  height: 320px;
+  width: 320px;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0)),
+    no-repeat url(../img/placeholder.jpg);
+  background-size: 320px 320px;
+  position: relative;
 }
 
-#album-art-img {
-  border-radius: 2px 0 0 2px;
-  -webkit-user-drag: none;
-}
-
-#card-right {
+#song-info {
   position: absolute;
-  left: 140px;
-  width: 268px;
-  padding: 10px 2px 15px 15px;
-  white-space: nowrap;
-  overflow: hidden;
+  top: 0;
+  width: 100%;
+  padding: 15px 10px 0 20px;
+  text-shadow: 0 1px 0 black;
+  line-height: 1.4;
 }
 
 .fade {
@@ -60,15 +49,6 @@ body {
   background-image: -webkit-linear-gradient(left,rgba(255,255,255,0) 0%,#fff 30px, #fff 100%);
 }
 
-#title-fade {
-  height: 20pt;
-}
-
-#info-fade {
-  top: 45px;
-  height: 50px;
-}
-
 #infobar {
   list-style-type: none;
   padding: 0;
@@ -76,7 +56,7 @@ body {
 
 #controls {
   position: absolute;
-  bottom: 33px;
+  bottom: 0px;
   left: 0px;
   background-color: #fafafa;
   width: 450px;
@@ -84,12 +64,17 @@ body {
 }
 
 #title {
-  color: #333;
+  color: #fff;
   font-size: 20px;
   font-weight: 300;
-  margin-bottom: 5px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #f1f1f1;
+  padding: 0;
+  overflow: hidden;
+}
+
+#artist, #album {
+  font-size: 15px;
+  font-weight: 300;
+  color: #fff;
   overflow: hidden;
 }
 
@@ -120,13 +105,6 @@ body {
 
 .lastfm-checked {
   opacity: 0.5!important;
-}
-
-#artist, #album {
-  font-size: 14px;
-  font-weight: 300;
-  color: #aaa;
-  overflow: hidden;
 }
 
 .control {
@@ -249,10 +227,22 @@ body {
 }
 
 #time {
-  font-size: 12px;
-  line-height: 20px;
-  color: #7f7f7f;
-  text-align: right;
+  font-size: 13px;
+  color: #fff;
+  position: absolute;
+  bottom: 30;
+  width: 100%;
+  text-shadow: 0 1px 0 black;
+}
+
+#current-time {
+  position: absolute;
+  left: 20;
+}
+
+#total-time {
+  position: absolute;
+  right: 20;
 }
 
 @-webkit-keyframes progressBar {
@@ -298,14 +288,6 @@ body {
 
 #slider-thumb[disabled] {
   display: none;
-}
-
-#time-and-slider {
-  position:absolute;
-  right: 0px;
-  left: 0px;
-  bottom: 67px;
-  z-index: 1000;
 }
 
 #menu {

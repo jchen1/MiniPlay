@@ -96,15 +96,15 @@ $(function() {
         $('#artist a').on('click', function() {
           chrome.tabs.create({url: 'https://play.google.com/music'});
         });
-        // break;
+        break;
       case 'no_song':
         $('.interface').attr('disabled', true);
         $('#infobar').hide();
         $('#album-art-img').attr('src', 'img/default_album.png');
         $('#title').html('No song selected');
-        $('#artist').html('Placeholder');
-        $('#album').html('Jer derp');
-        // break;
+        $('#artist').html('');
+        $('#album').html('');
+        break;
       case 'song':
         $('.interface').attr('disabled', false);
         $('#infobar').show();

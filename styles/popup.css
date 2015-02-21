@@ -1,7 +1,7 @@
 #popup {
   font-family: 'Roboto', arial, sans-serif;
   width: 320px;
-  height: 376px;
+  height: 370px;
   background-color: #e5e5e5;
   position: absolute;
   cursor: default;
@@ -11,7 +11,7 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 376px;
+  min-height: 370px;
   overflow: hidden;
 }
 
@@ -56,11 +56,13 @@ body {
 
 #controls {
   position: absolute;
-  bottom: 0px;
+  top: 320px;
   left: 0px;
   background-color: #fafafa;
-  width: 450px;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);
+  width: 320px;
+  height: 50px;
+  padding: 0 20;
+  /*box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);*/
 }
 
 #title {
@@ -110,56 +112,51 @@ body {
 .control {
   outline: none;
   border: none;
-  opacity: 0.8;
-  margin-top: 3px;
-  transition: background-color 0.218s;
+  opacity: 0.5;
+  margin-top: 13px;
+  transition: opacity 0.4s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 766px 53px;
+  background-size: 383px 27px;
 }
 
 .control:hover {
-  background-color: #e8e8e8!important;
   opacity: 1;
 }
 
 .control:active {
-  background-color: #d5d5d5!important;
   opacity: 1;
 }
 
 #setting {
-  background: no-repeat url(../img/sprites.png) -742px 0px;
-  background-size: 766px 53px;
+  background: no-repeat url(../img/sprites.png) -371px 0px;
+  background-size: 383px 27px;
   outline: none;
   border: none;
-  width: 24px;
-  height: 53px;
+  width: 12px;
+  height: 27px;
   transition: background-color 0.218s;
 }
 
 .control[disabled] {
   opacity: 0.2 !important;
-  background-color: transparent !important;
 }
 
 #up.control[disabled] {
   display: none;
-  background-color: transparent !important;
 }
 
 #down.control[disabled] {
   display: none;
-  background-color: transparent !important;
 }
 
 .large {
-  width: 62px;
-  height: 53px;
+  width: 31px;
+  height: 27px;
 }
 
 .medium {
-  width: 53px;
-  height: 53px;
+  width: 27px;
+  height: 27px;
 }
 
 .thumb {
@@ -179,51 +176,52 @@ body {
 }
 
 #repeat.control-list {
-  background-position: -53px 0;
+  background-position: -27px 0;
 }
 
 #repeat.control-single {
-  background-position: -106px 0;
+  background-position: -53px 0;
 }
 
 #shuffle.control {
-  background-position: -159px 0;
+  background-position: -80px 0;
 }
 
 #shuffle.control-checked {
-  background-position: -212px 0;
+  background-position: -106px 0;
 }
 
 #rew.control {
-  background-position: -265px 0;
+  background-position: -133px 0;
 }
 
 #play.control {
-  background-position: -327px 0;
+  background-position: -164px 0;
 }
 
 #play.control-checked {
-  background-position: -389px 0;
+  background-position: -195px 0;
 }
 
 #ff.control {
-  background-position: -451px 0;
+  background-position: -226px 0;
 }
 
 #down.control {
-  background-position: -513px 0;
+  background-position: -257px 0;
+  margin-right: 30px;
 }
 
 #down.control-checked {
-  background-position: -566px 0;
+  background-position: -283px 0;
 }
 
 #up.control {
-  background-position: -619px 0;
+  background-position: -310px 0;
 }
 
 #up.control-checked {
-  background-position: -672px 0;
+  background-position: -336px 0;
 }
 
 #time {
@@ -263,6 +261,7 @@ body {
   z-index: 1000;
   padding: 7px 0 7px 0;
   margin-top: -7px;
+  margin-left: -20px;
   cursor: pointer;
 }
 

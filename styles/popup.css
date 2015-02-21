@@ -1,7 +1,7 @@
 #popup {
   font-family: 'Roboto', arial, sans-serif;
   width: 320px;
-  height: 370px;
+  height: 390px;
   background-color: #e5e5e5;
   position: absolute;
   cursor: default;
@@ -11,7 +11,7 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 370px;
+  min-height: 390px;
   overflow: hidden;
 }
 
@@ -42,6 +42,14 @@ body {
   line-height: 1.4;
 }
 
+#top-controls {
+  position: absolute;
+  list-style-type: none;
+  padding: 15px 10px 0 20px;
+  margin: 0;
+  right: 0;
+}
+
 .fade {
   position: absolute;
   width: 30px;
@@ -60,7 +68,7 @@ body {
   left: 0px;
   background-color: #fafafa;
   width: 320px;
-  height: 50px;
+  height: 70px;
   padding: 0 20;
   /*box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);*/
 }
@@ -109,14 +117,19 @@ body {
   opacity: 0.5!important;
 }
 
+.top {
+  margin-top: 0!important;
+  height: 25px!important;
+}
+
 .control {
   outline: none;
   border: none;
   opacity: 0.5;
-  margin-top: 13px;
+  margin-top: 18px;
   transition: opacity 0.4s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 383px 27px;
+  background-size: 525px 37px;
 }
 
 .control:hover {
@@ -128,12 +141,12 @@ body {
 }
 
 #setting {
-  background: no-repeat url(../img/sprites.png) -371px 0px;
-  background-size: 383px 27px;
+  background: no-repeat url(../img/sprites.png) -508px 0px;
+  background-size: 525px 37px;
   outline: none;
   border: none;
-  width: 12px;
-  height: 27px;
+  width: 16px;
+  height: 37px;
   transition: background-color 0.218s;
 }
 
@@ -150,13 +163,13 @@ body {
 }
 
 .large {
-  width: 31px;
-  height: 27px;
+  width: 41px;
+  height: 37px;
 }
 
 .medium {
-  width: 27px;
-  height: 27px;
+  width: 37px;
+  height: 37px;
 }
 
 .thumb {
@@ -176,52 +189,52 @@ body {
 }
 
 #repeat.control-list {
-  background-position: -27px 0;
+  background-position: -37px 0;
 }
 
 #repeat.control-single {
-  background-position: -53px 0;
+  background-position: -73px 0;
 }
 
 #shuffle.control {
-  background-position: -80px 0;
+  background-position: -110px 0;
 }
 
 #shuffle.control-checked {
-  background-position: -106px 0;
+  background-position: -145px 0;
 }
 
 #rew.control {
-  background-position: -133px 0;
+  background-position: -182px 0;
 }
 
 #play.control {
-  background-position: -164px 0;
+  background-position: -225px 0;
 }
 
 #play.control-checked {
-  background-position: -195px 0;
+  background-position: -267px 0;
 }
 
 #ff.control {
-  background-position: -226px 0;
+  background-position: -310px 0;
 }
 
 #down.control {
-  background-position: -257px 0;
+  background-position: -352px 0;
   margin-right: 30px;
 }
 
 #down.control-checked {
-  background-position: -283px 0;
+  background-position: -388px 0;
 }
 
 #up.control {
-  background-position: -310px 0;
+  background-position: -425px 0;
 }
 
 #up.control-checked {
-  background-position: -336px 0;
+  background-position: -360px 0;
 }
 
 #time {

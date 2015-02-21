@@ -74,11 +74,11 @@ $(function() {
     },
     horizontal: false,
     vertical: true,
-    y: $('#played-vslider').height() / ($('#vslider').height() - $('#vslider-thumb').height()),
+    y: $('#played-vslider').height() / ($('#vslider-background').height() - $('#vslider-thumb').height()),
     speed: 1,
     slide: false,
     top: parseInt($('#vslider-thumb').css('height'), 10),
-    bottom: -1 * parseInt($('#vslider-thumb').css('height'), 10)
+    bottom: 0
   });
 
   chrome.storage.sync.get('scrobbling-enabled', function(data) {
@@ -217,20 +217,20 @@ $(function() {
     }
   });
 
-  $('#setting').click(function(ev) {
-    $('#menu').css('top', $('#top-bar').height());
-    if ($('#menu').css('visibility') == 'hidden') {
-      $('#menu').css('visibility', 'visible');
+  $('#volume').click(function(ev) {
+    $('#vslider').css('top', $('#top-bar').height());
+    if ($('#vslider').css('visibility') == 'hidden') {
+      $('#vslider').css('visibility', 'visible');
     }
     else {
-      $('#menu').css('visibility', 'hidden');
+      $('#vslider').css('visibility', 'hidden');
     }
     ev.stopPropagation();
   });
 
   $('body').click(function(ev) {
-    if (ev.target.id != 'menu' && $('#menu').has(ev.target).length === 0) {
-      $('#menu').css('visibility', 'hidden');
+    if (ev.target.id != 'vslider' && $('#vslider').has(ev.target).length === 0) {
+      $('#vslider').css('visibility', 'hidden');
     }
   });
   $('#options').on('click', function() {

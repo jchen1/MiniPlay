@@ -18,6 +18,7 @@ body {
 #artist a {
   outline: none;
   text-decoration: none;
+  color: #fff;
 }
 
 #album-art {
@@ -39,7 +40,7 @@ body {
   width: 100%;
   padding: 15px 10px 0 20px;
   text-shadow: 0 1px 0 black;
-  line-height: 1.4;
+  line-height: 1.6;
 }
 
 #top-controls {
@@ -69,7 +70,7 @@ body {
   background-color: #fafafa;
   width: 320px;
   height: 70px;
-  padding: 0 20;
+  padding: 0 12;
   /*box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.4);*/
 }
 
@@ -77,7 +78,7 @@ body {
   color: #fff;
   font-size: 20px;
   font-weight: 300;
-  padding: 0;
+  padding: 0 0 5 0;
   overflow: hidden;
 }
 
@@ -302,39 +303,28 @@ body {
   display: none;
 }
 
-#menu {
-  visibility: hidden;
-  float: right;
-  border-radius: 5px;
-  border: 1px solid #c0c0c0;
-  box-shadow: 0px 2px 40px rgba(0, 0, 0, .4);
-  background: white;
-  padding: 0.5em 0;
-  margin: 0;
-  z-index: 1001;
-  position: relative;
-  right: 1em;
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-}
-
-
 #played-vslider {
   background-color: #eaeaea;
-  width: 3pt;
+  width: 3px;
   height: 0px;
 }
 
 #vslider {
+  position: absolute;
+  right: 17;
+  top: 80;
+  visibility: hidden;
   outline: none;
-  height: 80pt;
-  margin: 0pt 0 25pt 0;
+  height: 80px;
   cursor: pointer;
-  width: 3pt;
+  width: 3px;
   z-index: 1100;
-  padding-left: 2.5em;
-  padding-right: 2.5em;
+  padding: 5 10 10 10;
+}
+
+#volume-min {
+  position: absolute;
+  right: -7;
 }
 
 #vslider[disabled] {
@@ -344,13 +334,13 @@ body {
 #vslider-background {
   background-color: #fd8500;
   height: 100%;
-  width: 3pt;
+  width: 3px;
 }
 
 #vslider-thumb {
-  width: 13pt;
-  height: 13pt;
-  margin-left: -5pt;
+  width: 11px;
+  height: 11px;
+  margin-left: -3pt;
   position: relative;
   border-radius: 100%;
   background-color: #fd8500;

@@ -27,9 +27,9 @@ body {
   background:
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.6),
       rgba(0, 0, 0, 0)),
-    no-repeat url(../img/placeholder.jpg);
+    no-repeat url(../img/default_album.png);
   background-size: 320px 320px;
   position: relative;
 }
@@ -37,10 +37,10 @@ body {
 #song-info {
   position: absolute;
   top: 0;
-  width: 100%;
+  width: 80%;
   padding: 15px 10px 0 20px;
   text-shadow: 0 1px 0 black;
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 #top-controls {
@@ -118,9 +118,53 @@ body {
   opacity: 0.5!important;
 }
 
-.top {
-  margin-top: 0!important;
+.top-control {
+  margin-top: 0;
   height: 25px!important;
+  opacity: 1;
+  outline: none;
+  border: none;
+  transition: all 0.4s fade;
+  background: no-repeat url(../img/sprites.png);
+  background-size: 567px 74px;
+}
+
+#repeat.top-control {
+  background-position: 0 -37px;
+}
+
+#repeat.control-list {
+  background-position: -37px -37px;
+}
+
+#repeat.control-single {
+  background-position: -74px -37px;
+}
+
+#shuffle.top-control {
+  background-position: -111px -37px;
+}
+
+#shuffle.control-checked {
+  background-position: -148px -37px;
+}
+
+#volume.top-control {
+  background-position: -493px 0px;
+}
+
+#volume.top-control:hover, #volume.top-control:active, #volume.control-checked {
+  background-position: -493px 0;
+}
+
+#mute.top-control {
+  background-position: -530px 0px;
+  position: absolute;
+  right: -7px;
+}
+
+.top-control[disabled] {
+  opacity: 0!important;
 }
 
 .control {
@@ -128,27 +172,13 @@ body {
   border: none;
   opacity: 0.5;
   margin-top: 18px;
-  transition: opacity 0.4s;
+  transition: all 0.4s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 525px 37px;
+  background-size: 567px 74px;
 }
 
-.control:hover {
+.control:hover, .control:active {
   opacity: 1;
-}
-
-.control:active {
-  opacity: 1;
-}
-
-#setting {
-  background: no-repeat url(../img/sprites.png) -508px 0px;
-  background-size: 525px 37px;
-  outline: none;
-  border: none;
-  width: 16px;
-  height: 37px;
-  transition: background-color 0.218s;
 }
 
 .control[disabled] {
@@ -164,7 +194,7 @@ body {
 }
 
 .large {
-  width: 41px;
+  width: 40px;
   height: 37px;
 }
 
@@ -185,28 +215,8 @@ body {
   float: right;
 }
 
-#repeat.control {
-  background-position: 0 0;
-}
-
-#repeat.control-list {
-  background-position: -37px 0;
-}
-
-#repeat.control-single {
-  background-position: -73px 0;
-}
-
-#shuffle.control {
-  background-position: -110px 0;
-}
-
-#shuffle.control-checked {
-  background-position: -145px 0;
-}
-
 #rew.control {
-  background-position: -182px 0;
+  background-position: -185px 0;
 }
 
 #play.control {
@@ -214,28 +224,28 @@ body {
 }
 
 #play.control-checked {
-  background-position: -267px 0;
+  background-position: -265px 0;
 }
 
 #ff.control {
-  background-position: -310px 0;
+  background-position: -305px 0;
 }
 
 #down.control {
-  background-position: -352px 0;
-  margin-right: 30px;
+  background-position: -345px 0;
+  margin-right: 20px;
 }
 
 #down.control-checked {
-  background-position: -388px 0;
+  background-position: -382px 0;
 }
 
 #up.control {
-  background-position: -425px 0;
+  background-position: -419px 0;
 }
 
 #up.control-checked {
-  background-position: -360px 0;
+  background-position: -456px 0;
 }
 
 #time {
@@ -275,7 +285,7 @@ body {
   z-index: 1000;
   padding: 7px 0 7px 0;
   margin-top: -7px;
-  margin-left: -20px;
+  margin-left: -12px;
   cursor: pointer;
 }
 
@@ -286,17 +296,16 @@ body {
 #slider-background {
   background-color: #eaeaea;
   height: 3px;
-  width: 450px;
+  width: 320px;
 }
 
 #slider-thumb {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   margin-top: -7px;
   position: relative;
-
-  background: no-repeat url(../img/sprites.png) -725px 0;
-  background-size: 766px 53px;
+  border-radius: 100%;
+  background-color: #fd8500;
 }
 
 #slider-thumb[disabled] {
@@ -320,11 +329,6 @@ body {
   width: 3px;
   z-index: 1100;
   padding: 5 10 10 10;
-}
-
-#volume-min {
-  position: absolute;
-  right: -7;
 }
 
 #vslider[disabled] {

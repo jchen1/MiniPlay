@@ -124,7 +124,7 @@ body {
   opacity: 1;
   outline: none;
   border: none;
-  transition: all 0.4s fade;
+  transition: opacity 0.4s fade;
   background: no-repeat url(../img/sprites.png);
   background-size: 567px 74px;
 }
@@ -172,7 +172,7 @@ body {
   border: none;
   opacity: 0.5;
   margin-top: 18px;
-  transition: all 0.4s;
+  transition: opacity 0.4s;
   background: no-repeat url(../img/sprites.png);
   background-size: 567px 74px;
 }

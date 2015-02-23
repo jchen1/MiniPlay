@@ -54,7 +54,8 @@ $(function() {
     },
     x: $('#played-slider').width() / ($('#slider').width() - ($('#slider-thumb').width())),
     speed: 1,
-    slide: false
+    slide: false,
+    right: parseInt($('#slider-thumb').css('height'), 10)
   });
 
   var vslider = new Dragdealer('vslider', {
@@ -74,23 +75,28 @@ $(function() {
     },
     horizontal: false,
     vertical: true,
-    y: $('#played-vslider').height() / ($('#vslider').height() - $('#vslider-thumb').height()),
+    y: $('#played-vslider').height() / ($('#vslider-background').height() - $('#vslider-thumb').height()),
     speed: 1,
     slide: false,
-    top: parseInt($('#vslider-thumb').css('height'), 10),
-    bottom: -1 * parseInt($('#vslider-thumb').css('height'), 10)
+    top: parseInt($('#vslider-thumb').css('height'), 10)
   });
 
   chrome.storage.sync.get('scrobbling-enabled', function(data) {
     update_scrobble(data['scrobbling-enabled']);
   });
 
+  function set_album_art(url) {
+    var background = 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(' + url + ')';
+    $('#album-art').css('background', background);
+    $('#album-art').css('background-size', '320px 320px');
+  }
+
   function set_state(state) {
     switch (state) {
       case 'no_tab':
         $('.interface').attr('disabled', true);
         $('#infobar').hide();
-        $('#album-art-img').attr('src', 'img/default_album.png');
+        set_album_art('img/default_album.png');
         $('#title').html('No Google Music tab found');
         $('#artist').html('<a href="#">Click to open a new tab</a>');
         $('#artist a').on('click', function() {
@@ -100,7 +106,7 @@ $(function() {
       case 'no_song':
         $('.interface').attr('disabled', true);
         $('#infobar').hide();
-        $('#album-art-img').attr('src', 'img/default_album.png');
+        set_album_art('img/default_album.png');
         $('#title').html('No song selected');
         $('#artist').html('');
         $('#album').html('');
@@ -129,7 +135,7 @@ $(function() {
         if (response.album_art == 'http://undefined') {
           response.album_art = 'img/default_album.png';
         }
-        $('#album-art-img').attr('src', response.album_art);
+        set_album_art(response.album_art);
         toggle_play(response.status);
         if (!slider.dragging) {
           $('#current-time').html(response.current_time);
@@ -206,7 +212,7 @@ $(function() {
     }
   }
 
-  $('.control').on('click', function(e) {
+  $('.control, .top-control').on('click', function(e) {
     var name = $(e.currentTarget).attr('id');
     if (interface_port) {
       interface_port.postMessage(
@@ -217,20 +223,24 @@ $(function() {
     }
   });
 
-  $('#setting').click(function(ev) {
-    $('#menu').css('top', $('#top-bar').height());
-    if ($('#menu').css('visibility') == 'hidden') {
-      $('#menu').css('visibility', 'visible');
+  $('#volume').click(function(ev) {
+    if ($('#volume').prop('disabled') == false) {
+      $('#vslider').css('top', $('#top-bar').height());
+      if ($('#vslider').css('visibility') == 'hidden') {
+        $('#vslider').css('visibility', 'visible');
+      }
+      else {
+        $('#vslider').css('visibility', 'hidden');
+      }
+      ev.stopPropagation();
+      $('#volume').addClass('control-checked');
     }
-    else {
-      $('#menu').css('visibility', 'hidden');
-    }
-    ev.stopPropagation();
   });
 
   $('body').click(function(ev) {
-    if (ev.target.id != 'menu' && $('#menu').has(ev.target).length === 0) {
-      $('#menu').css('visibility', 'hidden');
+    if (ev.target.id != 'vslider' && $('#vslider').has(ev.target).length === 0) {
+      $('#vslider').css('visibility', 'hidden');
+      $('#volume').removeClass('control-checked');
     }
   });
   $('#options').on('click', function() {

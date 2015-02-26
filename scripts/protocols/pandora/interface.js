@@ -34,9 +34,11 @@ $(function() {
     msg.oldValue = oldValue;
     msg.newValue = newValue;
     if (oldValue !== undefined && (oldValue.title != newValue.title ||
-        oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
+        oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art ||
+        (newValue.total_time_s == 0 && newValue.current_time_s == 0))) {
+      console.log(JSON.parse(JSON.stringify(newValue)));
       msg.scrobble = true;
-      if (newValue.title != '') {
+      if (newValue.title != '' && oldValue.title != newValue.title) {
         msg.notify = true;
       }
       return msg;

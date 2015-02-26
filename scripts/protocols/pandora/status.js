@@ -1,6 +1,6 @@
 var music_status = {
 
-  disabled_buttons : ['rew', 'repeat', 'shuffle', 'slider', 'vslider'],
+  disabled_buttons : ['rew', 'repeat', 'shuffle', 'slider'],
   artist : '',
   album : '',
   album_art : '',

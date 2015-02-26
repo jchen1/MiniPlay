@@ -83,6 +83,7 @@ function now_playing(details) {
 }
 
 function scrobble(details) {
+  console.log('scrobble');
   chrome.storage.sync.get('scrobbling-enabled', function(response) {
     if (response['scrobbling-enabled'] == true) {
       if (details === undefined || details.title === '') {
@@ -92,6 +93,7 @@ function scrobble(details) {
       if (details.total_time_s > 30 && (details.current_time_s >= 240
           || 2*details.current_time_s >= details.total_time_s)) {
         get_session_id(function (session_id) {
+
           if (session_id != '') {
             var params = {
               method: 'track.scrobble',

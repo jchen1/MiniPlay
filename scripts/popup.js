@@ -160,10 +160,10 @@ $(function() {
         case 'ff': $('#ff').attr('disabled', true); break;
         case 'up': $('#up').attr('disabled', true); break;
         case 'down': $('#down').attr('disabled', true); break;
-        case 'shuffle': $('#shuffle').attr('disabled', true); break;
-        case 'repeat': $('#repeat').attr('disabled', true); break;
-        case 'slider': slider.disable(); break;
-        case 'vslider': vslider.disable(); break;
+        case 'shuffle': $('#shuffle').css('display', 'none'); break;
+        case 'repeat': $('#repeat').css('display', 'none'); break;
+        case 'slider': $('#slider').attr('disabled', true); if (!slider.disabled) slider.disable(); break;
+        case 'vslider': $('#volume').css('display', 'none'); break;
       }
     }
   }

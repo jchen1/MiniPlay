@@ -34,12 +34,13 @@
     "storage",
     "tabs",
     "*://play.google.com/music*",
-    "*://*.pandora.com/*"
+    "*://*.pandora.com/*",
+    "*://play.spotify.com/*"
   ],
 
   "content_scripts": [
     {
-      "matches": ["*://play.google.com/music*", "*://*.pandora.com/*"],
+      "matches": ["*://play.google.com/music*", "*://*.pandora.com/*", "*://play.spotify.com/*"],
       "js": ["scripts/jquery.js", "scripts/loader.js", "scripts/socket.io.js"]
     }
   ],

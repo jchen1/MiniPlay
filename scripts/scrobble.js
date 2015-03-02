@@ -83,7 +83,6 @@ function now_playing(details) {
 }
 
 function scrobble(details) {
-  console.log('scrobble');
   chrome.storage.sync.get('scrobbling-enabled', function(response) {
     if (response['scrobbling-enabled'] == true) {
       if (details === undefined || details.title === '') {

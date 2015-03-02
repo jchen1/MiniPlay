@@ -109,7 +109,7 @@ $(function() {
           send_command(msg);
         }
       });
-      update();
+      update(false, true);
     }
   });
 

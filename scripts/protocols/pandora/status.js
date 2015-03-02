@@ -56,6 +56,7 @@ var music_status = {
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.current_time_s + this.get_time(this.total_time);
     this.thumb = this.get_thumb();
+    this.volume = (parseInt($('.volumeKnob').css('left'), 10) - 20) / 82;
     this.status = ($('.playButton').css('display') == "none") ? 'Pause' : 'Play';
     return this;
   }

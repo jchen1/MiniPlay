@@ -176,7 +176,7 @@ body {
 #mute.top-control {
   background-position: -530px 0px;
   position: absolute;
-  right: -7px;
+  right: 0px;
   -webkit-filter: brightness(110%);
   -webkit-animation: none;
 }
@@ -371,21 +371,18 @@ body {
 
 #played-vslider {
   background-color: #eaeaea;
-  width: 3px;
+  width: 11px;
   height: 0px;
 }
 
 #vslider {
-  position: absolute;
-  right: 17;
-  top: 80;
   visibility: hidden;
   outline: none;
   height: 80px;
   cursor: pointer;
-  width: 3px;
+  width: 11px;
   z-index: 1100;
-  padding: 5 10 10 10;
+  padding-left: 14;
 }
 
 #vslider[disabled] {
@@ -395,13 +392,13 @@ body {
 #vslider-background {
   background-color: #fd8500;
   height: 100%;
-  width: 3px;
+  width: 11px;
 }
 
 #vslider-thumb {
   width: 11px;
   height: 11px;
-  margin-left: -3pt;
+  opacity: 0;
   position: relative;
   border-radius: 100%;
   background-color: #fd8500;

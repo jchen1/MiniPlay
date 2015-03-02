@@ -70,15 +70,14 @@ $(function() {
       }
     },
     animationCallback: function(x, y) {
-      var height = parseInt($('#vslider-thumb').css('top'), 10);
-      $('#played-vslider').css('height', height);
+      var offset = Math.round(y * 80);
+      $('#played-vslider').css('height', offset);
     },
     horizontal: false,
     vertical: true,
     y: $('#played-vslider').height() / ($('#vslider-background').height() - $('#vslider-thumb').height()),
     speed: 1,
     slide: false,
-    top: parseInt($('#vslider-thumb').css('height'), 10)
   });
 
   chrome.storage.sync.get('scrobbling-enabled', function(data) {
@@ -143,6 +142,11 @@ $(function() {
           var offset = Math.round((response.current_time_s / response.total_time_s) * ($('#slider').width() - ($('#slider-thumb').width())));
           $('#played-slider').attr('style', 'width:' + offset + 'px;');
           $('#slider-thumb').attr('style', 'left:' + offset + 'px;');
+        }
+        if (response.vslider_updated) {
+          var offset = Math.round((1 - response.volume) * 80);
+          $('#played-vslider').attr('style', 'height:' + offset + 'px;');
+          $('#vslider-thumb').attr('style', 'top:' + offset + 'px;');
         }
         set_thumb(response.thumb);
         set_repeat(response.repeat);

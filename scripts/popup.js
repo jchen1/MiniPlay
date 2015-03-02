@@ -96,11 +96,8 @@ $(function() {
         $('.interface').attr('disabled', true);
         $('#infobar').hide();
         set_album_art('img/default_album.png');
-        $('#title').html('No Google Music tab found');
-        $('#artist').html('<a href="#">Click to open a new tab</a>');
-        $('#artist a').on('click', function() {
-          chrome.tabs.create({url: 'https://play.google.com/music'});
-        });
+        $('#title').html('No music tab found');
+        $('#artist').html('');
         break;
       case 'no_song':
         $('.interface').attr('disabled', true);

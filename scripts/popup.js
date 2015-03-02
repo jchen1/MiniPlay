@@ -245,12 +245,13 @@ $(function() {
       $('#vslider').css('top', $('#top-bar').height());
       if ($('#vslider').css('visibility') == 'hidden') {
         $('#vslider').css('visibility', 'visible');
+        $('#volume').addClass('control-checked');
       }
       else {
         $('#vslider').css('visibility', 'hidden');
+        $('#volume').removeClass('control-checked');
       }
       ev.stopPropagation();
-      $('#volume').addClass('control-checked');
     }
   });
 

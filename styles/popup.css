@@ -46,9 +46,9 @@ body {
 #top-controls {
   position: absolute;
   list-style-type: none;
-  padding: 15px 10px 0 20px;
+  padding-top: 12px;
   margin: 0;
-  right: 0;
+  right: 10;
 }
 
 .fade {
@@ -124,9 +124,23 @@ body {
   opacity: 1;
   outline: none;
   border: none;
-  transition: opacity 0.4s fade;
   background: no-repeat url(../img/sprites.png);
   background-size: 567px 74px;
+  -webkit-filter: brightness(90%);
+}
+
+.top-control:hover {
+  -webkit-animation: animbrightness 0.4s;
+  -webkit-filter: brightness(110%);
+}
+
+@-webkit-keyframes animbrightness {
+  0% {
+    -webkit-filter: brightness(90%);
+  }
+  100% {
+    -webkit-filter: brightness(110%);
+  }
 }
 
 #repeat.top-control {
@@ -153,14 +167,18 @@ body {
   background-position: -493px 0px;
 }
 
-#volume.top-control:hover, #volume.top-control:active, #volume.control-checked {
+#volume.top-control:active, #volume.control-checked {
   background-position: -493px 0;
+  -webkit-filter: brightness(110%);
+  -webkit-animation: none;
 }
 
 #mute.top-control {
   background-position: -530px 0px;
   position: absolute;
   right: -7px;
+  -webkit-filter: brightness(110%);
+  -webkit-animation: none;
 }
 
 .top-control[disabled] {
@@ -170,11 +188,23 @@ body {
 .control {
   outline: none;
   border: none;
-  opacity: 0.5;
+  opacity: 0.7;
   margin-top: 18px;
   transition: opacity 0.4s;
   background: no-repeat url(../img/sprites.png);
   background-size: 567px 74px;
+}
+
+.control::after {
+  content: "";
+  background: no-repeat url(../img/sprites.png);
+  background-size: 567px 74px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.control:hover::after {
+  opacity: 1;
 }
 
 .control:hover, .control:active {
@@ -207,6 +237,12 @@ body {
   opacity: 1;
 }
 
+.thumb::after {
+  height: 37;
+  width: 37;
+  float: left;
+}
+
 .left {
   float: left;
 }
@@ -236,12 +272,33 @@ body {
   margin-right: 20px;
 }
 
+#down.control::after {
+  background-position: -345px -37px;
+  margin-left:-6;
+  margin-top:-2;
+}
+
+#down.control-checked::after {
+  background-position: -382px -37px;
+}
+
 #down.control-checked {
   background-position: -382px 0;
 }
 
 #up.control {
   background-position: -419px 0;
+}
+
+#up.control::after {
+  margin-left:-7;
+  margin-top:-2;
+  background-position: -418px -37px;
+}
+
+#up.control-checked::after {
+  margin-left: -6;
+  background-position: -456px -37px;
 }
 
 #up.control-checked {

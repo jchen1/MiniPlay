@@ -26,8 +26,8 @@ var music_status = {
 
   get_album_art : function() {
     var art = $('#playingAlbumArt').attr('src');
-    return (art == 'http://undefined') : 'img/default_album.png' : art;
-  }
+    return (art == 'http://undefined') ? 'img/default_album.png' : art;
+  },
 
   update : function() {
     this.title = $('#playerSongTitle').text();

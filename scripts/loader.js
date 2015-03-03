@@ -4,6 +4,7 @@ $(function() {
   var urls = {
     gmusic: "play.google.com/music",
     pandora: "pandora.com",
+    songza: "songza.com",
     spotify: "play.spotify.com"
   };
 

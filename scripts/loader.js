@@ -3,7 +3,8 @@
 $(function() {
   var urls = {
     gmusic: "play.google.com/music",
-    pandora: "pandora.com"
+    pandora: "pandora.com",
+    spotify: "play.spotify.com"
   };
 
   var background_port = chrome.runtime.connect({name: "loader"});

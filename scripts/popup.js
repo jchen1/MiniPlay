@@ -132,6 +132,7 @@ $(function() {
           response.album_art = 'img/default_album.png';
         }
         set_album_art(response.album_art);
+        console.log(response.volume);
         toggle_play(response.status);
         if (!slider.dragging) {
           $('#current-time').html(response.current_time);

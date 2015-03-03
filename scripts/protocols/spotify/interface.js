@@ -25,9 +25,9 @@ $(function() {
     msg.oldValue = oldValue;
     msg.newValue = newValue;
     if (oldValue !== undefined && (oldValue.title != newValue.title ||
-        oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
+        oldValue.artist != newValue.artist)) {
       msg.scrobble = true;
-      if (newValue.title != '') {
+      if (newValue.title.trim() != '') {
         msg.notify = true;
       }
       return msg;
@@ -37,9 +37,6 @@ $(function() {
     }
   }
 
-  slider = document.getElementById('app-player').contentWindow.document.getElementById('bar-click');
-  $(slider).click(function(evt) {console.log(evt);});
-
   //TODO: fix
   function update_slider(position, slider) {  //position is in %
     var slider;
@@ -47,13 +44,22 @@ $(function() {
       slider = document.getElementById('app-player').contentWindow.document.getElementById('bar-click');
     }
     else if (slider == 'vslider') {
-      $('#app-player').contents().find('#volume').mouseenter();
+      var button = document.getElementById('app-player').contentWindow.document.getElementById('volume-show');
+      var evt = document.createEvent('MouseEvents');
+      evt.initMouseEvent('mouseover', true, false);
+      button.dispatchEvent(evt);
       slider = document.getElementById('app-player').contentWindow.document.getElementById('volume-click');
     }
     var newWidth = Math.round(position * slider.offsetWidth);
     var rect = slider.getBoundingClientRect();
 
-    slider.dispatchEvent(new MouseEvent('click', {
+    slider.dispatchEvent(new MouseEvent('mousedown', {
+      clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
+      clientY: rect.top + slider.clientTop - slider.scrollTop,
+      bubbles: true
+    }));
+
+    slider.dispatchEvent(new MouseEvent('mouseup', {
       clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
       clientY: rect.top + slider.clientTop - slider.scrollTop,
       bubbles: true
@@ -117,7 +123,7 @@ $(function() {
           send_command(msg);
         }
       });
-      update();
+      update(false, true);
     }
   });
 

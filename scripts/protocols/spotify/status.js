@@ -42,7 +42,7 @@ var music_status = {
     this.repeat = iframe.find('#repeat').hasClass('active') ? 'LIST_REPEAT' : 'NO_REPEAT';
     this.shuffle = iframe.find('#shuffle').hasClass('active') ? 'ALL_SHUFFLE' : 'NO_SHUFFLE';
     this.status = (iframe.find('#play-pause').hasClass('playing')) ? 'Pause' : 'Play';
-    this.volume = 100;
+    this.volume = parseFloat(iframe.find('#vol-position').css('left'), 10) / 108;
     this.slider_updated = false;
     this.vslider_updated = false;
     return this;

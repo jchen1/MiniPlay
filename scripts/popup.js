@@ -128,9 +128,6 @@ $(function() {
         $('#title').html(response.title);
         $('#artist').html(response.artist);
         $('#album').html(response.album);
-        if (response.album_art == 'http://undefined') {
-          response.album_art = 'img/default_album.png';
-        }
         set_album_art(response.album_art);
         console.log(response.volume);
         toggle_play(response.status);

@@ -24,11 +24,16 @@ var music_status = {
     }).reduce(function(a, b) { return a + b; });
   },
 
+  get_album_art : function() {
+    var art = $('#playingAlbumArt').attr('src');
+    return (art == 'http://undefined') : 'img/default_album.png' : art;
+  }
+
   update : function() {
     this.title = $('#playerSongTitle').text();
     this.artist = $('#player-artist').text();
     this.album = $('.player-album').text();
-    this.album_art = $('#playingAlbumArt').attr('src');
+    this.album_art = get_album_art();
     this.current_time = $('#time_container_current').text();
     this.total_time = $('#time_container_duration').text();
     this.current_time_s = this.get_time(this.current_time);

@@ -2,8 +2,9 @@
   "manifest_version": 2,
 
   "name": "MiniPlay",
-  "description": "Control Google Play Music from anywhere in Chrome",
-  "version": "0.4.5",
+  "short_name": "MiniPlay",
+  "description": "Control web music players from anywhere in Chrome",
+  "version": "0.5.0",
 
   "icons": {
      "16": "img/icon-16.png",
@@ -32,13 +33,14 @@
   "permissions": [
     "notifications",
     "storage",
-    "*://play.google.com/music*"
+    "tabs",
+    "*://*/"  // for album art
   ],
 
   "content_scripts": [
     {
-      "matches": ["*://play.google.com/music*"],
-      "js": ["scripts/jquery.js", "scripts/status.js", "scripts/interface.js"]
+      "matches": ["*://play.google.com/music*", "*://*.pandora.com/*", "*://songza.com/*", "*://play.spotify.com/*"],
+      "js": ["scripts/jquery.js", "scripts/loader.js"]
     }
   ],
 

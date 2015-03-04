@@ -2,11 +2,25 @@
 
 chrome.storage.local.set({'last_notification': ''});
 
-var interface_port = null, popup_port = null;
+var interface_port = null, popup_port = null, loader_port = null;
 
 chrome.runtime.onConnect.addListener(function(port) {
+  if (port.name == "loader" && !loader_port) {
+    loader_port = port;
+    loader_port.id = port.sender.tab.id;
+    port.onMessage.addListener(function(msg) {
+      if (msg.protocol) {
+        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/status.js"});
+        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/interface.js"});
+      }
+    });
+    port.onDisconnect.addListener(function() {
+      loader_port = null;
+    });
+  }
   if (port.name == "interface" && !interface_port) {
     interface_port = port;
+    interface_port.id = port.sender.tab.id;
     port.onMessage.addListener(function(msg) {
       if (msg.scrobble == true) {
         scrobble(msg.oldValue);
@@ -16,7 +30,6 @@ chrome.runtime.onConnect.addListener(function(port) {
         now_playing(msg.newValue);
       }
     });
-    interface_port.id = port.sender.tab.id;
     if (popup_port) {
       popup_port.postMessage({type: 'connect', id: interface_port.id});
     }
@@ -36,6 +49,24 @@ chrome.runtime.onConnect.addListener(function(port) {
   }
 });
 
+function notify_helper(details, url) {
+  chrome.notifications.create('',
+  {
+    type: 'basic',
+    title: details.title,
+    message: details.artist,
+    contextMessage: details.album,
+    iconUrl: url
+  }, function(id){
+    chrome.storage.local.get('last_notification', function (data) {
+      if (data['last_notification']) {
+        chrome.notifications.clear(data['last_notification'], function(cleared){});
+      }
+      chrome.storage.local.set({'last_notification': id});
+    });
+  });
+}
+
 function create_notification(details) {
   chrome.storage.sync.get('notifications-enabled', function (ans) {
     if (ans['notifications-enabled'] === true) {
@@ -43,45 +74,15 @@ function create_notification(details) {
       xhr.open('GET', details.album_art);
       xhr.responseType = 'blob';
       xhr.onload = function(){
-        var blob = this.response;
-        chrome.notifications.create('',
-        {
-          type: 'basic',
-          title: details.title,
-          message: details.artist,
-          contextMessage: details.album,
-          iconUrl: window.URL.createObjectURL(blob)
-        }, function(id){
-          chrome.storage.local.get('last_notification', function (data) {
-            if (data['last_notification']) {
-              chrome.notifications.clear(data['last_notification'], function(cleared){});
-            }
-            chrome.storage.local.set({'last_notification': id});
-          });
-        });
+        notify_helper(details, window.URL.createObjectURL(this.response));
       };
+      xhr.onerror = function() {
+        notify_helper(details, 'img/default_album.png');
+      }
       xhr.send(null);
     }
   });
 }
-
-chrome.storage.onChanged.addListener(function (changes, area) {
-  if (changes['music_status'] && changes['music_status'].newValue) {
-    var oldValue = changes['music_status'].oldValue
-    var newValue = changes['music_status'].newValue;
-
-    if (oldValue === undefined ||
-        oldValue.title != newValue.title ||
-        oldValue.artist != newValue.artist ||
-        oldValue.album_art != newValue.album_art) {
-      scrobble(oldValue);
-      if (newValue.title != '') {
-        create_notification(newValue);
-        now_playing(newValue);
-      }
-    }
-  }
-});
 
 chrome.notifications.onClicked.addListener(function (id) {
   chrome.storage.local.get('lastfm_fail_id', function (data) {

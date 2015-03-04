@@ -92,6 +92,7 @@ function scrobble(details) {
       if (details.total_time_s > 30 && (details.current_time_s >= 240
           || 2*details.current_time_s >= details.total_time_s)) {
         get_session_id(function (session_id) {
+
           if (session_id != '') {
             var params = {
               method: 'track.scrobble',

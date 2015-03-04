@@ -54,10 +54,11 @@ $(function() {
     },
     x: $('#played-slider').width() / ($('#slider').width() - ($('#slider-thumb').width())),
     speed: 1,
-    slide: false
+    slide: false,
+    right: parseInt($('#slider-thumb').css('height'), 10)
   });
 
-  var vslider = new Dragdealer('vslider', {
+  var vslider = new Dragdealer('vslider-background', {
     callback: function(x, y) {
       if (interface_port) {
         interface_port.postMessage(
@@ -70,37 +71,39 @@ $(function() {
     },
     animationCallback: function(x, y) {
       var height = parseInt($('#vslider-thumb').css('top'), 10);
-      $('#played-vslider').css('height', height);
+      $('#played-vslider').css('height', height); //grey thing
     },
     horizontal: false,
     vertical: true,
-    y: $('#played-vslider').height() / ($('#vslider').height() - $('#vslider-thumb').height()),
+    y: $('#played-vslider').height() / ($('#vslider-background').height() - $('#vslider-thumb').height()),
+    bottom: -$('#vslider-thumb').height(),
     speed: 1,
     slide: false,
-    top: parseInt($('#vslider-thumb').css('height'), 10),
-    bottom: -1 * parseInt($('#vslider-thumb').css('height'), 10)
   });
 
   chrome.storage.sync.get('scrobbling-enabled', function(data) {
     update_scrobble(data['scrobbling-enabled']);
   });
 
+  function set_album_art(url) {
+    var background = 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(' + url + ')';
+    $('#album-art').css('background', background);
+    $('#album-art').css('background-size', '320px 320px');
+  }
+
   function set_state(state) {
     switch (state) {
       case 'no_tab':
         $('.interface').attr('disabled', true);
         $('#infobar').hide();
-        $('#album-art-img').attr('src', 'img/default_album.png');
-        $('#title').html('No Google Music tab found');
-        $('#artist').html('<a href="#">Click to open a new tab</a>');
-        $('#artist a').on('click', function() {
-          chrome.tabs.create({url: 'https://play.google.com/music'});
-        });
+        set_album_art('img/default_album.png');
+        $('#title').html('No music tab found');
+        $('#artist').html('');
         break;
       case 'no_song':
         $('.interface').attr('disabled', true);
         $('#infobar').hide();
-        $('#album-art-img').attr('src', 'img/default_album.png');
+        set_album_art('img/default_album.png');
         $('#title').html('No song selected');
         $('#artist').html('');
         $('#album').html('');
@@ -126,10 +129,7 @@ $(function() {
         $('#title').html(response.title);
         $('#artist').html(response.artist);
         $('#album').html(response.album);
-        if (response.album_art == 'http://undefined') {
-          response.album_art = 'img/default_album.png';
-        }
-        $('#album-art-img').attr('src', response.album_art);
+        set_album_art(response.album_art);
         toggle_play(response.status);
         if (!slider.dragging) {
           $('#current-time').html(response.current_time);
@@ -138,9 +138,31 @@ $(function() {
           $('#played-slider').attr('style', 'width:' + offset + 'px;');
           $('#slider-thumb').attr('style', 'left:' + offset + 'px;');
         }
+        if (response.vslider_updated) {
+          var offset = Math.round((1 - response.volume) * 80);
+          $('#played-vslider').attr('style', 'height:' + offset + 'px;');
+          $('#vslider-thumb').attr('style', 'top:' + offset + 'px;');
+        }
         set_thumb(response.thumb);
         set_repeat(response.repeat);
         set_shuffle(response.shuffle);
+        disable_buttons(response.disabled_buttons);
+      }
+    }
+  }
+
+  function disable_buttons(disabled) {
+    for (var i = 0; i < disabled.length; i++) {
+      switch (disabled[i]) {
+        case 'play': $('#play').attr('disabled', true); break;
+        case 'rew': $('#rew').attr('disabled', true); break;
+        case 'ff': $('#ff').attr('disabled', true); break;
+        case 'up': $('#up').attr('disabled', true); break;
+        case 'down': $('#down').attr('disabled', true); break;
+        case 'shuffle': $('#shuffle').css('display', 'none'); break;
+        case 'repeat': $('#repeat').css('display', 'none'); break;
+        case 'slider': $('#slider').attr('disabled', true); if (!slider.disabled) slider.disable(); break;
+        case 'vslider': $('#volume').css('display', 'none'); $('#vslider').css('display', 'none'); break;
       }
     }
   }
@@ -206,7 +228,7 @@ $(function() {
     }
   }
 
-  $('.control').on('click', function(e) {
+  $('.control, .top-control').on('click', function(e) {
     var name = $(e.currentTarget).attr('id');
     if (interface_port) {
       interface_port.postMessage(
@@ -217,20 +239,30 @@ $(function() {
     }
   });
 
-  $('#setting').click(function(ev) {
-    $('#menu').css('top', $('#top-bar').height());
-    if ($('#menu').css('visibility') == 'hidden') {
-      $('#menu').css('visibility', 'visible');
+  $('#volume').click(function(ev) {
+    if ($('#volume').prop('disabled') == false) {
+      $('#vslider').css('top', $('#top-bar').height());
+      if ($('#vslider').css('display') == 'none') {
+        $('#vslider').css('display', 'block');
+        $('#volume').addClass('control-checked');
+        vslider.reflow();
+      }
+      else {
+        $('#vslider').css('display', 'none');
+        $('#volume').removeClass('control-checked');
+      }
+      ev.stopPropagation();
     }
-    else {
-      $('#menu').css('visibility', 'hidden');
-    }
-    ev.stopPropagation();
+  });
+
+  $('#settings').click(function() {
+    chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
 
   $('body').click(function(ev) {
-    if (ev.target.id != 'menu' && $('#menu').has(ev.target).length === 0) {
-      $('#menu').css('visibility', 'hidden');
+    if (ev.target.id != 'vslider' && $('#vslider').has(ev.target).length === 0) {
+      $('#vslider').css('display', 'none');
+      $('#volume').removeClass('control-checked');
     }
   });
   $('#options').on('click', function() {

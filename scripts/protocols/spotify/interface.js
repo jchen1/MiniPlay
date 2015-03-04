@@ -1,4 +1,4 @@
-// Interfaces with the Google Play Music tab
+// Interfaces with the spotify tab
 
 $(function() {
   var background_port = chrome.runtime.connect({name: "interface"});
@@ -10,6 +10,7 @@ $(function() {
     music_status.update();
     music_status.slider_updated = (slider == true);
     music_status.vslider_updated = (vslider == true);
+    // socket.emit('data', music_status);
     var msg = create_background_msg(old_status, music_status);
     if (msg != null) {
       background_port.postMessage(msg);
@@ -24,9 +25,9 @@ $(function() {
     msg.oldValue = oldValue;
     msg.newValue = newValue;
     if (oldValue !== undefined && (oldValue.title != newValue.title ||
-        oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
+        oldValue.artist != newValue.artist)) {
       msg.scrobble = true;
-      if (newValue.title != '') {
+      if (newValue.title.trim() != '') {
         msg.notify = true;
       }
       return msg;
@@ -36,38 +37,49 @@ $(function() {
     }
   }
 
-  function update_slider(position, slidername) {  //position is in %
-    var slider = document.getElementById(slidername);
+  //TODO: fix
+  function update_slider(position, slider) {  //position is in %
+    var slider;
+    if (slider == 'slider') {
+      slider = document.getElementById('app-player').contentWindow.document.getElementById('bar-click');
+    }
+    else if (slider == 'vslider') {
+      var button = document.getElementById('app-player').contentWindow.document.getElementById('volume-show');
+      var evt = document.createEvent('MouseEvents');
+      evt.initMouseEvent('mouseover', true, false);
+      button.dispatchEvent(evt);
+      slider = document.getElementById('app-player').contentWindow.document.getElementById('volume-click');
+    }
     var newWidth = Math.round(position * slider.offsetWidth);
     var rect = slider.getBoundingClientRect();
 
-    slider.dispatchEvent(new MouseEvent('click', {
+    slider.dispatchEvent(new MouseEvent('mousedown', {
       clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
-      clientY: rect.top + slider.clientTop - slider.scrollTop
+      clientY: rect.top + slider.clientTop - slider.scrollTop,
+      bubbles: true
+    }));
+
+    slider.dispatchEvent(new MouseEvent('mouseup', {
+      clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
+      clientY: rect.top + slider.clientTop - slider.scrollTop,
+      bubbles: true
     }));
   }
 
   function send_command(message) {
+    var iframe = $('#app-player').contents();
     var $button = null;
     switch (message.type) {
       case 'play':
-        $button = $('button[data-id="play-pause"]');
-        if ($button.attr('disabled')) {
-          $button = $('[data-type="imfl"]');  // I'm feeling lucky radio
-        }
-        break;
+        $button = iframe.find('#play-pause'); break;
       case 'rew':
-        $button = $('button[data-id="rewind"]'); break;
+        $button = iframe.find('#previous'); break;
       case 'ff':
-        $button = $('button[data-id="forward"]'); break;
-      case 'up':
-        $button = $('li[title="Thumbs up"]'); break;
-      case 'down':
-        $button = $('li[title="Thumbs down"]'); break;
+        $button = iframe.find('#next'); break;
       case 'shuffle':
-        $button = $('button[data-id="shuffle"]'); break;
+        $button = iframe.find('#shuffle'); break;
       case 'repeat':
-        $button = $('button[data-id="repeat"]'); break;
+        $button = iframe.find('#repeat'); break;
       case 'slider':
         update_slider(message.position, 'slider'); break;
       case 'vslider':
@@ -90,6 +102,14 @@ $(function() {
     }
   }
 
+  // var socket = io('https://miniplay.herokuapp.com');
+  // socket.on('connect', function() {
+  //   // TODO: find a better selector (user and authuser might not be 0)
+  //   var email = $('a[href="/music/listen?u=0&authuser=0"] > div:contains("(default)") > div:contains("(default)")').text().split(' ')[0];
+  //   socket.emit('room', {client : 'player', room : email});
+  // });
+  // socket.on('data', parseMessage);
+
   background_port.onMessage.addListener(parseMessage);
 
   chrome.runtime.onConnect.addListener(function(port) {
@@ -103,7 +123,7 @@ $(function() {
           send_command(msg);
         }
       });
-      update();
+      update(false, true);
     }
   });
 

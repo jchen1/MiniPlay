@@ -1,7 +1,5 @@
-## MiniPlay for Google Play Music
-[MiniPlay](https://chrome.google.com/webstore/detail/miniplay/dfddfiedihbijfeacjamchlliogmjjnd) adds a miniplayer and global keyboard shortcuts to [Google Play Music](https://play.google.com/music/listen).
-
-Note: You need to have a Google Play Music account to use this extension. After installing the extension, you will have to refresh your Google Play Music tab due to a Chrome extension limitation.
+## MiniPlay - control music streaming sites from anywhere in Chrome
+[MiniPlay](https://chrome.google.com/webstore/detail/miniplay/dfddfiedihbijfeacjamchlliogmjjnd) adds a miniplayer and global keyboard shortcuts to various music players, including Spotify, Google Play Music, Pandora, and Songza.
 
 ### Features
 

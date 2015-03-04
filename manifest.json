@@ -3,7 +3,7 @@
 
   "name": "MiniPlay",
   "short_name": "MiniPlay",
-  "description": "Control web music players from anywhere in Chrome",
+  "description": "Control streaming music players from anywhere in Chrome",
   "version": "0.5.0",
 
   "icons": {
@@ -34,7 +34,7 @@
     "notifications",
     "storage",
     "tabs",
-    "*://*/"  // for album art
+    "*://*/"
   ],
 
   "content_scripts": [

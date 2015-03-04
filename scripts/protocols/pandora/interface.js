@@ -72,7 +72,6 @@ $(function() {
       case 'down':
         $button = $('.thumbDownButton'); break;
       case 'vslider':
-        console.log('update_slider(' + message.position + ');');
         update_slider(message.position); break;
     }
     if ($button !== null) {

@@ -32,7 +32,7 @@ var music_status = {
         return $(item).attr('src');
       }
     }
-    return 'img/default_album.png');
+    return 'img/default_album.png';
   },
 
   get_thumb : function () {

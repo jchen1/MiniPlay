@@ -125,7 +125,7 @@ body {
   outline: none;
   border: none;
   background: no-repeat url(../img/sprites.png);
-  background-size: 567px 74px;
+  background-size: 604px 74px;
   -webkit-filter: brightness(90%);
 }
 
@@ -167,6 +167,10 @@ body {
   background-position: -493px 0px;
 }
 
+#settings.top-control {
+  background-position: -567px 0px;
+}
+
 #volume.top-control:active, #volume.control-checked {
   background-position: -493px 0;
   -webkit-filter: brightness(110%);
@@ -175,8 +179,6 @@ body {
 
 #mute.top-control {
   background-position: -530px 0px;
-  position: absolute;
-  right: 0px;
   -webkit-filter: brightness(110%);
   -webkit-animation: none;
 }
@@ -192,13 +194,13 @@ body {
   margin-top: 18px;
   transition: opacity 0.4s;
   background: no-repeat url(../img/sprites.png);
-  background-size: 567px 74px;
+  background-size: 604px 74px;
 }
 
 .control::after {
   content: "";
   background: no-repeat url(../img/sprites.png);
-  background-size: 567px 74px;
+  background-size: 604px 74px;
   opacity: 0;
   transition: opacity 0.5s;
 }
@@ -376,13 +378,11 @@ body {
 }
 
 #vslider {
-  visibility: hidden;
+  display: none;
   outline: none;
-  height: 80px;
   cursor: pointer;
   width: 11px;
   z-index: 1100;
-  padding-left: 14;
 }
 
 #vslider[disabled] {
@@ -391,15 +391,18 @@ body {
 
 #vslider-background {
   background-color: #fd8500;
-  height: 100%;
+  height: 80px;
   width: 11px;
+  position: relative;
+  top: 4;
+  left: 13;
 }
 
 #vslider-thumb {
   width: 11px;
   height: 11px;
   opacity: 0;
-  position: relative;
+  position: absolute;
   border-radius: 100%;
   background-color: #fd8500;
 }

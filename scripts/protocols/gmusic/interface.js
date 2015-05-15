@@ -37,11 +37,11 @@ $(function() {
   }
 
   function update_slider(position, slidername) {  //position is in %
-    var slider = document.getElementById(slidername);
+    var slider = document.getElementById(slidername).shadowRoot.getElementById('sliderBar');
     var newWidth = Math.round(position * slider.offsetWidth);
     var rect = slider.getBoundingClientRect();
 
-    slider.dispatchEvent(new MouseEvent('click', {
+    slider.dispatchEvent(new MouseEvent('mousedown', {
       clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
       clientY: rect.top + slider.clientTop - slider.scrollTop
     }));
@@ -51,24 +51,24 @@ $(function() {
     var $button = null;
     switch (message.type) {
       case 'play':
-        $button = $('button[data-id="play-pause"]');
+        $button = $('sj-icon-button[data-id="play-pause"]');
         break;
       case 'rew':
-        $button = $('button[data-id="rewind"]'); break;
+        $button = $('sj-icon-button[data-id="rewind"]'); break;
       case 'ff':
-        $button = $('button[data-id="forward"]'); break;
+        $button = $('sj-icon-button[data-id="forward"]'); break;
       case 'up':
-        $button = $('li[title="Thumbs up"]'); break;
+        $button = $('sj-icon-button[data-rating="5"]'); break;
       case 'down':
-        $button = $('li[title="Thumbs down"]'); break;
+        $button = $('sj-icon-button[data-rating="1"]'); break;
       case 'shuffle':
-        $button = $('button[data-id="shuffle"]'); break;
+        $button = $('sj-icon-button[data-id="shuffle"]'); break;
       case 'repeat':
-        $button = $('button[data-id="repeat"]'); break;
+        $button = $('sj-icon-button[data-id="repeat"]'); break;
       case 'slider':
-        update_slider(message.position, 'slider'); break;
+        update_slider(message.position, 'material-player-progress'); break;
       case 'vslider':
-        update_slider(message.position, 'vslider'); break;
+        update_slider(message.position, 'material-vslider'); break;
     }
     if ($button !== null) {
       $button.click();

@@ -237,6 +237,7 @@ $(function() {
         'type': name
       });
     }
+    e.stopPropagation();
   });
 
   $('#volume').click(function(ev) {
@@ -259,6 +260,10 @@ $(function() {
     chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
 
+  $('#vslider').click(function(e) {
+    e.stopPropagation();
+  });
+
   $('body').click(function(ev) {
     if (ev.target.id != 'vslider' && $('#vslider').has(ev.target).length === 0) {
       $('#vslider').css('display', 'none');
@@ -268,7 +273,7 @@ $(function() {
   $('#options').on('click', function() {
     chrome.tabs.create({url: chrome.extension.getURL('options.html')});
   });
-  $('#album-art-img').on('click', function() {
+  $('#album-art').on('click', function() {
     if (interface_port) {
       chrome.tabs.update(interface_port.id, {highlighted: true});
       chrome.tabs.get(interface_port.id, function (tab) {

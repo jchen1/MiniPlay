@@ -29,8 +29,20 @@ var music_status = {
     return (art == 'http://undefined') ? 'img/default_album.png' : art;
   },
 
+  get_thumb : function() {
+    if ($('sj-icon-button[data-rating="5"]').attr('title') == 'Undo thumb-up') {
+      return "5";
+    }
+    else if ($('sj-icon-button[data-rating="1"]').attr('title') == 'Undo thumb-down') {
+      return "1";
+    }
+    else {
+      return "0";
+    }
+  },
+
   update : function() {
-    this.title = $('#playerSongTitle').text();
+    this.title = $('#player-song-title').text();
     this.artist = $('#player-artist').text();
     this.album = $('.player-album').text();
     this.album_art = this.get_album_art();
@@ -38,11 +50,11 @@ var music_status = {
     this.total_time = $('#time_container_duration').text();
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.get_time(this.total_time);
-    this.shuffle = $('button[data-id="shuffle"]').attr('value');
-    this.repeat = $('button[data-id="repeat"]').attr('value');
-    this.thumb = $('.thumbs > .selected').attr('data-rating');
-    this.status = $('button[data-id="play-pause"]').attr('title');
-    this.volume = parseInt($('#vslider > .goog-slider-thumb').css('left'), 10) / (parseInt($('.volume-slider-background').css('width'), 10) - parseInt($('.goog-slider-thumb').css('width'), 10));
+    this.shuffle = $('sj-icon-button[data-id="shuffle"]').attr('value');
+    this.repeat = $('sj-icon-button[data-id="repeat"]').attr('value');
+    this.thumb = this.get_thumb();
+    this.status = $('sj-icon-button[data-id="play-pause"]').attr('title') == 'Play' ? 'Pause' : 'Play';
+    this.volume = parseInt($('#material-vslider').attr('aria-valuenow')) / 100.0;
     this.slider_updated = false;
     this.vslider_updated = false;
     return this;

@@ -2,7 +2,20 @@
 
 chrome.storage.local.set({'last_notification': ''});
 
-var interface_port = null, popup_port = null, loader_port = null;
+var interface_port = null, popup_port = null, loader_port = null, server_port = io('https://miniplay.herokuapp.com');
+
+server_port.on('connect', function() {
+  var email = "rememberthebaldness@gmail.com";
+  server_port.emit('room', {client : 'player', room : email});
+});
+server_port.on('data', function(msg) {
+  if (msg.action == 'update_status') {}
+  if (msg.action == 'send_command') {
+    if (interface_port) {
+        interface_port.postMessage({action: 'send_command', type: msg.type, position: msg.position});
+    }
+  }
+});
 
 chrome.runtime.onConnect.addListener(function(port) {
   if (port.name == "loader" && !loader_port) {
@@ -28,6 +41,9 @@ chrome.runtime.onConnect.addListener(function(port) {
       if (msg.notify == true) {
         create_notification(msg.newValue);
         now_playing(msg.newValue);
+      }
+      if (server_port) {
+        server_port.emit('data', msg.newValue);
       }
     });
     if (popup_port) {

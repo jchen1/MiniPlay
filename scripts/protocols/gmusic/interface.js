@@ -29,11 +29,9 @@ $(function() {
       if (newValue.title != '') {
         msg.notify = true;
       }
-      return msg;
     }
-    else {
-      return null;
-    }
+
+    return msg;
   }
 
   function update_slider(position, slidername) {  //position is in %

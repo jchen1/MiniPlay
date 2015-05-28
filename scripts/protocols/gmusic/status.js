@@ -53,7 +53,7 @@ var music_status = {
     this.shuffle = $('sj-icon-button[data-id="shuffle"]').attr('value');
     this.repeat = $('sj-icon-button[data-id="repeat"]').attr('value');
     this.thumb = this.get_thumb();
-    this.status = $('sj-icon-button[data-id="play-pause"]').attr('title') == 'Play' ? 'Pause' : 'Play';
+    this.status = $('sj-icon-button[data-id="play-pause"]').attr('title');
     this.volume = parseInt($('#material-vslider').attr('aria-valuenow')) / 100.0;
     this.slider_updated = false;
     this.vslider_updated = false;

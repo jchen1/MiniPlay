@@ -26,7 +26,7 @@ var music_status = {
 
   get_album_art : function() {
     var art = $('#playingAlbumArt').attr('src');
-    return (art == 'http://undefined') ? 'img/default_album.png' : art;
+    return (!art || art == 'http://undefined') ? 'img/default_album.png' : art.substring(0, art.search('=') + 1) + 's320';
   },
 
   get_thumb : function() {

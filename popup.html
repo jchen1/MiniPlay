@@ -1,7 +1,9 @@
 <html>
 <head>
-  <link rel='stylesheet' type='text/css' href='styles/popup.css'>
   <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.deep_orange-indigo.min.css" /> 
+  <link rel='stylesheet' type='text/css' href='styles/popup.css'>
 </head>
 <body>
 
@@ -13,40 +15,56 @@
         <div id='album'></div>
       </div>
       <ul id='top-controls'>
-        <li id='shuffle' class='top-control interface medium' title='Shuffle songs' tabIndex='-1'></li>
-        <li id='repeat' class='top-control interface medium' title='Repeat songs' tabIndex='-1'></li>
-        <li id='volume' class='top-control interface medium' title='Volume' tabIndex='-1'></li>
-        <li id='vslider'>
-          <div id='vslider-background' role='slider' class='dragdealer'>
-            <div id='vslider-thumb' class='handle'></div>
-            <div id='played-vslider'></div>
-          </div>
-          <div id='mute' class='top-control interface medium'></div>
+        <li id='shuffle' class='top-control interface' title='Shuffle songs' tabIndex='-1'>
+          <i class="material-icons">shuffle</i>
         </li>
-        <li id='settings' class='top-control interface medium' title='Settings' tabIndex='-1'></li>
+        <li id='repeat' class='top-control interface' title='Repeat songs' tabIndex='-1'>
+          <i class="material-icons">repeat</i>
+        </li>
+        <li id='settings' class='top-control interface' title='Settings' tabIndex='-1'>
+          <i class='material-icons'>settings</i>
+        </li>
       </ul>
-      <div id='time'>
         <div id='current-time'>0:00</div>
         <div id='total-time'>0:00</div>
-      </div>
     </div>
+    <p id='slider-wrapper'>
+      <input id='slider' class='mdl-slider mdl-js-slider' type='range' min='0' max='0' value'0' tabindex='-1' />
+    </p>
     <div id='controls'>
-      <div id='slider'role='slider' class='dragdealer interface'>
-        <div id='slider-background'>
-          <div id='played-slider'></div>
-        </div>
-        <div id='slider-thumb' class='handle interface'></div>
+      <div id='controls-left'>
+        <button id='rew' class='mdl-button mdl-js-button mdl-button--icon control interface' title='Previous song' tabIndex='-1' >
+          <i class="material-icons">skip_previous</i>
+        </button>
+        <button id='play' class='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary control interface' title='Play' tabIndex='0' >
+          <i class="material-icons">play_arrow</i>
+        </button>
+        <button id='ff' class='mdl-button mdl-js-button mdl-button--icon control interface' title='Next song' tabIndex='-1' >
+          <i class="material-icons">skip_next</i>
+        </button>
       </div>
-      <button id='rew' class='control interface large left' title='Previous song' tabIndex='-1' disabled></button>
-      <button id='play' class='control interface large left' title='Play' tabIndex='0' disabled></button>
-      <button id='ff' class='control interface large left' title='Next song' tabIndex='-1' disabled></button>
-      <button id='down' class='control interface medium thumb right' title='Thumbs down' tabIndex='-1' disabled></button>
-      <button id='up' class='control interface medium thumb right' title='Thumbs up' tabIndex='-1' disabled></button>
+      <div id='controls-right'>
+        <button id='up' class='mdl-button mdl-js-button mdl-button--icon control interface thumb' title='Thumbs up' tabIndex='-1' >
+          <i class="material-icons">thumb_up</i>
+        </button>
+        <button id='down' class='mdl-button mdl-js-button mdl-button--icon control interface thumb' title='Thumbs down' tabIndex='-1' >
+          <i class="material-icons">thumb_down</i>
+        </button>
+        <button id='vol' class='mdl-button mdl-js-button mdl-button--icon control interface' title='Volume' tabindex='-1'>
+          <i class='material-icons'>volume_up</i>
+        </button>
+        <p id='vol-wrapper'>
+          <input id='vol-slider' class='mdl-slider mdl-js-slider' type='range' min='0' max='100' value='100' tabindex='-1' disabled />
+        </p>
+        <button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon control interface' title='Volume' tabindex='-1'>
+          <i class='material-icons'>volume_up</i>
+        </button>
+      </div>
     </div>
   </div>
 
   <script src='scripts/jquery.js'></script>
-  <script src='scripts/dragdealer.min.js'></script>
   <script src='scripts/popup.js'></script>
+  <script src="scripts/material.min.js"></script>
 </body>
 </html>

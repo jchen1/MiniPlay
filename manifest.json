@@ -4,7 +4,7 @@
   "name": "MiniPlay",
   "short_name": "MiniPlay",
   "description": "Control streaming music players from anywhere in Chrome",
-  "version": "0.5.2",
+  "version": "0.5.3",
 
   "icons": {
      "16": "img/icon-16.png",
@@ -26,7 +26,7 @@
       "19": "img/icon-19.png",
       "38": "img/icon-38.png"
     },
-    "default_title": "Google Play Music",
+    "default_title": "MiniPlay",
     "default_popup": "popup.html"
   },
 

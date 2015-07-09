@@ -105,4 +105,8 @@ $(function() {
   });
 
   window.setInterval(update, 1000);
+
+  // Toggle the playlist to set it up for viewing
+  $('#queue').click();
+  window.setTimeout(function() { $('#queue').click(); }, 10);
 });

@@ -107,20 +107,18 @@ $(function() {
         set_shuffle(response.shuffle);
         disable_buttons(response.disabled_buttons);
         set_playlist(response.playlist);
+        set_volume(response.volume);
       }
     }
   }
 
   function set_playlist(playlist) {
     $('#playlist-table > tbody').empty();
-    if (!playlist) {
-      return;
-    }
     for (var i = 0; i < playlist.length; i++) {
       var item = playlist[i];
       var row =
-        $('<tr>').addClass('song-row').append(
-          $('<td>').append(
+        $('<tr>').addClass('song-row').attr('index', i).append(
+          $('<td>').addClass('song-details-span').addClass('mdl-data-table__cell--non-numeric').append(
             $('<span>').addClass('song-info').append(
               $('<img>').attr('src', item.album_art).addClass('small-art')).append(
               $('<div>').addClass('song-details').append(
@@ -128,16 +126,32 @@ $(function() {
                 $('<div>').addClass('song-artist-album').text(item.artist + " - " + item.album)
               )
             )
-          ).append(
-          $('<td>').append(
-            $('<span>').text(item.total_time))
-          ).append(
-          $('<td>').append(
-            $('<span>').text(item.play_count))
+          )
+        ).append(
+          $('<td>').addClass('duration').append(
+            $('<span>').text(item.total_time)
+          )
+        ).append(
+          $('<td>').addClass('play-count').append(
+            $('<span>').text(item.play_count)
           )
         );
+
+
       $('#playlist-table > tbody').append(row);
     }
+
+    $('.song-row').click(function() {
+      console.log($(this).attr('index'));
+      if (interface_port) {
+        interface_port.postMessage(
+        {
+          'action': 'send_command',
+          'type': 'playlist',
+          'index': $(this).attr('index')
+        });
+      }
+    });
   }
 
   function disable_buttons(disabled) {
@@ -205,15 +219,17 @@ $(function() {
     }
   }
 
-  function setVolumeIcon(vol) {
-    if (vol == 0) {
-      $('#vol > i').text('volume_mute');
-    }
-    else if (vol < 50) {
-      $('#vol > i').text('volume_down');
-    }
-    else {
-      $('#vol > i').text('volume_up');
+  function set_volume(vol) {
+    if ($('#vol-slider').prop('disabled') == false) {
+      if (vol == 0) {
+        $('#vol > i').text('volume_mute');
+      }
+      else if (vol < 50) {
+        $('#vol > i').text('volume_down');
+      }
+      else {
+        $('#vol > i').text('volume_up');
+      }
     }
   }
 
@@ -248,7 +264,7 @@ $(function() {
     if ($('#vol-slider').prop('disabled') == false) {
       $('#vol-slider').prop('disabled', true);
       $('#vol-wrapper').css('display', 'none');
-      setVolumeIcon($('#vol-slider').val());
+      set_volume($('#vol-slider').val());
       $('#vol-up').css('display', 'none');
       $('.thumb').css('display', 'block');
     }

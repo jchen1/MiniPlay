@@ -49,6 +49,7 @@ $(function() {
 
   function send_command(message) {
     var $button = null;
+    console.log(message);
     switch (message.type) {
       case 'play':
         $button = $('sj-icon-button[data-id="play-pause"]');
@@ -69,7 +70,11 @@ $(function() {
         update_slider(message.position, 'material-player-progress'); break;
       case 'vslider':
         update_slider(message.position, 'material-vslider'); break;
+      case 'playlist':
+        console.log('index:'+message.index);
+        $button = $('.song-table > tbody > .song-row[data-index="'+message.index+'"] > td[data-col="song-details"] button'); break;
     }
+    console.log($button);
     if ($button !== null) {
       $button.click();
     }
@@ -100,13 +105,21 @@ $(function() {
           send_command(msg);
         }
       });
-      update(false, true);
+      // Toggle the playlist to set it up for viewing
+      if (!$('#queue-overlay').hasClass('sj-opened')) {
+        $('#queue').click();
+      }
+      window.setTimeout(function() {
+        if ($('#queue-overlay').hasClass('sj-opened')) {
+          $('#queue').click();
+        }
+        update(false, true);
+      }, 100);
+
     }
   });
 
   window.setInterval(update, 1000);
 
-  // Toggle the playlist to set it up for viewing
-  $('#queue').click();
-  window.setTimeout(function() { $('#queue').click(); }, 10);
+
 });

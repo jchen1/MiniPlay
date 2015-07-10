@@ -2,7 +2,7 @@
 <head>
   <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.deep_orange-indigo.min.css" /> 
+  <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.0/material.deep_orange-indigo.min.css" />
   <link rel='stylesheet' type='text/css' href='styles/popup.css'>
 </head>
 <body>
@@ -27,6 +27,23 @@
       </ul>
         <div id='current-time'>0:00</div>
         <div id='total-time'>0:00</div>
+    </div>
+    <div id='playlist'>
+      <table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
+        <thead>
+          <tr>
+            <th class='mdl-data-table__cell--non-numeric'>Song</th>
+            <th>
+              <i class="material-icons">schedule</i>
+            </th>
+            <th>
+              <i class='material-icons'>music_note</i>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
     <p id='slider-wrapper'>
       <input id='slider' class='mdl-slider mdl-js-slider' type='range' min='0' max='0' value'0' tabindex='-1' />
@@ -58,6 +75,9 @@
         </p>
         <button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon control interface' title='Volume' tabindex='-1'>
           <i class='material-icons'>volume_up</i>
+        </button>
+        <button id='playlist-button' class='mdl-button mdl-js-button mdl-button--icon control interface' title='Playlist' tabindex='-1'>
+          <i class='material-icons'>queue_music</i>
         </button>
       </div>
     </div>

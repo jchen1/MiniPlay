@@ -85,8 +85,11 @@ $(function() {
           $('#slider-wrapper').find('.mdl-slider__background-lower').attr('style', 'flex: ' + offset + ' 1 0%;');
           $('#slider-wrapper').find('.mdl-slider__background-upper').attr('style', 'flex: ' + (1 - offset) + ' 1 0%;');
           $('#slider').val(response.current_time_s);
-          if ($('#slider').val() > 0) {
+          if (response.current_time_s > 0) {
             $('#slider').removeClass('is-lowest-value');
+          }
+          else {
+            $('#slider').addClass('is-lowest-value');
           }
           $('#current-time').html(response.current_time);
           $('#total-time').html(response.total_time);
@@ -103,7 +106,37 @@ $(function() {
         set_repeat(response.repeat);
         set_shuffle(response.shuffle);
         disable_buttons(response.disabled_buttons);
+        set_playlist(response.playlist);
       }
+    }
+  }
+
+  function set_playlist(playlist) {
+    $('#playlist-table > tbody').empty();
+    if (!playlist) {
+      return;
+    }
+    for (var i = 0; i < playlist.length; i++) {
+      var item = playlist[i];
+      var row =
+        $('<tr>').addClass('song-row').append(
+          $('<td>').append(
+            $('<span>').addClass('song-info').append(
+              $('<img>').attr('src', item.album_art).addClass('small-art')).append(
+              $('<div>').addClass('song-details').append(
+                $('<div>').addClass('song-title').text(item.title)).append(
+                $('<div>').addClass('song-artist-album').text(item.artist + " - " + item.album)
+              )
+            )
+          ).append(
+          $('<td>').append(
+            $('<span>').text(item.total_time))
+          ).append(
+          $('<td>').append(
+            $('<span>').text(item.play_count))
+          )
+        );
+      $('#playlist-table > tbody').append(row);
     }
   }
 
@@ -236,6 +269,15 @@ $(function() {
         'type': 'vslider',
         'position': $('#vol-slider').val() / $('#vol-slider').attr('max')
       });
+    }
+  });
+
+  $('#playlist-button').click(function() {
+    if ($('#playlist').css('display') == 'none') {
+      $('#playlist').css('display', 'flex');
+    }
+    else {
+      $('#playlist').css('display', 'none');
     }
   });
 

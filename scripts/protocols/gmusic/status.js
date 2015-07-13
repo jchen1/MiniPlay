@@ -43,7 +43,7 @@ var music_status = {
   },
 
   get_playlist : function() {
-    var playlist_root = $('.song-table > tbody');
+    var playlist_root = $('#queue-container > .queue-song-table > .song-table > tbody');
     var playlist_count = playlist_root.attr('data-count');
     var playlist_arr = playlist_root.find('.song-row');
     var playlist = [];

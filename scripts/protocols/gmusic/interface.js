@@ -49,7 +49,6 @@ $(function() {
 
   function send_command(message) {
     var $button = null;
-    console.log(message);
     switch (message.type) {
       case 'play':
         $button = $('sj-icon-button[data-id="play-pause"]');
@@ -71,10 +70,17 @@ $(function() {
       case 'vslider':
         update_slider(message.position, 'material-vslider'); break;
       case 'playlist':
-        console.log('index:'+message.index);
         $button = $('.song-table > tbody > .song-row[data-index="'+message.index+'"] > td[data-col="song-details"] button'); break;
+      case 'playlist-button':
+        // Toggle the playlist to set it up for viewing
+        if (!$('#queue-overlay').hasClass('sj-opened')) {
+          $('#queue').click();
+          window.setTimeout(function() {
+            $('#queue').click();
+          }, 100);
+        }
+        break;
     }
-    console.log($button);
     if ($button !== null) {
       $button.click();
     }
@@ -90,6 +96,7 @@ $(function() {
     if (msg.action === 'send_command') {
       send_command(msg);
     }
+
   }
 
   background_port.onMessage.addListener(parseMessage);
@@ -105,17 +112,6 @@ $(function() {
           send_command(msg);
         }
       });
-      // Toggle the playlist to set it up for viewing
-      if (!$('#queue-overlay').hasClass('sj-opened')) {
-        $('#queue').click();
-      }
-      window.setTimeout(function() {
-        if ($('#queue-overlay').hasClass('sj-opened')) {
-          $('#queue').click();
-        }
-        update(false, true);
-      }, 100);
-
     }
   });
 

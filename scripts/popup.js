@@ -14,6 +14,7 @@ $(function() {
       });
       interface_port.onMessage.addListener(update);
     }
+    set_state("no_song");
   });
 
   set_state("no_tab");
@@ -68,7 +69,6 @@ $(function() {
       set_state('no_tab');
     }
     else {
-      music_status = response;
       if (response.title === '') {
         set_state('no_song');
       }
@@ -109,49 +109,55 @@ $(function() {
         set_playlist(response.playlist);
         set_volume(response.volume);
       }
+      music_status = response;
     }
   }
 
   function set_playlist(playlist) {
-    $('#playlist-table > tbody').empty();
     for (var i = 0; i < playlist.length; i++) {
       var item = playlist[i];
-      var row =
-        $('<tr>').addClass('song-row').attr('index', i).append(
-          $('<td>').addClass('song-details-span').addClass('mdl-data-table__cell--non-numeric').append(
-            $('<span>').addClass('song-info').append(
-              $('<img>').attr('src', item.album_art).addClass('small-art')).append(
-              $('<div>').addClass('song-details').append(
-                $('<div>').addClass('song-title').text(item.title)).append(
-                $('<div>').addClass('song-artist-album').text(item.artist + " - " + item.album)
-              )
+      if (music_status && music_status.playlist && i < music_status.playlist.length && item.title == music_status.playlist[i].title) {
+        continue;
+      }
+      var details =
+        $('<td>').addClass('song-details-span').addClass('mdl-data-table__cell--non-numeric').append(
+          $('<span>').addClass('song-info').append(
+            $('<img>').attr('src', item.album_art).addClass('small-art')).append(
+            $('<div>').addClass('song-details').append(
+              $('<div>').addClass('song-title').text(item.title)).append(
+              $('<div>').addClass('song-artist-album').text(item.artist + " - " + item.album)
             )
           )
-        ).append(
-          $('<td>').addClass('duration').append(
-            $('<span>').text(item.total_time)
-          )
-        ).append(
-          $('<td>').addClass('play-count').append(
-            $('<span>').text(item.play_count)
-          )
+        );
+      var duration = 
+        $('<td>').addClass('duration').append(
+          $('<span>').text(item.total_time)
+        );
+      var playcount = 
+        $('<td>').addClass('play-count').append(
+          $('<span>').text(item.play_count)
         );
 
+      if ($('#playlist-table > tbody > tr').length <= i) {
+        $('#playlist-table > tbody').append($('<tr>').addClass('song-row').append(details).append(duration).append(playcount).click(function() {
+          if (interface_port) {
+            interface_port.postMessage(
+            {
+              'action': 'send_command',
+              'type': 'playlist',
+              'index': $(this).closest('tr').index()
+            });
+          }
+        }));
+      }
+      else {
+        $('#playlist-table > tbody > tr').eq(i).empty();
+        $('#playlist-table > tbody > tr').eq(i).append(details).append(duration).append(playcount);
 
-      $('#playlist-table > tbody').append(row);
+      }
     }
 
-    $('.song-row').click(function() {
-      console.log($(this).attr('index'));
-      if (interface_port) {
-        interface_port.postMessage(
-        {
-          'action': 'send_command',
-          'type': 'playlist',
-          'index': $(this).attr('index')
-        });
-      }
-    });
+    $('#playlist-table > tbody > tr:gt(' + (playlist.length - 1) + ')').remove();
   }
 
   function disable_buttons(disabled) {

@@ -49,6 +49,7 @@ $(function() {
         set_album_art('img/default_album.png');
         $('#title').html('No music tab found');
         $('#artist').html('');
+        $('#current-time, #total-time').css('display', 'none');
         break;
       case 'no_song':
         $('.interface').attr('disabled', true);
@@ -56,9 +57,11 @@ $(function() {
         $('#title').html('No song selected');
         $('#artist').html('');
         $('#album').html('');
+        $('#current-time, #total-time').css('display', 'none');
         break;
       case 'song':
         $('.interface').attr('disabled', false);
+        $('#current-time, #total-time').css('display', 'block');
         break;
     }
   }

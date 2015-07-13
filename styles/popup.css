@@ -94,18 +94,18 @@ body {
 
 #current-time, #total-time {
   font-size: 13px;
-  color: #fff;
+  color: rgba(0, 0, 0, 0.870588);
   position: absolute;
-  bottom: 10;
-  text-shadow: 0 1px 0 black;
+  bottom: -70;
+  z-index: 2;
 }
 
 #current-time {
-  left: 20;
+  left: 10;
 }
 
 #total-time {
-  right: 20;
+  right: 10;
 }
 
 #slider-wrapper {

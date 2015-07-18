@@ -134,11 +134,13 @@ body {
 
 #playlist-table .duration {
   text-align: right;
+  vertical-align: middle;
   width: 60px;
 }
 
 #playlist-table .play-count {
   text-align: right;
+  vertical-align: middle;
   width: 50px;
 }
 

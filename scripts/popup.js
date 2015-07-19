@@ -129,7 +129,9 @@ popupApp.directive('mpSlider', function() {
         return attrs.value;
       }, function() {
         for (var i = 0; i < element.length; i++) {
-          element[i].MaterialSlider.change();
+          if (element[i].MaterialSlider) {
+            element[i].MaterialSlider.change();
+          }
         }
         $(element).hide().show(0);
       });
@@ -200,11 +202,10 @@ $(function() {
           popupScope.music_status.album_art = response.album_art;
           popupScope.music_status.status = response.status == 'Pause' ? 'pause' : 'play_arrow';
           popupScope.music_status.shuffle = response.shuffle == 'NO_SHUFFLE' ? false : true;
-          popupScope.music_status.repeat = response.repeat == "NO_REPEAT" ? RepeatEnum.NONE : (response.repeat == "SINGLE_REPEAT" ? RepeatEnum.ONE : RepeatEnum.ALL);
+          console.log(response.repeat);
+          popupScope.music_status.repeat = response.repeat;
           popupScope.music_status.thumb = response.thumb;
-
-          popupScope.music_status.volume = response.volume * 100;
-
+          popupScope.music_status.volume = response.volume;
           popupScope.music_status.current_time = response.current_time;
           popupScope.music_status.total_time = response.total_time;
           popupScope.music_status.current_time_s = response.current_time_s;

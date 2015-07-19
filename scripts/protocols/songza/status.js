@@ -9,8 +9,8 @@ var music_status = {
   total_time : '',
   current_time_s : 0,
   total_time_s: 0,
-  thumb : '',
-  repeat : '',
+  thumb : ThumbEnum.NONE,
+  repeat : RepeatEnum.NONE,
   shuffle : '',
   status : '',
   volume : '',
@@ -36,13 +36,13 @@ var music_status = {
 
   get_thumb : function () {
     if ($('.thumb-up').hasClass('voted')) {
-      return '5';
+      return ThumbEnum.UP;
     }
     else if ($('.thumb-down').hasClass('voted')) {
-      return '1';
+      return ThumbEnum.DOWN;
     }
     else {
-      return '0';
+      return ThumbEnum.NONE;
     }
   },
 
@@ -55,7 +55,7 @@ var music_status = {
     this.total_time_s = parseInt($('.miniplayer-timeline').css('width'));
     this.thumb = this.get_thumb();
     this.status = $('.player-wrapper').hasClass('player-state-play') ? "Pause" : "Play";
-    this.volume = parseFloat($('#volume-control-slider-input').val()) / 100;
+    this.volume = parseFloat($('#volume-control-slider-input').val());
     this.slider_updated = false;
     this.vslider_updated = false;
     return this;

@@ -32,13 +32,25 @@ var music_status = {
 
   get_thumb : function() {
     if ($('sj-icon-button[data-rating="5"]').attr('title') == 'Undo thumb-up') {
-      return "5";
+      return ThumbEnum.UP;
     }
     else if ($('sj-icon-button[data-rating="1"]').attr('title') == 'Undo thumb-down') {
-      return "1";
+      return ThumbEnum.DOWN;
     }
     else {
-      return "0";
+      return ThumbEnum.NONE;
+    }
+  },
+
+  get_shuffle : function() {
+    return $('sj-icon-button[data-id="shuffle"]').attr('value');
+  },
+
+  get_repeat : function() {
+    switch ($('sj-icon-button[data-id="repeat"]').attr('value')) {
+      case 'NO_REPEAT': return RepeatEnum.NONE;
+      case 'SINGLE_REPEAT': return RepeatEnum.ONE;
+      case 'LIST_REPEAT': return RepeatEnum.ALL;
     }
   },
 
@@ -80,11 +92,11 @@ var music_status = {
     this.total_time = $('#time_container_duration').text();
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.get_time(this.total_time);
-    this.shuffle = $('.material-player-middle > sj-icon-button[data-id="shuffle"]').attr('value');
-    this.repeat = $('sj-icon-button[data-id="repeat"]').attr('value');
     this.thumb = this.get_thumb();
+    this.shuffle = this.get_shuffle();
+    this.repeat = this.get_repeat();
     this.status = $('sj-icon-button[data-id="play-pause"]').attr('title');
-    this.volume = parseInt($('#material-vslider').attr('aria-valuenow')) / 100.0;
+    this.volume = parseInt($('#material-vslider').attr('aria-valuenow'));
     this.playlist = this.get_playlist();
     this.slider_updated = false;
     this.vslider_updated = false;

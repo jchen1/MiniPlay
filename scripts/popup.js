@@ -1,8 +1,150 @@
+var popupApp = angular.module('app', []);
+var popupScope = null;
+
+const StateEnum = {
+  NO_TAB : 0,
+  NO_SONG : 1,
+  PLAYING : 2
+}
+
+const RepeatEnum = {
+  NONE: 0,
+  ONE: 1,
+  ALL: 2
+}
+
+const ThumbEnum = {
+  NONE: 0,
+  UP: 5,
+  DOWN: 1
+}
+
+var controller = popupApp.controller('PopupController', ['$scope', function($scope) {
+    $scope.StateEnum = StateEnum;
+    $scope.RepeatEnum = RepeatEnum;
+    $scope.ThumbEnum = ThumbEnum;
+
+    $scope.music_status = {};
+
+    $scope.music_status.state = StateEnum.NO_TAB;
+    $scope.music_status.title = 'No music tab found';
+    $scope.music_status.artist = '';
+    $scope.music_status.album = '';
+    $scope.music_status.album_art = 'img/default_album.png';
+    $scope.music_status.shuffle = false;
+    $scope.music_status.repeat = 0;
+    $scope.music_status.current_time = '';
+    $scope.music_status.total_time = '';
+    $scope.music_status.current_time_s = 0;
+    $scope.music_status.total_time_s = 0;
+    $scope.music_status.status = 'play_arrow';
+    $scope.music_status.disabled = {};
+    $scope.music_status.volume = 0;
+    $scope.music_status.thumb = 0;
+    $scope.music_status.vol_pressed = false;
+    $scope.music_status.playlist_pressed = false;
+    $scope.music_status.slider_dragging = false;
+    $scope.music_status.playlist = [];
+
+    $scope.repeat_icon = function() {
+      return ($scope.music_status.repeat == RepeatEnum.ONE) ? 'repeat_one' : 'repeat';
+    };
+
+    $scope.volume_icon = function() {
+      if ($scope.music_status.volume == 0 || $scope.music_status.vol_pressed) {
+        return 'volume_mute';
+      }
+      else if ($scope.music_status.volume < 50) {
+        return 'volume_down';
+      }
+      else {
+        return 'volume_up';
+      }
+    }
+
+    $scope.album_art_background = function() {
+      return 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(' + $scope.music_status.album_art + ')';
+    };
+
+    $scope.status_title = function() {
+        return $scope.music_status.status == 'play_arrow' ? 'Play' : 'Pause';
+    }
+
+    $scope.set_state = function(state) {
+      $scope.music_status.state = state;
+      switch (state) {
+        case StateEnum.NO_TAB:
+          $scope.music_status.album_art = 'img/default_album.png';
+          $scope.music_status.title = 'No music tab found';
+          $scope.music_status.artist = '';
+          $scope.music_status.album = '';
+          break;
+        case StateEnum.NO_SONG:
+          $scope.music_status.album_art = 'img/default_album.png';
+          $scope.music_status.title = 'No song selected';
+          $scope.music_status.artist = '';
+          $scope.music_status.album = '';
+          break;
+        case StateEnum.PLAYING:
+          // do nothing
+          break;
+      }
+    };
+
+    $scope.set_disabled = function(disabled) {
+      $scope.music_status.disabled = {};
+      for (var i = 0; i < disabled.length; i++) {
+        switch (disabled[i]) {
+          case 'play': $scope.music_status.disabled['play'] = true; break;
+          case 'rew': $scope.music_status.disabled['rew'] = true; break;
+          case 'ff': $scope.music_status.disabled['ff'] = true; break;
+          case 'up': $scope.music_status.disabled['up'] = true; break;
+          case 'down': $scope.music_status.disabled['down'] = true; break;
+          case 'shuffle': $scope.music_status.disabled['shuffle'] = true; break;
+          case 'repeat': $scope.music_status.disabled['repeat'] = true; break;
+          case 'slider': $scope.music_status.disabled['slider'] = true; break;
+          case 'vslider': $scope.music_status.disabled['vslider'] = true; break;
+          case 'playlist': $scope.music_status.disabled['playlist'] = true; break;
+        }
+      }
+    }
+
+    $scope.playlist_click = function(index) {
+      if (interface_port) {
+        interface_port.postMessage(
+        {
+          'action': 'send_command',
+          'type': 'playlist',
+          'index': index
+        });
+      }
+    }
+  }]);
+
+popupApp.directive('mpSlider', function() {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      scope.$watch(function() {
+        return attrs.value;
+      }, function() {
+        for (var i = 0; i < element.length; i++) {
+          if (element[i].MaterialSlider) {
+            element[i].MaterialSlider.change();
+          }
+        }
+        $(element).hide().show(0);
+      });
+    }
+  }
+});
+
+var background_port = null;
+var interface_port = null;
+
 $(function() {
-  var background_port = chrome.runtime.connect({name: "popup"});
-  var interface_port = null;
-  var music_status = null;
-  var dragging = false;
+  background_port = chrome.runtime.connect({name: "popup"});
+  popupScope = angular.element(document.getElementById('popup')).scope();
 
   background_port.onMessage.addListener(function(msg) {
     if (msg.type == 'connect') {
@@ -10,15 +152,16 @@ $(function() {
       interface_port.id = msg.id;
       interface_port.onDisconnect.addListener(function() {
         interface_port = null;
-        set_state("no_tab");
+        popupScope.$apply(function() {
+          popupScope.set_state(StateEnum.NO_TAB);
+        });
       });
       interface_port.onMessage.addListener(update);
-      set_state("no_song");
+      popupScope.$apply(function() {
+        popupScope.set_state(StateEnum.NO_SONG);
+      });
     }
-    set_state("no_song");
   });
-
-  set_state("no_tab");
 
   function setupAnalytics() {
     var _gaq = _gaq || [];
@@ -38,206 +181,45 @@ $(function() {
     return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
   }
 
-  function set_album_art(url) {
-    var background = 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(' + url + ')';
-    $('#album-art').css('background', background);
-    $('#album-art').css('background-size', '320px 320px');
-  }
-
-  function set_state(state) {
-    switch (state) {
-      case 'no_tab':
-        $('.interface').attr('disabled', true);
-        set_album_art('img/default_album.png');
-        $('#title').html('No music tab found');
-        $('#artist').html('');
-        $('#current-time, #total-time').css('display', 'none');
-        break;
-      case 'no_song':
-        $('.interface').attr('disabled', true);
-        set_album_art('img/default_album.png');
-        $('#title').html('No song selected');
-        $('#artist').html('');
-        $('#album').html('');
-        $('#current-time, #total-time').css('display', 'none');
-        break;
-      case 'song':
-        $('.interface').attr('disabled', false);
-        $('#current-time, #total-time').css('display', 'block');
-        break;
-    }
-  }
-
   function update(response) {
     if (chrome.extension.lastError) {
-      set_state('no_tab');
+      popupScope.$apply(function() {
+        popupScope.set_state(StateEnum.NO_TAB);
+      });
     }
     else {
       if (response.title === '') {
-        set_state('no_song');
+        popupScope.$apply(function() {
+          popupScope.set_state(StateEnum.NO_SONG);
+        });
       }
       else {
-        set_state('song');
-        $('#title').html(response.title);
-        $('#artist').html(response.artist);
-        $('#album').html(response.album);
-        set_album_art(response.album_art);
-        toggle_play(response.status);
-        if (!dragging) {
-          $('#slider').attr('max', response.total_time_s);
-          var offset = response.current_time_s / response.total_time_s;
-          $('#slider-wrapper').find('.mdl-slider__background-lower').attr('style', 'flex: ' + offset + ' 1 0%;');
-          $('#slider-wrapper').find('.mdl-slider__background-upper').attr('style', 'flex: ' + (1 - offset) + ' 1 0%;');
-          $('#slider').val(response.current_time_s);
-          if (response.current_time_s > 0) {
-            $('#slider').removeClass('is-lowest-value');
+        popupScope.$apply(function() {
+          popupScope.set_state(StateEnum.PLAYING);
+          popupScope.music_status.title = response.title;
+          popupScope.music_status.artist = response.artist;
+          popupScope.music_status.album = response.album;
+          popupScope.music_status.album_art = response.album_art;
+          popupScope.music_status.status = response.status == 'Pause' ? 'pause' : 'play_arrow';
+          popupScope.music_status.shuffle = response.shuffle == 'NO_SHUFFLE' ? false : true;
+          console.log(response.repeat);
+          popupScope.music_status.repeat = response.repeat;
+          popupScope.music_status.thumb = response.thumb;
+          popupScope.music_status.volume = response.volume;
+          popupScope.music_status.current_time = response.current_time;
+          popupScope.music_status.total_time = response.total_time;
+          popupScope.music_status.current_time_s = response.current_time_s;
+          popupScope.music_status.total_time_s = response.total_time_s;
+
+          popupScope.set_disabled(response.disabled_buttons);
+
+          for (var i = 0; i < response.playlist.length; i++) {
+            if (popupScope.music_status.playlist.length <= i || response.playlist[i].title != popupScope.music_status.playlist[i].title) {
+              popupScope.music_status.playlist[i] = response.playlist[i];
+              popupScope.music_status.playlist[i].index = i;
+            }
           }
-          else {
-            $('#slider').addClass('is-lowest-value');
-          }
-          $('#current-time').html(response.current_time);
-          $('#total-time').html(response.total_time);
-        }
-        $('#vol-slider').val(response.volume * 100);
-        $('#vol-wrapper').find('.mdl-slider__background-lower').attr('style', 'flex: ' + response.volume + ' 1 0%;');
-        $('#vol-wrapper').find('.mdl-slider__background-upper').attr('style', 'flex: ' + (1 - response.volume) + ' 1 0%;');
-        if ($('#vol-slider').val() > 0) {
-          $('#slider').removeClass('is-lowest-value');
-        }
-        set_thumb(response.thumb);
-        set_repeat(response.repeat);
-        set_shuffle(response.shuffle);
-        disable_buttons(response.disabled_buttons);
-        set_playlist(response.playlist);
-        set_volume(response.volume);
-      }
-      music_status = response;
-    }
-  }
-
-  function set_playlist(playlist) {
-    for (var i = 0; i < playlist.length; i++) {
-      var item = playlist[i];
-      if ((music_status && music_status.playlist && i < music_status.playlist.length && item.title == music_status.playlist[i].title) ||
-          (item.title == '')) {
-        continue;
-      }
-      var details =
-        $('<td>').addClass('song-details-span').addClass('mdl-data-table__cell--non-numeric').append(
-          $('<span>').addClass('song-info').append(
-            $('<img>').attr('src', item.album_art).addClass('small-art')).append(
-            $('<div>').addClass('song-details').append(
-              $('<div>').addClass('song-title').text(item.title)).append(
-              $('<div>').addClass('song-artist-album').text(item.artist + " - " + item.album)
-            )
-          )
-        );
-      var duration =
-        $('<td>').addClass('duration').append(
-          $('<span>').text(item.total_time)
-        );
-      var playcount =
-        $('<td>').addClass('play-count').append(
-          $('<span>').text(item.play_count)
-        );
-
-      if ($('#playlist-table > tbody > tr').length <= i) {
-        $('#playlist-table > tbody').append($('<tr>').addClass('song-row').append(details).append(duration).append(playcount).click(function() {
-          if (interface_port) {
-            interface_port.postMessage(
-            {
-              'action': 'send_command',
-              'type': 'playlist',
-              'index': $(this).closest('tr').index()
-            });
-          }
-        }));
-      }
-      else {
-        $('#playlist-table > tbody > tr').eq(i).empty();
-        $('#playlist-table > tbody > tr').eq(i).append(details).append(duration).append(playcount);
-      }
-    }
-
-    $('#playlist-table > tbody > tr:gt(' + (playlist.length - 1) + ')').remove();
-  }
-
-  function disable_buttons(disabled) {
-    for (var i = 0; i < disabled.length; i++) {
-      switch (disabled[i]) {
-        case 'play': $('#play').attr('disabled', true); break;
-        case 'rew': $('#rew').attr('disabled', true); break;
-        case 'ff': $('#ff').attr('disabled', true); break;
-        case 'up': $('#up').attr('disabled', true); break;
-        case 'down': $('#down').attr('disabled', true); break;
-        case 'shuffle': $('#shuffle').css('display', 'none'); break;
-        case 'repeat': $('#repeat').css('display', 'none'); break;
-        case 'slider': $('#slider').attr('disabled', true); break;
-        case 'vslider': $('#vol').css('display', 'none'); break;
-        case 'playlist': $('#playlist-button').css('display', 'none'); break;
-      }
-    }
-  }
-
-  function set_repeat(status) {
-    if (status === 'SINGLE_REPEAT') {
-      $('#repeat').addClass('top-control-active');
-      $('#repeat > i').text('repeat_one');
-    }
-    else if (status === 'LIST_REPEAT') {
-      $('#repeat').addClass('top-control-active');
-      $('#repeat > i').text('repeat');
-    }
-    else if (status === 'NO_REPEAT') {
-      $('#repeat').removeClass('top-control-active');
-      $('#repeat > i').text('repeat');
-    }
-  }
-
-  function set_shuffle(status) {
-    if (status === 'NO_SHUFFLE') {
-      $('#shuffle').removeClass('top-control-active');
-    }
-    else if (status === 'ALL_SHUFFLE') {
-      $('#shuffle').addClass('top-control-active');
-    }
-  }
-
-  function set_thumb(status) {
-    if (status === '0') {
-      $('.thumb').removeClass('mdl-button--colored');
-    }
-    else if (status === '5') {
-      $('#down').removeClass('mdl-button--colored');
-      $('#up').addClass('mdl-button--colored');
-    }
-    else if (status === '1') {
-      $('#down').addClass('mdl-button--colored');
-      $('#up').removeClass('mdl-button--colored');
-    }
-  }
-
-  function toggle_play(status) {
-    if (status === 'Pause') {
-      $('#play > i').text('pause');
-      $('#play').attr('title', 'Pause');
-    }
-    else if (status === 'Play') {
-      $('#play > i').text('play_arrow');
-      $('#play').attr('title', 'Play');
-    }
-  }
-
-  function set_volume(vol) {
-    if ($('#vol-slider').prop('disabled') == false) {
-      if (vol == 0) {
-        $('#vol > i').text('volume_mute');
-      }
-      else if (vol < 50) {
-        $('#vol > i').text('volume_down');
-      }
-      else {
-        $('#vol > i').text('volume_up');
+        });
       }
     }
   }
@@ -253,27 +235,6 @@ $(function() {
     e.stopPropagation();
   });
 
-  $('#vol, #vol-up').click(function(ev) {
-    if ($('#vol-slider').prop('disabled') == false) {
-      $('#vol-slider').prop('disabled', true);
-      $('#vol-wrapper').css('display', 'none');
-      set_volume($('#vol-slider').val());
-      $('#vol-up').css('display', 'none');
-      $('.thumb').css('display', 'block');
-      if (!music_status || music_status.disabled_buttons.indexOf('playlist') < 0) {
-        $('#playlist-button').css('display', 'block');
-      }
-    }
-    else {
-      $('#vol-slider').prop('disabled', false);
-      $('#vol-wrapper').css('display', 'block');
-      $('#vol > i').text('volume_down');
-      $('#vol-up').css('display', 'block');
-      $('.thumb').css('display', 'none');
-      $('#playlist-button').css('display', 'none');
-    }
-  });
-
   $('#vol-slider').on('input', function() {
     if (interface_port) {
       interface_port.postMessage(
@@ -282,15 +243,6 @@ $(function() {
         'type': 'vslider',
         'position': $('#vol-slider').val() / $('#vol-slider').attr('max')
       });
-    }
-  });
-
-  $('#playlist-button').click(function() {
-    if ($('#playlist').css('display') == 'none') {
-      $('#playlist').css('display', 'flex');
-    }
-    else {
-      $('#playlist').css('display', 'none');
     }
   });
 

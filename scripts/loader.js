@@ -1,4 +1,16 @@
-// Finds which interface script to use
+// Finds which interface script to use, and store global enums
+
+const RepeatEnum = {
+  NONE: 0,
+  ONE: 1,
+  ALL: 2
+}
+
+const ThumbEnum = {
+  NONE: 0,
+  UP: 5,
+  DOWN: 1
+}
 
 $(function() {
   var urls = {

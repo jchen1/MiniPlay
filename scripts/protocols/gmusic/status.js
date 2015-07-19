@@ -80,7 +80,7 @@ var music_status = {
     this.total_time = $('#time_container_duration').text();
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.get_time(this.total_time);
-    this.shuffle = $('sj-icon-button[data-id="shuffle"]').attr('value');
+    this.shuffle = $('.material-player-middle > sj-icon-button[data-id="shuffle"]').attr('value');
     this.repeat = $('sj-icon-button[data-id="repeat"]').attr('value');
     this.thumb = this.get_thumb();
     this.status = $('sj-icon-button[data-id="play-pause"]').attr('title');

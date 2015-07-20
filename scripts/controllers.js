@@ -112,6 +112,21 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
+    $scope.handle_key = function($event) {
+      if ($event.keyCode == 32 || $event.charCode === 32) {
+        $scope.$apply(function() {
+          $scope.music_status.status = !$scope.music_status.status;
+        });
+        if ($scope.interface_port) {
+          $scope.interface_port.postMessage(
+          {
+            'action': 'send_command',
+            'type': 'play'
+          });
+        }
+      }
+    }
+
     var init = function () {
       $scope.background_port = chrome.runtime.connect({name: "popup"});
 

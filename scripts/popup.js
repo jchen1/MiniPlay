@@ -140,10 +140,53 @@ popupApp.directive('mpSlider', function() {
       }, function() {
         for (var i = 0; i < element.length; i++) {
           if (element[i].MaterialSlider) {
-            element[i].MaterialSlider.change();
+            if (element[i].getAttribute('mp-slider') == 'slider') {
+              element[i].MaterialSlider.change(element[i].getAttribute('value'));
+            }
+            else {
+              element[i].MaterialSlider.change();
+            }
           }
         }
         $(element).hide().show(0);
+      });
+    }
+  }
+});
+
+popupApp.directive('mpScrollIf', function() {
+  var getScrollingParent = function(element) {
+    element = element.parentElement;
+    while (element) {
+      if (element.scrollHeight !== element.clientHeight) {
+        return element;
+      }
+      element = element.parentElement;
+    }
+    return null;
+  };
+  
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      scope.$watch(function() {
+        return scope.$eval(attrs.mpScrollIf);
+      }, function(value) {
+        if (value) {
+          var sp = getScrollingParent(element[0]);
+          var topMargin = parseInt(attrs.scrollMarginTop) || 0;
+          var bottomMargin = parseInt(attrs.scrollMarginBottom) || 0;
+          var elemOffset = element[0].offsetTop;
+          var elemHeight = element[0].clientHeight;
+
+          if (sp) {
+            if (elemOffset - topMargin < sp.scrollTop) {
+                sp.scrollTop = elemOffset - topMargin;
+            } else if (elemOffset + elemHeight + bottomMargin > sp.scrollTop + sp.clientHeight) {
+                sp.scrollTop = elemOffset + elemHeight + bottomMargin - sp.clientHeight;
+            }
+          }
+        }
       });
     }
   }
@@ -223,7 +266,7 @@ $(function() {
           popupScope.set_disabled(response.disabled_buttons);
 
           for (var i = 0; i < response.playlist.length; i++) {
-            if (popupScope.music_status.playlist.length <= i || response.playlist[i].title != popupScope.music_status.playlist[i].title) {
+            if (response.playlist[i].title && (popupScope.music_status.playlist.length <= i || response.playlist[i].title != popupScope.music_status.playlist[i].title)) {
               popupScope.music_status.playlist[i] = response.playlist[i];
               popupScope.music_status.playlist[i].index = i;
             }

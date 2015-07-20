@@ -47,7 +47,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class='song-row' ng-repeat='song in music_status.playlist' ng-click='playlist_click(song.index)'>
+          <tr class='song-row' ng-repeat='song in music_status.playlist' ng-click='playlist_click(song.index)' mp-scroll-if='music_status.playlist_pressed && song.currently_playing'>
             <td class='song-details-span mdl-data-table__cell--non-numeric'>
               <span class='song-info'>
                 <img class='small-art' ng-src='{{song.album_art}}'/>
@@ -93,7 +93,7 @@
           <i class='material-icons'>{{volume_icon()}}</i>
         </button>
         <p id='vol-wrapper' ng-style='{"display": music_status.vol_pressed ? "block" : "none"}'>
-          <input id='vol-slider' mp-slider='slider' class='mdl-slider mdl-js-slider' type='range' min='0' max='100' value='{{music_status.volume}}' tabindex='-1' />
+          <input id='vol-slider' mp-slider='vslider' class='mdl-slider mdl-js-slider' type='range' min='0' max='100' value='{{music_status.volume}}' tabindex='-1' />
         </p>
         <button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon control' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vol' title='Volume' tabindex='-1' ng-click='music_status.vol_pressed=!music_status.vol_pressed' ng-style='{"display": music_status.vol_pressed ? "block" : "none"}'>
           <i class='material-icons'>volume_up</i>

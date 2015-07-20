@@ -11,7 +11,7 @@ var music_status = {
   total_time_s: 0,
   thumb : ThumbEnum.NONE,
   repeat : RepeatEnum.NONE,
-  shuffle : '',
+  shuffle : false,
   status : '',
   volume : '',
   slider_updated : false,
@@ -54,7 +54,7 @@ var music_status = {
     this.current_time_s = parseFloat($('.miniplayer-timeline-current-time').css('width'));
     this.total_time_s = parseInt($('.miniplayer-timeline').css('width'));
     this.thumb = this.get_thumb();
-    this.status = $('.player-wrapper').hasClass('player-state-play') ? "Pause" : "Play";
+    this.status = $('.player-wrapper').hasClass('player-state-play') ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseFloat($('#volume-control-slider-input').val());
     this.slider_updated = false;
     this.vslider_updated = false;

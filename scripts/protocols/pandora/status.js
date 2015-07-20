@@ -11,7 +11,7 @@ var music_status = {
   total_time_s: 0,
   thumb : '',
   repeat : RepeatEnum.NONE,
-  shuffle : 'NO_SHUFFLE',
+  shuffle : false,
   status : '',
   volume : '',
   slider_updated : false,
@@ -58,7 +58,7 @@ var music_status = {
     this.total_time_s = this.current_time_s + this.get_time(this.total_time);
     this.thumb = this.get_thumb();
     this.volume = (parseInt($('.volumeKnob').css('left'), 10) - 20) / 82 * 100;
-    this.status = ($('.playButton').css('display') == "none") ? 'Pause' : 'Play';
+    this.status = ($('.playButton').css('display') == "none") ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     return this;
   }
 };

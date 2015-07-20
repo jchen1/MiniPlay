@@ -15,7 +15,7 @@ body {
   overflow: hidden;
 }
 
-#album-art {
+.album-art {
   height: 320px;
   width: 320px;
   background:
@@ -46,11 +46,9 @@ body {
 
 #playlist th {
   color: #212121;
-  /*vertical-align: middle;*/
   padding-bottom: 0;
   height: 36px;
   text-transform: uppercase;
-  /*border: none;*/
 }
 
 #playlist th > i {
@@ -179,14 +177,14 @@ body {
   right: 15;
 }
 
-.top-control {
+#top-controls > li {
   outline: none;
   border: none;
   color: white;
   -webkit-filter: brightness(90%);
 }
 
-.top-control:hover {
+#top-controls > li:hover {
   -webkit-animation: animbrightness 0.4s;
   -webkit-filter: brightness(110%);
 }
@@ -200,12 +198,12 @@ body {
   }
 }
 
-.top-control[disabled] {
+#top-controls > li[disabled] {
   opacity: 0!important;
 }
 
 .top-control-active {
-  color: rgb(255, 87, 34);
+  color: rgb(255, 87, 34)!important;
 }
 
 #current-time, #total-time {
@@ -267,7 +265,7 @@ body {
   font-size: 18px;
 }
 
-.control {
+#controls button {
   outline: none;
   border: none;
   margin: 1px;
@@ -285,6 +283,6 @@ body {
   display: none;
 }
 
-.thumb.control[disabled] {
+.thumb[disabled] {
   display: none;
 }

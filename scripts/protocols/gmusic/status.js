@@ -43,7 +43,7 @@ var music_status = {
   },
 
   get_shuffle : function() {
-    return $('sj-icon-button[data-id="shuffle"]').attr('value');
+    return ($('sj-icon-button[data-id="shuffle"]').attr('value') == 'ALL_SHUFFLE');
   },
 
   get_repeat : function() {
@@ -95,7 +95,7 @@ var music_status = {
     this.thumb = this.get_thumb();
     this.shuffle = this.get_shuffle();
     this.repeat = this.get_repeat();
-    this.status = $('sj-icon-button[data-id="play-pause"]').attr('title');
+    this.status = $('sj-icon-button[data-id="play-pause"]').attr('title') == 'Pause' ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseInt($('#material-vslider').attr('aria-valuenow'));
     this.playlist = this.get_playlist();
     this.slider_updated = false;

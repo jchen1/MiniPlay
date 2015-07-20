@@ -7,26 +7,28 @@
 
   <script src='scripts/angular.min.js'></script>
   <script src='scripts/jquery.js'></script>
+  <script src='scripts/enums.js'></script>
   <script src='scripts/popup.js'></script>
-
+  <script src='scripts/controllers.js'></script>
+  <script src='scripts/directives.js'></script>
 </head>
 <body>
 
   <div id='popup' ng-controller='PopupController'>
-    <div id='album-art' ng-style='{"background-image":album_art_background()}'>
+    <div class='album-art' ng-style='{"background-image":album_art_background()}'>
       <div id='song-info'>
         <div id='title'>{{music_status.title}}</div>
         <div id='artist'>{{music_status.artist}}</div>
         <div id='album'>{{music_status.album}}</div>
       </div>
       <ul id='top-controls'>
-        <li id='shuffle' class='top-control' ng-class='{"top-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle' tabIndex='-1'>
+        <li mp-control id='shuffle' ng-class='{"top-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle' tabIndex='-1'>
           <i class="material-icons">shuffle</i>
         </li>
-        <li id='repeat' class='top-control' ng-class='{"top-control-active": music_status.repeat != RepeatEnum.NONE}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.repeat' title='Repeat songs' tabIndex='-1'>
+        <li mp-control id='repeat' ng-class='{"top-control-active": music_status.repeat != RepeatEnum.NONE}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.repeat' title='Repeat songs' tabIndex='-1'>
           <i class="material-icons">{{repeat_icon()}}</i>
         </li>
-        <li id='settings' class='top-control' ng-disabled='music_status.state != StateEnum.PLAYING' title='Settings' tabIndex='-1'>
+        <li class='settings' ng-disabled='music_status.state != StateEnum.PLAYING' title='Settings' tabIndex='-1'>
           <i class='material-icons'>settings</i>
         </li>
       </ul>
@@ -47,7 +49,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class='song-row' ng-repeat='song in music_status.playlist' ng-click='playlist_click(song.index)' mp-scroll-if='music_status.playlist_pressed && song.currently_playing'>
+          <tr class='song-row' ng-repeat='song in playlist' ng-click='playlist_click(song.index)' mp-scroll-if='music_status.playlist_pressed && song.currently_playing'>
             <td class='song-details-span mdl-data-table__cell--non-numeric'>
               <span class='song-info'>
                 <img class='small-art' ng-src='{{song.album_art}}'/>
@@ -68,37 +70,37 @@
       </table>
     </div>
     <p id='slider-wrapper'>
-      <input id='slider' mp-slider='slider' class='mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' tabindex='-1' />
+      <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' tabindex='-1' />
     </p>
     <div id='controls'>
       <div id='controls-left'>
-        <button id='rew' class='mdl-button mdl-js-button mdl-button--icon control' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.rew' title='Previous song' tabIndex='-1' >
+        <button mp-control id='rew' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.rew' title='Previous song' tabIndex='-1' >
           <i class="material-icons">skip_previous</i>
         </button>
-        <button id='play' class='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary control' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.play' ng-attr-title='{{status_title()}}' ng-click='music_status.status=!music_status.status' tabIndex='0' >
+        <button mp-control id='play' class='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.play' ng-attr-title='{{status_title()}}' ng-click='music_status.status=!music_status.status' tabIndex='0' >
           <i class="material-icons">{{status_icon()}}</i>
         </button>
-        <button id='ff' class='mdl-button mdl-js-button mdl-button--icon control' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.ff' title='Next song' tabIndex='-1' >
+        <button mp-control id='ff' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.ff' title='Next song' tabIndex='-1' >
           <i class="material-icons">skip_next</i>
         </button>
       </div>
       <div id='controls-right'>
-        <button id='up' class='mdl-button mdl-js-button mdl-button--icon control thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.UP}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.up' title='Thumbs up' tabIndex='-1' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.UP ? ThumbEnum.NONE : ThumbEnum.UP'>
+        <button mp-control id='up' class='mdl-button mdl-js-button mdl-button--icon thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.UP}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.up' title='Thumbs up' tabIndex='-1' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.UP ? ThumbEnum.NONE : ThumbEnum.UP'>
           <i class="material-icons">thumb_up</i>
         </button>
-        <button id='down' class='mdl-button mdl-js-button mdl-button--icon control thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.DOWN}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.down' title='Thumbs down' tabIndex='-1' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.DOWN ? ThumbEnum.NONE : ThumbEnum.DOWN'>
+        <button mp-control id='down' class='mdl-button mdl-js-button mdl-button--icon thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.DOWN}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.down' title='Thumbs down' tabIndex='-1' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.DOWN ? ThumbEnum.NONE : ThumbEnum.DOWN'>
           <i class="material-icons">thumb_down</i>
         </button>
-        <button id='vol' class='mdl-button mdl-js-button mdl-button--icon control' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vslider' title='Volume' tabindex='-1' ng-click='music_status.vol_pressed=!music_status.vol_pressed'>
+        <button id='vol' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vslider' title='Volume' tabindex='-1' ng-click='music_status.vol_pressed=!music_status.vol_pressed'>
           <i class='material-icons'>{{volume_icon()}}</i>
         </button>
         <p id='vol-wrapper' ng-style='{"display": music_status.vol_pressed ? "block" : "none"}'>
-          <input id='vol-slider' mp-slider='vslider' class='mdl-slider mdl-js-slider' type='range' min='0' max='100' value='{{music_status.volume}}' tabindex='-1' />
+          <input class='mp-volslider mdl-slider mdl-js-slider' type='range' min='0' max='100' value='{{music_status.volume}}' tabindex='-1' />
         </p>
-        <button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon control' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vol' title='Volume' tabindex='-1' ng-click='music_status.vol_pressed=!music_status.vol_pressed' ng-style='{"display": music_status.vol_pressed ? "block" : "none"}'>
+        <button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vol' title='Volume' tabindex='-1' ng-click='music_status.vol_pressed=!music_status.vol_pressed' ng-style='{"display": music_status.vol_pressed ? "block" : "none"}'>
           <i class='material-icons'>volume_up</i>
         </button>
-        <button id='playlist-button' class='mdl-button mdl-js-button mdl-button--icon control' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.playlist' title='Playlist' tabindex='-1' ng-click='music_status.playlist_pressed=!music_status.playlist_pressed' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}'>
+        <button id='playlist-button' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.playlist' title='Playlist' tabindex='-1' ng-click='music_status.playlist_pressed=!music_status.playlist_pressed' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}'>
           <i class='material-icons'>queue_music</i>
         </button>
       </div>

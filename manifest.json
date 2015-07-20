@@ -40,7 +40,7 @@
   "content_scripts": [
     {
       "matches": ["*://play.google.com/music*", "*://*.pandora.com/*", "*://songza.com/*", "*://play.spotify.com/*"],
-      "js": ["scripts/jquery.js", "scripts/loader.js"]
+      "js": ["scripts/jquery.js", "scripts/enums.js", "scripts/loader.js"]
     }
   ],
 

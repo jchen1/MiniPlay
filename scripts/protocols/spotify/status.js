@@ -11,7 +11,7 @@ var music_status = {
   total_time_s: 0,
   thumb : ThumbEnum.NONE,
   repeat : 'NO_REPEAT',
-  shuffle : 'NO_SHUFFLE',
+  shuffle : false,
   status : '',
   volume : '',
   slider_updated : false,
@@ -40,8 +40,8 @@ var music_status = {
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.get_time(this.total_time);
     this.repeat = iframe.find('#repeat').hasClass('active') ? RepeatEnum.ALL : RepeatEnum.NONE;
-    this.shuffle = iframe.find('#shuffle').hasClass('active') ? 'ALL_SHUFFLE' : 'NO_SHUFFLE';
-    this.status = (iframe.find('#play-pause').hasClass('playing')) ? 'Pause' : 'Play';
+    this.shuffle = iframe.find('#shuffle').hasClass('active');
+    this.status = (iframe.find('#play-pause').hasClass('playing')) ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseFloat(iframe.find('#vol-position').css('left'), 10) / 108 * 100;
     this.slider_updated = false;
     this.vslider_updated = false;

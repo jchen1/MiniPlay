@@ -99,6 +99,29 @@ body {
   float: left;
 }
 
+.song-indicator {
+  height: 48;
+  width: 48;
+  padding: 8 0;
+  float: left;
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-position: center;
+  float: none;
+  background-image: url('../img/eq_paused.png');
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.song-indicator[disabled] {
+  display: none;
+}
+
+.song-indicator-active {
+  background-image: url('../img/eq_playing.gif');
+}
+
 #playlist-table .song-details-span {
   display: block;
   position: relative;

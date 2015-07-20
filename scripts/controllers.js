@@ -148,7 +148,10 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
               $scope.set_disabled(response.disabled_buttons);
 
               for (var i = 0; i < response.playlist.length; i++) {
-                if (response.playlist[i].title && ($scope.playlist.length <= i || response.playlist[i].title != $scope.playlist[i].title)) {
+                if (response.playlist[i].title &&
+                    ($scope.playlist.length <= i ||
+                     response.playlist[i].title != $scope.playlist[i].title ||
+                     response.playlist[i].currently_playing != $scope.playlist[i].currently_playing)) {
                   $scope.playlist[i] = response.playlist[i];
                   $scope.playlist[i].index = i;
                 }

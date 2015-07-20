@@ -15,7 +15,7 @@
 <body>
 
   <div id='popup' ng-controller='PopupController'>
-    <div class='album-art' ng-style='{"background-image":album_art_background()}'>
+    <div class='album-art' ng-style='{"background-image":album_art_background()}' ng-click='album_art_click()'>
       <div id='song-info'>
         <div id='title'>{{music_status.title}}</div>
         <div id='artist'>{{music_status.artist}}</div>
@@ -28,7 +28,7 @@
         <li mp-control id='repeat' ng-class='{"top-control-active": music_status.repeat != RepeatEnum.NONE}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.repeat' title='Repeat songs' tabIndex='-1'>
           <i class="material-icons">{{repeat_icon()}}</i>
         </li>
-        <li class='settings' ng-disabled='music_status.state != StateEnum.PLAYING' title='Settings' tabIndex='-1'>
+        <li class='settings' ng-disabled='music_status.state != StateEnum.PLAYING' title='Settings' tabIndex='-1' ng-click='settings_click($event)'>
           <i class='material-icons'>settings</i>
         </li>
       </ul>

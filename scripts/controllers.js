@@ -98,6 +98,20 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
+    $scope.settings_click = function($event) {
+      chrome.tabs.create({url: chrome.extension.getURL('options.html')});
+      $event.stopPropagation();
+    }
+
+    $scope.album_art_click = function() {
+      if ($scope.interface_port) {
+        chrome.tabs.update($scope.interface_port.id, {highlighted: true});
+        chrome.tabs.get($scope.interface_port.id, function (tab) {
+          chrome.windows.update(tab.windowId, {focused: true});
+        });
+      }
+    }
+
     var init = function () {
       $scope.background_port = chrome.runtime.connect({name: "popup"});
 

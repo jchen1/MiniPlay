@@ -96,7 +96,6 @@ $(function() {
     if (msg.action === 'send_command') {
       send_command(msg);
     }
-
   }
 
   background_port.onMessage.addListener(parseMessage);
@@ -116,6 +115,4 @@ $(function() {
   });
 
   window.setInterval(update, 1000);
-
-
 });

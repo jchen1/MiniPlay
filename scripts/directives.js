@@ -1,26 +1,3 @@
-popupApp.directive('mdlSlider', function() {
-  return {
-    restrict: 'C',
-    link: function (scope, element, attrs) {
-      scope.$watch(function() {
-        return attrs.value;
-      }, function() {
-        for (var i = 0; i < element.length; i++) {
-          if (element[i].MaterialSlider) {
-            if (element[i].getAttribute('id') == 'slider') {
-              element[i].MaterialSlider.change(element[i].getAttribute('value'));
-            }
-            else {
-              element[i].MaterialSlider.change();
-            }
-          }
-        }
-        $(element).hide().show(0);
-      });
-    }
-  }
-});
-
 popupApp.directive('mpSlider', function() {
   var secondsToHms = function(d) {
     d = Number(d);
@@ -33,7 +10,8 @@ popupApp.directive('mpSlider', function() {
   return {
     restrict: 'C',
     link: function (scope, element, attrs) {
-      // TODO: slider is broken when tab is not in focus
+      // TODO: gmusic slider is broken when tab is not in focus
+      // should probably just disable on gmusic for now...
       $(element).on('mouseup', function() {
         dragging = false;
 
@@ -49,6 +27,15 @@ popupApp.directive('mpSlider', function() {
         dragging = true;
       }).on('input', function() {
         $('#current-time').html(secondsToHms($(element).val()));
+      });
+
+      scope.$watch(function() {
+        return attrs.value;
+      }, function() {
+        if (element[0].MaterialSlider) {
+          element[0].MaterialSlider.change(element[0].getAttribute('value'));
+        }
+        $(element).hide().show(0); // Force reflow
       });
     }
   }
@@ -67,6 +54,15 @@ popupApp.directive('mpVolslider', function() {
             'position': $(element).val() / $(element).attr('max')
           });
         }
+      });
+
+      scope.$watch(function() {
+        return attrs.value;
+      }, function() {
+        if (element[0].MaterialSlider) {
+          element[0].MaterialSlider.change();
+        }
+        $(element).hide().show(0); // Force reflow
       });
     }
   }
@@ -118,31 +114,3 @@ popupApp.directive('mpControl', function() {
     }
   }
 });
-
-popupApp.directive('albumArt', function() {
-  return {
-    restrict: 'C',
-    link: function (scope, elements, attrs) {
-      $(elements).on('click', function(event) {
-        if (scope.interface_port) {
-          chrome.tabs.update(scope.interface_port.id, {highlighted: true});
-          chrome.tabs.get(scope.interface_port.id, function (tab) {
-            chrome.windows.update(tab.windowId, {focused: true});
-          });
-        }
-      });
-    }
-  }
-})
-
-popupApp.directive('settings', function() {
-  return {
-    restrict: 'C',
-    link: function (scope, elements, attrs) {
-      $(elements).on('click', function(event) {
-        chrome.tabs.create({url: chrome.extension.getURL('options.html')});
-        event.stopPropagation();
-      });
-    }
-  }
-})

@@ -19,10 +19,16 @@ const ThumbEnum = {
   DOWN: 1
 }
 
+const StatusEnum = {
+  PAUSED: 0,
+  PLAYING: 1
+}
+
 var controller = popupApp.controller('PopupController', ['$scope', function($scope) {
     $scope.StateEnum = StateEnum;
     $scope.RepeatEnum = RepeatEnum;
     $scope.ThumbEnum = ThumbEnum;
+    $scope.StatusEnum = StatusEnum;
 
     $scope.music_status = {};
 
@@ -37,7 +43,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.music_status.total_time = '';
     $scope.music_status.current_time_s = 0;
     $scope.music_status.total_time_s = 0;
-    $scope.music_status.status = 'play_arrow';
+    $scope.music_status.status = StatusEnum.PAUSED;
     $scope.music_status.disabled = {};
     $scope.music_status.volume = 0;
     $scope.music_status.thumb = 0;
@@ -60,6 +66,10 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       else {
         return 'volume_up';
       }
+    }
+
+    $scope.status_icon = function() {
+      return ($scope.music_status.status == StatusEnum.PAUSED) ? 'play_arrow' : 'pause';
     }
 
     $scope.album_art_background = function() {
@@ -200,9 +210,8 @@ $(function() {
           popupScope.music_status.artist = response.artist;
           popupScope.music_status.album = response.album;
           popupScope.music_status.album_art = response.album_art;
-          popupScope.music_status.status = response.status == 'Pause' ? 'pause' : 'play_arrow';
+          popupScope.music_status.status = response.status == 'Pause' ? StatusEnum.PLAYING : StatusEnum.PAUSED;
           popupScope.music_status.shuffle = response.shuffle == 'NO_SHUFFLE' ? false : true;
-          console.log(response.repeat);
           popupScope.music_status.repeat = response.repeat;
           popupScope.music_status.thumb = response.thumb;
           popupScope.music_status.volume = response.volume;

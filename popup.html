@@ -101,7 +101,7 @@
         <button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vol' title='Volume' ng-click='music_status.vol_pressed=!music_status.vol_pressed' ng-style='{"display": music_status.vol_pressed ? "block" : "none"}'>
           <i class='material-icons'>volume_up</i>
         </button>
-        <button id='playlist-button' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.playlist' title='Playlist' ng-click='music_status.playlist_pressed=!music_status.playlist_pressed' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}'>
+        <button mp-control id='playlist-button' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.playlist' title='Playlist' ng-click='music_status.playlist_pressed=!music_status.playlist_pressed' ng-style='{"display": music_status.vol_pressed ? "none" : "block"}'>
           <i class='material-icons'>queue_music</i>
         </button>
       </div>

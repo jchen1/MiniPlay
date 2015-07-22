@@ -212,7 +212,7 @@ body {
 }
 
 #top-controls > li[disabled] {
-  opacity: 0!important;
+  display: none;
 }
 
 .top-control-active {

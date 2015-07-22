@@ -69,6 +69,17 @@ $(function() {
         update_slider(message.position, 'material-player-progress'); break;
       case 'vslider':
         update_slider(message.position, 'material-vslider'); break;
+      case 'playlist':
+        $button = $('.song-table > tbody > .song-row[data-index="'+message.index+'"] > td[data-col="song-details"] button'); break;
+      case 'playlist-button':
+        // Toggle the playlist to set it up for viewing
+        if (!$('#queue-overlay').hasClass('sj-opened')) {
+          $('#queue').click();
+          window.setTimeout(function() {
+            $('#queue').click();
+          }, 100);
+        }
+        break;
     }
     if ($button !== null) {
       $button.click();
@@ -100,7 +111,7 @@ $(function() {
           send_command(msg);
         }
       });
-      update(false, true);
+      update();
     }
   });
 

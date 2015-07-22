@@ -10,8 +10,8 @@ var music_status = {
   current_time_s : 0,
   total_time_s: 0,
   thumb : '',
-  repeat : 'NO_REPEAT',
-  shuffle : 'NO_SHUFFLE',
+  repeat : RepeatEnum.NONE,
+  shuffle : false,
   status : '',
   volume : '',
   slider_updated : false,
@@ -37,13 +37,13 @@ var music_status = {
 
   get_thumb : function () {
     if ($('.thumbUpButton').hasClass('indicator')) {
-      return '5';
+      return ThumbEnum.UP;
     }
     else if ($('.thumbDownButton').hasClass('indicator')) {
-      return '1';
+      return ThumbEnum.DOWN;
     }
     else {
-      return '0';
+      return ThumbEnum.NONE;
     }
   },
 
@@ -57,8 +57,8 @@ var music_status = {
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.current_time_s + this.get_time(this.total_time);
     this.thumb = this.get_thumb();
-    this.volume = (parseInt($('.volumeKnob').css('left'), 10) - 20) / 82;
-    this.status = ($('.playButton').css('display') == "none") ? 'Pause' : 'Play';
+    this.volume = (parseInt($('.volumeKnob').css('left'), 10) - 20) / 82 * 100;
+    this.status = ($('.playButton').css('display') == "none") ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     return this;
   }
 };

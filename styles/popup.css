@@ -57,10 +57,6 @@ body {
   margin-bottom: 4px;
 }
 
-#schedule_icon {
-  margin-right: -18px;
-}
-
 #song_header {
   text-indent: 55;
 }
@@ -184,12 +180,6 @@ body {
 
 #artist, #album {
   font-size: 15px;
-}
-
-#artist a {
-  outline: none;
-  text-decoration: none;
-  color: #fff;
 }
 
 #top-controls {

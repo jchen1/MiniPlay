@@ -111,6 +111,7 @@ $(function() {
           send_command(msg);
         }
       });
+      update();
     }
   });
 

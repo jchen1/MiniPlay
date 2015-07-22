@@ -1,6 +1,6 @@
 var music_status = {
 
-  disabled_buttons : [],
+  disabled_buttons : ['slider'],
   artist : '',
   album : '',
   album_art : '',

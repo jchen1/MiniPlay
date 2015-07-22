@@ -10,8 +10,6 @@ popupApp.directive('mpSlider', function() {
   return {
     restrict: 'C',
     link: function (scope, element, attrs) {
-      // TODO: gmusic slider is broken when tab is not in focus
-      // should probably just disable on gmusic for now...
       $(element).on('mouseup', function() {
         dragging = false;
 
@@ -36,6 +34,17 @@ popupApp.directive('mpSlider', function() {
           element[0].MaterialSlider.change(element[0].getAttribute('value'));
         }
         $(element).hide().show(0); // Force reflow
+      });
+
+      scope.$watch(function() {
+        return scope.music_status.disabled['slider'];
+      }, function(value) {
+        if (value === true) {
+          $(element).add($(element).parent()).on('mousedown mouseup', false);
+        }
+        else {
+          $(element).add($(element).parent()).off('mousedown mouseup', true);
+        }
       });
     }
   }

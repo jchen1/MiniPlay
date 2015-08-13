@@ -164,22 +164,49 @@ body {
 #song-info {
   position: absolute;
   top: 0;
-  width: 80%;
-  padding: 15px 10px 0 20px;
-  text-shadow: 0 1px 0 black;
+  width: 100%;
+  padding: 15px 40px 10px 20px;
+  box-sizing: border-box;
   line-height: 1.4;
   font-weight: 300;
   overflow: hidden;
   color: #fff;
+  background: inherit;
+}
+
+#song-info.blur-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  background-attachment: fixed;
+  -webkit-filter: blur(10px);
+}
+
+#song-info.blur-background::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
 }
 
 #title {
+  z-index: 1;
   font-size: 20px;
   padding: 0 0 5 0;
+  position: relative;
 }
 
 #artist, #album {
+  z-index: 1;
   font-size: 15px;
+  position: relative;
 }
 
 #top-controls {

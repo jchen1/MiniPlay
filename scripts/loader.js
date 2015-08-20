@@ -5,6 +5,7 @@ $(function() {
     gmusic: "play.google.com/music",
     pandora: "pandora.com",
     songza: "songza.com",
+    soundcloud: "soundcloud.com",
     spotify: "play.spotify.com"
   };
 

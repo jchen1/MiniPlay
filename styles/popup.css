@@ -172,6 +172,7 @@ body {
   overflow: hidden;
   color: #fff;
   background: inherit;
+  min-height: 80px;
 }
 
 #song-info.blur-background::before {

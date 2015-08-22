@@ -26,8 +26,8 @@ var music_status = {
   },
 
   get_album_art : function() {
-    var art = $('.playBackSoundBadge__avatar > .image > span').css('background-image');
-    return (!art || art == '') ? 'img/default_album.png' : art.substring(4, art.length() - 2);
+    var art = $('.playbackSoundBadge__avatar > .image > span').css('background-image');
+    return (!art || art == '') ? 'img/default_album.png' : art.substring(4, art.length - 1);
   },
 
   get_thumb : function() {

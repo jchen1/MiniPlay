@@ -1,8 +1,12 @@
 var api_key = '8acdad46ec761ef21ba93ce72a888f1b';
-var api_url = 'https://ws.audioscrobbler.com/2.0/?';
+var api_url = 'https://ws.audioscrobbler.com/2.0/';
 
 function auth() {
-  $.get(api_url + 'method=auth.gettoken&api_key=' + api_key, function (data) {
+  var params = {
+    method: 'auth.gettoken',
+    api_key: api_key
+  };
+  $.get(api_url + get_query_string(params), function (data) {
     if ($(data).find('lfm').attr('status') == 'ok') {
       var token = $(data).find('token').text();
       chrome.storage.sync.set({'lastfm_token': token});
@@ -62,6 +66,7 @@ function now_playing(details) {
             api_key: api_key
           };
           $.post(api_url + get_query_string(params), params).always(function(data) {
+            console.log(data);
             var status = $(data).find('lfm').attr('status');
             if (status != 'ok') {
               var code = $(data).find('error').attr('code');
@@ -125,9 +130,23 @@ function scrobble(details) {
   });
 }
 
+function get_signature(params) {
+  var keys = Object.keys(params);
+  var string = '';
+
+  keys.sort();
+  keys.forEach(function(key) {
+    string += key + params[key];
+  });
+
+  string += 'de379e5188615868380b23f62068f1e6';
+
+  return MD5(string);
+}
+
 function get_query_string(params) {
   var parts = new Array(), keys = new Array();
-  var o = ''
+  var o = '';
 
   for (var x in params) {
     parts.push(x + '=' + encodeURIComponent(params[x]));
@@ -144,7 +163,7 @@ function get_query_string(params) {
   }
 
   return parts.join('&') + '&api_sig=' +
-         MD5(o + 'de379e5188615868380b23f62068f1e6');
+         get_signature(params);
 }
 
 function fail_auth() {

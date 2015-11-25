@@ -110,11 +110,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
       chrome.tabs.create({url: chrome.extension.getURL('options.html')});
     });
   }
-
-  // Force update Last.fm details
-  else if (details.reason == 'update') {
-    chrome.storage.sync.remove(['lastfm_sessionID', 'lastfm_token']);
-  }
 });
 
 chrome.commands.onCommand.addListener(function (command) {

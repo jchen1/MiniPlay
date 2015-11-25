@@ -54,6 +54,7 @@ $(function() {
     else {
       $('#login').hide();
       $('#auth').hide();
+      chrome.storage.sync.remove(['lastfm_sessionID', 'lastfm_token']);
     }
   })
 

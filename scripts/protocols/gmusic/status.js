@@ -1,6 +1,6 @@
 var music_status = {
 
-  disabled_buttons : [],
+  disabled_buttons : ['slider'],
   artist : '',
   album : '',
   album_art : '',
@@ -31,10 +31,10 @@ var music_status = {
   },
 
   get_thumb : function() {
-    if ($('sj-icon-button[data-rating="5"]').attr('title') == 'Undo thumb-up') {
+    if ($('paper-icon-button[data-rating="5"]').attr('title') == 'Undo thumb-up') {
       return ThumbEnum.UP;
     }
-    else if ($('sj-icon-button[data-rating="1"]').attr('title') == 'Undo thumb-down') {
+    else if ($('paper-icon-button[data-rating="1"]').attr('title') == 'Undo thumb-down') {
       return ThumbEnum.DOWN;
     }
     else {
@@ -43,11 +43,11 @@ var music_status = {
   },
 
   get_shuffle : function() {
-    return ($('sj-icon-button[data-id="shuffle"]').attr('value') == 'ALL_SHUFFLE');
+    return ($('paper-icon-button[data-id="shuffle"]').attr('value') == 'ALL_SHUFFLE');
   },
 
   get_repeat : function() {
-    switch ($('sj-icon-button[data-id="repeat"]').attr('value')) {
+    switch ($('paper-icon-button[data-id="repeat"]').attr('value')) {
       case 'NO_REPEAT': return RepeatEnum.NONE;
       case 'SINGLE_REPEAT': return RepeatEnum.ONE;
       case 'LIST_REPEAT': return RepeatEnum.ALL;
@@ -55,7 +55,7 @@ var music_status = {
   },
 
   get_playlist : function() {
-    var playlist_root = $('#queue-container > .queue-song-table > .song-table > tbody');
+    var playlist_root = $('#queueContainer > .queue-song-table > .song-table > tbody');
     var playlist_count = playlist_root.attr('data-count');
     var playlist_arr = playlist_root.find('.song-row');
     var playlist = [];
@@ -95,7 +95,7 @@ var music_status = {
     this.thumb = this.get_thumb();
     this.shuffle = this.get_shuffle();
     this.repeat = this.get_repeat();
-    this.status = $('sj-icon-button[data-id="play-pause"]').attr('title') == 'Pause' ? StatusEnum.PLAYING : StatusEnum.PAUSED;
+    this.status = $('paper-icon-button[data-id="play-pause"]').attr('title') == 'Pause' ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseInt($('#material-vslider').attr('aria-valuenow'));
     this.playlist = this.get_playlist();
     this.slider_updated = false;

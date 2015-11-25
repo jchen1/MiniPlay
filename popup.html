@@ -16,7 +16,7 @@
 
   <div id='popup' >
     <div class='album-art' ng-style='{"background-image":album_art_background()}' ng-click='album_art_click()'>
-      <div id='song-info'>
+      <div id='song-info' ng-class='{"blur-background": music_status.state == StateEnum.PLAYING}'>
         <div id='title'>{{music_status.title}}</div>
         <div id='artist'>{{music_status.artist}}</div>
         <div id='album'>{{music_status.album}}</div>

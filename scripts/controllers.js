@@ -52,7 +52,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.album_art_background = function() {
-      return 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(' + $scope.music_status.album_art + ')';
+      return ($scope.music_status.state == StateEnum.PLAYING ? '' : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), no-repeat ') + 'url(' + $scope.music_status.album_art + ')';
     };
 
     $scope.status_title = function() {

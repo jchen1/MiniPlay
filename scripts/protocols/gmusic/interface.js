@@ -51,20 +51,20 @@ $(function() {
     var $button = null;
     switch (message.type) {
       case 'play':
-        $button = $('sj-icon-button[data-id="play-pause"]');
+        $button = $('paper-icon-button[data-id="play-pause"]');
         break;
       case 'rew':
-        $button = $('sj-icon-button[data-id="rewind"]'); break;
+        $button = $('paper-icon-button[data-id="rewind"]'); break;
       case 'ff':
-        $button = $('sj-icon-button[data-id="forward"]'); break;
+        $button = $('paper-icon-button[data-id="forward"]'); break;
       case 'up':
-        $button = $('sj-icon-button[data-rating="5"]'); break;
+        $button = $('paper-icon-button[data-rating="5"]'); break;
       case 'down':
-        $button = $('sj-icon-button[data-rating="1"]'); break;
+        $button = $('paper-icon-button[data-rating="1"]'); break;
       case 'shuffle':
-        $button = $('sj-icon-button[data-id="shuffle"]'); break;
+        $button = $('paper-icon-button[data-id="shuffle"]'); break;
       case 'repeat':
-        $button = $('sj-icon-button[data-id="repeat"]'); break;
+        $button = $('paper-icon-button[data-id="repeat"]'); break;
       case 'slider':
         update_slider(message.position, 'material-player-progress'); break;
       case 'vslider':

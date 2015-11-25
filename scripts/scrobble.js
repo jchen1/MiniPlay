@@ -1,11 +1,15 @@
-var api_key = '8acdad46ec761ef21ba93ce72a888f1b';
-var api_url = 'https://ws.audioscrobbler.com/2.0/';
+var api_key = '2aa5bd89dfc1b94205cc65b55556ef0e';
+var api_secret = '80bec7945eb422b6030391d85896174a';
+var api_url = 'http://ws.audioscrobbler.com/2.0/?';
 
 function auth() {
   var params = {
     method: 'auth.gettoken',
-    api_key: api_key
+    api_key: api_key,
   };
+
+  var api_sig = get_signature(params);
+
   $.get(api_url + get_query_string(params), function (data) {
     if ($(data).find('lfm').attr('status') == 'ok') {
       var token = $(data).find('token').text();
@@ -65,16 +69,16 @@ function now_playing(details) {
             sk: session_id,
             api_key: api_key
           };
-          $.post(api_url + get_query_string(params), params).always(function(data) {
-            console.log(data);
-            var status = $(data).find('lfm').attr('status');
+          params.api_sig = get_signature(params);
+          $.post(api_url, params).always(function(data) {
+            var status = $(data.responseXML).find('lfm').attr('status');
             if (status != 'ok') {
-              var code = $(data).find('error').attr('code');
+              var code = $(data.responseXML).find('error').attr('code');
               if (code == '9' || code == '4') {
                 fail_auth();
               }
               else {
-                fail_scrobble(code);
+                fail_scrobble($(data.responseXML).find('error').text());
               }
             }
           });
@@ -108,15 +112,17 @@ function scrobble(details) {
               sk: session_id,
               api_key: api_key
             };
-            $.post(api_url + get_query_string(params), params).always(function(data) {
-              var status = $(data).find('lfm').attr('status');
+            params.api_sig = get_signature(params);
+
+            $.post(api_url, params).always(function(data) {
+              var status = $(data.responseXML).find('lfm').attr('status');
               if (status != 'ok') {
-                var code = $(data).find('error').attr('code');
+                var code = $(data.responseXML).find('error').attr('code');
                 if (code == '9' || code == '4') {
                   fail_auth();
                 }
                 else {
-                  fail_scrobble(code);
+                  fail_scrobble($(data.responseXML).find('error').text());
                 }
               }
             });
@@ -139,7 +145,7 @@ function get_signature(params) {
     string += key + params[key];
   });
 
-  string += 'de379e5188615868380b23f62068f1e6';
+  string += api_secret;
 
   return MD5(string);
 }
@@ -178,12 +184,12 @@ function fail_auth() {
   });
 }
 
-function fail_scrobble(code) {
+function fail_scrobble(msg) {
   chrome.notifications.create('lastfm_fail_scrobble',
   {
     type: 'basic',
-    title: 'Scrobbling failed!',
-    message: 'Error ' + code,
+    title: 'Last.fm scrobbling failed!',
+    message: msg,
     iconUrl: '../img/icon-128.png'
   }, function(id){
     chrome.storage.local.set({'lastfm_fail_id': id});

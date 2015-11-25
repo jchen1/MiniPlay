@@ -37,7 +37,8 @@ $(function() {
   }
 
   function update_slider(position, slidername) {  //position is in %
-    var slider = document.getElementById(slidername).shadowRoot.getElementById('sliderBar');
+    var slider = document.getElementById(slidername).getElementsByTagName('paper-progress')[0];
+
     var newWidth = Math.round(position * slider.offsetWidth);
     var rect = slider.getBoundingClientRect();
 

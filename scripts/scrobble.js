@@ -70,7 +70,7 @@ function now_playing(details) {
             api_key: api_key
           };
           params.api_sig = get_signature(params);
-          $.post(api_url, params).always(function(data) {
+          $.post(api_url, params).error(function(data) {
             var status = $(data).find('lfm').attr('status');
             if (status != 'ok') {
               var code = $(data.responseXML).find('error').attr('code');
@@ -114,7 +114,7 @@ function scrobble(details) {
             };
             params.api_sig = get_signature(params);
 
-            $.post(api_url, params).always(function(data) {
+            $.post(api_url, params).error(function(data) {
               var status = $(data.responseXML).find('lfm').attr('status');
               if (status != 'ok') {
                 var code = $(data.responseXML).find('error').attr('code');

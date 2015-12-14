@@ -26,7 +26,7 @@ var music_status = {
   },
 
   get_album_art : function() {
-    var art = $('#playingAlbumArt').attr('src');
+    var art = $('#playerBarArt').attr('src');
     return (!art || art == 'http://undefined') ? 'img/default_album.png' : art.substring(0, art.search('=') + 1) + 's320';
   },
 
@@ -84,7 +84,7 @@ var music_status = {
   },
 
   update : function() {
-    this.title = $('#player-song-title').text();
+    this.title = $('#currently-playing-title').text();
     this.artist = $('#player-artist').text();
     this.album = $('.player-album').text();
     this.album_art = this.get_album_art();

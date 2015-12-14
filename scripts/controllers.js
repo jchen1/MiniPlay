@@ -190,7 +190,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         }
       }
 
-      setupAnalytics();
+      // setupAnalytics();
     }
 
     init();

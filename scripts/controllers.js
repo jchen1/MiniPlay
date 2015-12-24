@@ -172,6 +172,10 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           else {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.PLAYING);
+              if ($scope.music_status.slider_dragging === true) {
+                response.current_time_s = $scope.current_time_s;
+                response.current_time = $scope.current_time;
+              }
               $.extend($scope.music_status, response);
 
               $scope.set_disabled(response.disabled_buttons);

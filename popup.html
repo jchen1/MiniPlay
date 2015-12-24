@@ -11,7 +11,7 @@
   <script src='scripts/controllers.js'></script>
   <script src='scripts/directives.js'></script>
 </head>
-<body ng-controller='PopupController' ng-keypress='handle_key($event)'>
+<body ng-controller='PopupController' ng-keypress='handle_key($event)' ng-mouseup='music_status.slider_dragging = false'>
 
   <div id='popup' >
     <div class='album-art' ng-style='{"background-image":album_art_background(), "display": music_status.playlist_pressed ? "none" : "block"}' ng-click='album_art_click()'>
@@ -64,7 +64,7 @@
       </table>
     </div>
     <p id='slider-wrapper'>
-      <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' />
+      <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' ng-mousedown='music_status.slider_dragging = true' />
     </p>
     <div id='controls'>
       <div id='controls-left'>

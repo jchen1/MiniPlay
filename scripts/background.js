@@ -10,6 +10,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     loader_port.id = port.sender.tab.id;
     port.onMessage.addListener(function(msg) {
       if (msg.protocol) {
+        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/global.js"});
         chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/status.js"});
         chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/interface.js"});
       }

@@ -140,7 +140,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
               $scope.set_state(StateEnum.NO_TAB);
             });
           });
-          $scope.interface_port.onMessage.addListener(update);
+          $scope.interface_port.onMessage.addListener(route_interface_msg);
           $scope.$apply(function() {
             $scope.set_state(StateEnum.NO_SONG);
           });
@@ -155,6 +155,12 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = 'https://ssl.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      }
+
+      function route_interface_msg(msg) {
+        if (msg.type === 'status') {
+          update(msg.status);
+        }
       }
 
       function update(response) {

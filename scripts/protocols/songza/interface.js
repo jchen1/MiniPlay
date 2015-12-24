@@ -14,7 +14,10 @@ $(function() {
       background_port.postMessage(msg);
     }
     if (popup_port) {
-      popup_port.postMessage(music_status);
+      popup_port.postMessage({
+        'type': 'status',
+        'status': music_status
+      });
     }
   }
 

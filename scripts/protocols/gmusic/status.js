@@ -1,6 +1,6 @@
 var music_status = {
 
-  disabled_buttons : ['slider'],
+  disabled_buttons : [],
   artist : '',
   album : '',
   album_art : '',
@@ -14,8 +14,6 @@ var music_status = {
   shuffle : '',
   status : '',
   volume : '',
-  slider_updated : false,
-  vslider_updated : false,
   playlist : [],
   protocol : 'gmusic',
 
@@ -98,8 +96,6 @@ var music_status = {
     this.status = $('paper-icon-button[data-id="play-pause"]').attr('title') == 'Pause' ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseInt($('#material-vslider').attr('aria-valuenow'));
     this.playlist = this.get_playlist();
-    this.slider_updated = false;
-    this.vslider_updated = false;
     return this;
   }
 };

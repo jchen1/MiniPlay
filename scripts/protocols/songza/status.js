@@ -14,8 +14,6 @@ var music_status = {
   shuffle : false,
   status : '',
   volume : '',
-  slider_updated : false,
-  vslider_updated : false,
   protocol : 'songza',
 
   get_time : function (time) {
@@ -56,8 +54,6 @@ var music_status = {
     this.thumb = this.get_thumb();
     this.status = $('.player-wrapper').hasClass('player-state-play') ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseFloat($('#volume-control-slider-input').val());
-    this.slider_updated = false;
-    this.vslider_updated = false;
     return this;
   }
 };

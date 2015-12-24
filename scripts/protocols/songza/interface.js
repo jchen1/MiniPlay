@@ -5,11 +5,9 @@ $(function() {
   var popup_port = null;
   var old_status = null;
 
-  function update(slider, vslider) {
+  function update() {
     old_status = JSON.parse(JSON.stringify(music_status));
     music_status.update();
-    music_status.slider_updated = (slider == true);
-    music_status.vslider_updated = (vslider == true);
     // socket.emit('data', music_status);
     var msg = create_background_msg(old_status, music_status);
     if (msg != null) {
@@ -63,7 +61,7 @@ $(function() {
       $button.click();
     }
     window.setTimeout( function() {
-      update(false, message.type == 'vslider');
+      update();
     }, 30);
   }
 
@@ -97,7 +95,7 @@ $(function() {
           send_command(msg);
         }
       });
-      update(false, true);
+      update();
     }
   });
 

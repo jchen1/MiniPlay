@@ -14,8 +14,6 @@ var music_status = {
   shuffle : false,
   status : '',
   volume : '',
-  slider_updated : false,
-  vslider_updated : false,
   protocol : 'pandora',
 
   get_time : function (time) {

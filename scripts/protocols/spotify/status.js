@@ -14,8 +14,6 @@ var music_status = {
   shuffle : false,
   status : '',
   volume : '',
-  slider_updated : false,
-  vslider_updated : false,
   protocol : 'spotify',
 
   get_time : function (time) {
@@ -43,8 +41,6 @@ var music_status = {
     this.shuffle = iframe.find('#shuffle').hasClass('active');
     this.status = (iframe.find('#play-pause').hasClass('playing')) ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseFloat(iframe.find('#vol-position').css('left'), 10) / 108 * 100;
-    this.slider_updated = false;
-    this.vslider_updated = false;
     return this;
   }
 };

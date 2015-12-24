@@ -64,14 +64,14 @@
       </table>
     </div>
     <p id='slider-wrapper'>
-      <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' ng-mousedown='music_status.slider_dragging = true' />
+      <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' ng-mousedown='music_status.slider_dragging = true' tabindex="-1" />
     </p>
     <div id='controls'>
       <div id='controls-left'>
         <button mp-control id='rew' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.rew' title='Previous song'>
           <i class="material-icons">skip_previous</i>
         </button>
-        <button mp-control id='play' class='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.play' ng-attr-title='{{status_title()}}' ng-click='music_status.status=!music_status.status'>
+        <button mp-control id='play' class='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.play' ng-attr-title='{{status_title()}}' ng-click='music_status.status=!music_status.status' tabindex="0">
           <i class="material-icons">{{status_icon()}}</i>
         </button>
         <button mp-control id='ff' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.ff' title='Next song'>

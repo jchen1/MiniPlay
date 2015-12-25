@@ -36,15 +36,22 @@ var music_status = {
   },
 
   get_shuffle : function() {
-    return ($('paper-icon-button[data-id="shuffle"]').attr('value') == 'ALL_SHUFFLE');
+    return ($('paper-icon-button[data-id="shuffle"]').hasClass('active'));
   },
 
   get_repeat : function() {
-    switch ($('paper-icon-button[data-id="repeat"]').attr('value')) {
-      case 'NO_REPEAT': return RepeatEnum.NONE;
-      case 'SINGLE_REPEAT': return RepeatEnum.ONE;
-      case 'LIST_REPEAT': return RepeatEnum.ALL;
+    var title = $('paper-icon-button[data-id="repeat"]').attr('title');
+    if (title.search('Off') > 0) {
+      return RepeatEnum.NONE;
     }
+    else if (title.search('All') > 0) {
+      return RepeatEnum.ALL;
+    }
+    else if (title.search('Current') > 0) {
+      return RepeatEnum.ONE;
+    }
+
+    return RepeatEnum.NONE;
   },
 
   get_playlist : function() {

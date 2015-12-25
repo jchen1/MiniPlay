@@ -26,6 +26,8 @@ body {
     no-repeat url(../img/default_album.png);
   background-size: 320px 320px;
   position: relative;
+
+  margin-top: -35px;
 }
 
 #playlist {
@@ -162,16 +164,12 @@ body {
 }
 
 #song-info {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  padding: 15px 40px 10px 20px;
+  padding: 15px 0px 10px 60px;
   box-sizing: border-box;
   line-height: 1.4;
   font-weight: 300;
   overflow: hidden;
-  color: #fff;
-  background: inherit;
+  white-space: nowrap;
 }
 
 #song-info.blur-background::before {
@@ -201,12 +199,14 @@ body {
   font-size: 20px;
   padding: 0 0 5 0;
   position: relative;
+  overflow: hidden;
 }
 
 #artist, #album {
   z-index: 1;
   font-size: 15px;
   position: relative;
+  overflow: hidden;
 }
 
 #top-controls {
@@ -254,11 +254,43 @@ body {
   z-index: 2;
 }
 
-#current-time {
+#repeat, #shuffle {
+  position: absolute;
+  bottom: 15;
+  z-index: 2;
+  color: white;
+}
+
+#repeat-shuffle {
+  background:
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0));
+
+  position: absolute;
+  bottom: 40;
+  height: 50px;
+  width: 100%;
+}
+
+#repeat-shuffle i {
+  font-size: 18px;
+}
+
+#repeat {
+  left: 15;
+}
+
+#shuffle {
+  right: 15;
+}
+
+#current-time{
   left: 10;
 }
 
-#total-time {
+#total-time{
   right: 10;
 }
 
@@ -325,4 +357,8 @@ body {
 
 .thumb[disabled] {
   display: none;
+}
+
+.mdl-layout__drawer-button {
+  padding-top: 12px;
 }

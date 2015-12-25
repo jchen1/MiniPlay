@@ -31,9 +31,9 @@
           <i class='material-icons'>settings</i>
         </li>
       </ul>
-        <div id='current-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.current_time}}</div>
-        <div id='total-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.total_time}}</div>
     </div>
+    <div id='current-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.current_time}}</div>
+    <div id='total-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.total_time}}</div>
     <div id='playlist' ng-style='{"display" : music_status.playlist_pressed ? "flex" : "none"}'>
       <table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
         <thead>

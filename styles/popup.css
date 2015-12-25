@@ -250,7 +250,7 @@ body {
   font-size: 11px;
   color: rgba(0, 0, 0, 0.870588);
   position: absolute;
-  bottom: -70;
+  bottom: 0;
   z-index: 2;
 }
 

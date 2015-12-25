@@ -159,7 +159,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
       function route_interface_msg(msg) {
         if (msg.type === 'status') {
-          update(msg.status);
+          update(msg.data);
         }
       }
 

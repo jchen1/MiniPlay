@@ -23,11 +23,6 @@ var music_status = {
     }).reduce(function(a, b) { return a + b; });
   },
 
-  get_album_art : function() {
-    var art = $('#playerBarArt').attr('src');
-    return (!art || art == 'http://undefined') ? 'img/default_album.png' : art.substring(0, art.search('=') + 1) + 's320';
-  },
-
   get_thumb : function() {
     if ($('paper-icon-button[data-rating="5"]').attr('title') == 'Undo thumb-up') {
       return ThumbEnum.UP;
@@ -85,7 +80,7 @@ var music_status = {
     this.title = $('#currently-playing-title').text();
     this.artist = $('#player-artist').text();
     this.album = $('.player-album').text();
-    this.album_art = this.get_album_art();
+    this.album_art = get_album_art($('#playerBarArt').attr('src'));
     this.current_time = $('#time_container_current').text();
     this.total_time = $('#time_container_duration').text();
     this.current_time_s = this.get_time(this.current_time);

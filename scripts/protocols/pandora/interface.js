@@ -46,3 +46,7 @@ function send_command(message) {
     update();
   }, 30);
 }
+
+$(function() {
+  route('send_command', send_command);
+});

@@ -75,7 +75,7 @@ function get_artists(msg) {
       var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
       var observer = null;
 
-      var parse_artists = function() {
+      var parse_data = function() {
         var raw_artists = document.querySelectorAll('.lane-content > .material-card');
         var artists = [];
         for (var i = 0; i < raw_artists.length; i++) {
@@ -120,7 +120,7 @@ function get_artists(msg) {
               }
 
               else {
-                parse_artists();
+                parse_data();
               }
             }
           });
@@ -133,7 +133,7 @@ function get_artists(msg) {
         document.getElementById('mainContainer').dispatchEvent(evt);
       }
       else {
-        parse_artists();
+        parse_data();
       }
     });
   });
@@ -149,7 +149,7 @@ function get_albums(msg) {
       var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
       var observer = null;
 
-      var parse_albums = function() {
+      var parse_data = function() {
         var raw_albums = document.querySelectorAll('.lane-content > .material-card');
         var albums = [];
         for (var i = 0; i < raw_albums.length; i++) {
@@ -192,7 +192,7 @@ function get_albums(msg) {
               }
 
               else {
-                parse_albums();
+                parse_data();
               }
             }
           });
@@ -205,7 +205,7 @@ function get_albums(msg) {
         document.getElementById('mainContainer').dispatchEvent(evt);
       }
       else {
-        parse_albums();
+        parse_data();
       }
     });
   });

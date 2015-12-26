@@ -1,1 +1,41 @@
-<h1>STATIONS</h1>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+    <div class="mdl-tabs__tab-bar">
+        <a href="#recents-panel" class="mdl-tabs__tab is-active">Recent Stations</a>
+        <a href="#my-panel" class="mdl-tabs__tab">My Stations</a>
+    </div>
+    <div class="mdl-tabs__panel is-active" id="recents-panel">
+        <table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
+          <tbody>
+            <tr class='song-row' ng-repeat='station in data.stations.recent_stations' ng-click=''>
+              <td class='song-details-span mdl-data-table__cell--non-numeric'>
+                <span class='song-info'>
+                  <img class='small-art' ng-src='{{station.image}}'/>
+                  <div class='song-details'>
+                    <div class='song-title'>{{station.title}}</div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+    <div class="mdl-tabs__panel" id="my-panel">
+        <table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
+          <tbody>
+            <tr class='song-row' ng-repeat='station in data.stations.my_stations' ng-click=''>
+              <td class='song-details-span mdl-data-table__cell--non-numeric'>
+                <span class='song-info'>
+                  <img class='small-art' ng-src='{{station.image}}'/>
+                  <div class='song-details'>
+                    <div class='song-title'>{{station.title}}</div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+</div>
+
+<div class='end-loading mdl-spinner mdl-js-spinner is-active' ng-style='{"display": "none"}'></div>

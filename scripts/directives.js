@@ -11,8 +11,6 @@ popupApp.directive('mpSlider', function() {
     restrict: 'C',
     link: function (scope, element, attrs) {
       $(element).on('mouseup', function() {
-        dragging = false;
-
         if (scope.interface_port) {
           scope.interface_port.postMessage(
           {
@@ -21,8 +19,6 @@ popupApp.directive('mpSlider', function() {
             'position': $(element).val() / $(element).attr('max')
           });
         }
-      }).on('mousedown', function() {
-        dragging = true;
       }).on('input', function() {
         $('#current-time').html(secondsToHms($(element).val()));
       });
@@ -88,7 +84,7 @@ popupApp.directive('mpScrollIf', function() {
     }
     return null;
   };
-  
+
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {

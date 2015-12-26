@@ -1,7 +1,7 @@
 #popup {
   font-family: 'Roboto', arial, sans-serif;
   width: 320px;
-  height: 390px;
+  height: 460px;
   background-color: #e5e5e5;
   position: absolute;
   cursor: default;
@@ -11,7 +11,7 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 390px;
+  min-height: 460px;
   overflow: hidden;
 }
 
@@ -26,17 +26,38 @@ body {
     no-repeat url(../img/default_album.png);
   background-size: 320px 320px;
   position: relative;
+  z-index: 1;
+}
+
+#art-controls {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background:
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0));
+}
+
+#art-controls > i {
+  font-size: 18px;
+  color: white;
+  position: absolute;
+  bottom: 15;
+}
+
+#repeat {
+  left: 15;
+}
+
+#shuffle {
+  right: 15;
 }
 
 #playlist {
-  height: 320;
-  width: 320;
-  background-color: white;
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: none;
-  overflow: auto;
+  display: flex;
 }
 
 #playlist-table {
@@ -161,51 +182,30 @@ body {
   width: 50px;
 }
 
+header {
+  height: 70px;
+}
+
 #song-info {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  padding: 15px 40px 10px 20px;
-  box-sizing: border-box;
-  line-height: 1.4;
   font-weight: 300;
   overflow: hidden;
-  color: #fff;
-  background: inherit;
+  white-space: nowrap;
+  padding: 11 0 0 60;
 }
 
-#song-info.blur-background::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  background-attachment: fixed;
-  -webkit-filter: blur(10px);
-}
-
-#song-info.blur-background::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.25);
+.mdl-layout__drawer-button > i {
+  padding-top: 10px;
 }
 
 #title {
   z-index: 1;
-  font-size: 20px;
-  padding: 0 0 5 0;
+  padding: 5 0 10 0;
   position: relative;
 }
 
-#artist, #album {
+#subtitle {
   z-index: 1;
-  font-size: 15px;
+  font-size: 12px;
   position: relative;
 }
 
@@ -267,13 +267,12 @@ body {
   margin: -8 0 0 -26;
   z-index: 1;
   position: absolute;
-  top: 320;
 }
 
 #controls {
   position: absolute;
   left: 0px;
-  top: 320px;
+  bottom: 0;
   background-color: #fafafa;
   width: 100%;
   height: 70px;
@@ -324,5 +323,25 @@ body {
 }
 
 .thumb[disabled] {
+  display: none;
+}
+
+#list-content {
+  height: 320;
+  width: 320;
+  background-color: white;
+  position: absolute;
+  bottom: 70;
+  left: 0;
+  overflow: auto;
+}
+
+#list-loader {
+  position: absolute;
+  top: 146; /* 320/2 - height/2 */
+  left: 146;
+}
+
+#list-none {
   display: none;
 }

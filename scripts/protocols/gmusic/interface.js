@@ -71,20 +71,11 @@ function get_artists(msg) {
       var cluster = document.querySelector('.material-card-grid');
       var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
-      var scroll_to_idx = function(idx, msg, cb) {
-        if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-               cluster.getAttribute('data-start-index') != idx) {
-          var cards = document.querySelectorAll('.lane-content > .material-card');
-          document.querySelector('#mainContainer').scrollTop = cards[cards.length-1].offsetTop;
+      var cards = document.querySelectorAll('.lane-content > .material-card');
+      var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
+      var observer = null;
 
-          window.setTimeout(function() {scroll_to_idx(idx, msg, cb)}, 20);
-        }
-        else {
-          cb(msg);
-        }
-      }
-
-      scroll_to_idx(desired_start_index, msg, function(msg) {
+      var parse_artists = function() {
         var raw_artists = document.querySelectorAll('.lane-content > .material-card');
         var artists = [];
         for (var i = 0; i < raw_artists.length; i++) {
@@ -102,7 +93,6 @@ function get_artists(msg) {
           artists.push(artist);
         }
 
-        console.log(artists);
         if (popup_port) {
           popup_port.postMessage({
             'type': 'artists',
@@ -111,36 +101,111 @@ function get_artists(msg) {
             'count': parseInt(document.querySelector('#countSummary').innerText)
           });
         }
-      });
+
+        if (observer != null) observer.disconnect();
+      }
+
+      if (desired_start_index != 0) {
+        observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'data-start-index') {
+              var current_idx = cluster.getAttribute('data-start-index');
+
+              if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                     desired_start_index != current_idx) {
+                document.querySelector('#mainContainer').scrollTop += scroll_step;
+                var evt = document.createEvent('HTMLEvents');
+                evt.initEvent('scroll', false, true);
+                document.getElementById('mainContainer').dispatchEvent(evt);
+              }
+
+              else {
+                parse_artists();
+              }
+            }
+          });
+        });
+
+        observer.observe(cluster, {attributes: true});
+        document.querySelector('#mainContainer').scrollTop += scroll_step;
+        var evt = document.createEvent('HTMLEvents');
+        evt.initEvent('scroll', false, true);
+        document.getElementById('mainContainer').dispatchEvent(evt);
+      }
+      else {
+        parse_artists();
+      }
     });
   });
 }
 
-function get_albums() {
+function get_albums(msg) {
   click('a[data-type="my-library"]', function() {
     click('paper-tab[data-type="albums"]', function() {
-      var raw_albums = document.querySelectorAll('.lane-content > .material-card');
-      var albums = [];
-      for (var i = 0; i < raw_albums.length; i++) {
-        var album = {};
-        album.title = raw_albums[i].querySelector('.title');
-        album.title = album.title == null ? "" : album.title.innerText;
+      var cluster = document.querySelector('.material-card-grid');
+      var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
-        album.artist = raw_albums[i].querySelector('.sub-title');
-        album.artist = album.artist == null ? "" : album.artist.innerText;
+      var cards = document.querySelectorAll('.lane-content > .material-card');
+      var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
+      var observer = null;
 
-        album.image = raw_albums[i].querySelector('img');
-        album.image = album.image == null ? "img/default_album.png" : album.image.src;
+      var parse_albums = function() {
+        var raw_albums = document.querySelectorAll('.lane-content > .material-card');
+        var albums = [];
+        for (var i = 0; i < raw_albums.length; i++) {
+          var album = {};
+          album.title = raw_albums[i].querySelector('.title');
+          album.title = album.title == null ? "" : album.title.innerText;
 
-        albums.push(album);
+          album.artist = raw_albums[i].querySelector('.sub-title');
+          album.artist = album.artist == null ? "" : album.artist.innerText;
+
+          album.image = raw_albums[i].querySelector('img');
+          album.image = album.image == null ? "img/default_album.png" : album.image.src;
+
+          albums.push(album);
+        }
+
+        if (popup_port) {
+          popup_port.postMessage({
+            'type': 'albums',
+            'data': albums,
+            'offset': cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index'),
+            'count': parseInt(document.querySelector('#countSummary').innerText)
+          });
+        }
+        if (observer != null) observer.disconnect();
       }
 
-      console.log(albums);
-      if (popup_port) {
-        popup_port.postMessage({
-          'type': 'albums',
-          'data': albums
+      if (desired_start_index != 0) {
+        observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'data-start-index') {
+              var current_idx = cluster.getAttribute('data-start-index');
+
+              if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                     desired_start_index != current_idx) {
+                document.querySelector('#mainContainer').scrollTop += scroll_step;
+                var evt = document.createEvent('HTMLEvents');
+                evt.initEvent('scroll', false, true);
+                document.getElementById('mainContainer').dispatchEvent(evt);
+              }
+
+              else {
+                parse_albums();
+              }
+            }
+          });
         });
+
+        observer.observe(cluster, {attributes: true});
+        document.querySelector('#mainContainer').scrollTop += scroll_step;
+        var evt = document.createEvent('HTMLEvents');
+        evt.initEvent('scroll', false, true);
+        document.getElementById('mainContainer').dispatchEvent(evt);
+      }
+      else {
+        parse_albums();
       }
     });
   });

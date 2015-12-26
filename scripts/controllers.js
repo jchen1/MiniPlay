@@ -234,12 +234,10 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           update(msg.data);
         }
         else {
-          if (msg.type === 'artists') {
-            $scope.data.artists = $scope.data.artists.slice(0, msg.offset).concat(msg.data);
+          if (msg.type === 'artists' || msg.type === 'albums') {
+            $scope.data[msg.type] = $scope.data[msg.type].slice(0, msg.offset).concat(msg.data);
             $scope.status.scrolling_busy = false;
-            $scope.counts['artists'] = msg.count;
-
-            console.log(msg.count, $scope.data.artists.length);
+            $scope.counts[msg.type] = msg.count;
           }
           else {
             $scope.data[msg.type] = msg.data;

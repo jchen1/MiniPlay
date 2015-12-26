@@ -345,3 +345,19 @@ header {
 #list-none {
   display: none;
 }
+
+#options-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+#options-table .mdl-data-table__cell--non-numeric {
+  width: 85%;
+  overflow-x: hidden;
+  line-height: 1.3;
+}
+
+
+#options-table .mdl-data-table__cell--non-numeric span{
+  font-size: 11px;
+}

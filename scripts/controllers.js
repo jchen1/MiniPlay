@@ -124,8 +124,11 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.settings_click = function($event) {
-      chrome.tabs.create({url: chrome.extension.getURL('options.html')});
-      $event.stopPropagation();
+      // chrome.tabs.create({url: chrome.extension.getURL('options.html')});
+      // $event.stopPropagation();
+      $scope.status.displayed_content = 'options';
+      $('.mdl-layout__obfuscator').click();
+
     }
 
     $scope.drawer_click = function(clicked) {

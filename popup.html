@@ -30,6 +30,8 @@
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_artists")'>Artists</a>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_albums")'>Albums</a>
         <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'>Settings</a>
+        <p id='version'>MiniPlay v0.7.0 by Jeff Chen</p>
+
       </nav>
     </div>
     <div class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>
@@ -56,6 +58,9 @@
       </div>
       <div ng-switch-when='albums'>
         <div id='albums' ng-include src='"templates/albums.html"'></div>
+      </div>
+      <div ng-switch-when='options'>
+        <div id='options' ng-include src='"templates/options.html"'></div>
       </div>
       <div id='list-none' ng-switch-default></div>
     </div>

@@ -113,7 +113,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.handle_key = function($event) {
-      if ($event.keyCode == 32 || $event.charCode === 32) {
+      if (!$('.mdl-layout__drawer').hasClass('is-visible') && ($event.keyCode == 32 || $event.charCode === 32)) {
         $scope.$apply(function() {
           $scope.music_status.status = !$scope.music_status.status;
         });
@@ -164,6 +164,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
 
       function update(response) {
+        componentHandler.upgradeAllRegistered();
         if (chrome.extension.lastError) {
           $scope.$apply(function() {
             $scope.set_state(StateEnum.NO_TAB);

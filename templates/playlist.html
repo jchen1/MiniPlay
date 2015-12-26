@@ -1,0 +1,27 @@
+<table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
+  <thead>
+    <tr>
+      <th id='song_header' class='mdl-data-table__cell--non-numeric'>Song</th>
+      <th>
+        <i id='schedule_icon' class="material-icons">schedule</i>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class='song-row' ng-repeat='song in playlist' ng-click='playlist_click(song.index)' mp-scroll-if='music_status.playlist_pressed && song.currently_playing'>
+      <td class='song-details-span mdl-data-table__cell--non-numeric'>
+        <span class='song-info'>
+          <img class='small-art' ng-src='{{song.album_art}}' ng-style='{opacity: song.currently_playing ? 0 : 100}'/>
+          <div class='song-details'>
+            <div class='song-title'>{{song.title}}</div>
+            <div class='song-artist-album'>{{song.artist}} - {{song.album}}</div>
+          </div>
+          <div class='song-indicator' ng-class='{"song-indicator-active" : song.currently_playing && music_status.status == StatusEnum.PLAYING}' ng-disabled='!song.currently_playing'></div>
+        </span>
+      </td>
+      <td class='duration'>
+        <span>{{song.total_time}}</span>
+      </td>
+    </tr>
+  </tbody>
+</table>

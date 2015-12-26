@@ -18,19 +18,28 @@
       <div id='song-info'>
         <div id='title'>{{music_status.title}}</div>
         <div id='artist'>{{music_status.artist}} - {{music_status.album}}</div>
-        <!-- <div id='album'>{{music_status.album}}</div> -->
       </div>
     </header>
     <div class='mdl-layout__drawer'>
-      <span class="mdl-layout-title">Title</span>
+      <span class="mdl-layout-title">My Library</span>
+      <form action="#">
+        <div class="mdl-textfield mdl-js-textfield">
+          <input class="mdl-textfield__input" type="text" id="sample1">
+          <label class="mdl-textfield__label" for="sample1">Search</label>
+          <label class="mdl-button mdl-js-button mdl-button--icon" for="sample1">
+            <i class="material-icons">search</i>
+          </label>
+        </div>
+      </form>
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Playlists</a>
+        <a class="mdl-navigation__link" href="">Stations</a>
+        <a class="mdl-navigation__link" href="">Artists</a>
+        <a class="mdl-navigation__link" href="">Albums</a>
       </nav>
     </div>
-    <div class='album-art' ng-style='{"background-image":album_art_background(), "display": music_status.playlist_pressed ? "none" : "block"}' ng-click='album_art_click()'>
+    <div id='playlist' ng-style='{"display" : music_status.playlist_pressed ? "flex" : "none"}' ng-include='"templates/playlist.html"'></div>
+    <div class='album-art' ng-style='{"background-image":album_art_background()}' ng-click='album_art_click()'>
 
       <div id='repeat-shuffle'>
         <div mp-control id='shuffle' ng-class='{"top-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle'>
@@ -44,35 +53,6 @@
     </div>
     <div id='current-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.current_time}}</div>
     <div id='total-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.total_time}}</div>
-    <div id='playlist' ng-style='{"display" : music_status.playlist_pressed ? "flex" : "none"}'>
-      <table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
-        <thead>
-          <tr>
-            <th id='song_header' class='mdl-data-table__cell--non-numeric'>Song</th>
-            <th>
-              <i id='schedule_icon' class="material-icons">schedule</i>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class='song-row' ng-repeat='song in playlist' ng-click='playlist_click(song.index)' mp-scroll-if='music_status.playlist_pressed && song.currently_playing'>
-            <td class='song-details-span mdl-data-table__cell--non-numeric'>
-              <span class='song-info'>
-                <img class='small-art' ng-src='{{song.album_art}}' ng-style='{opacity: song.currently_playing ? 0 : 100}'/>
-                <div class='song-details'>
-                  <div class='song-title'>{{song.title}}</div>
-                  <div class='song-artist-album'>{{song.artist}} - {{song.album}}</div>
-                </div>
-                <div class='song-indicator' ng-class='{"song-indicator-active" : song.currently_playing && music_status.status == StatusEnum.PLAYING}' ng-disabled='!song.currently_playing'></div>
-              </span>
-            </td>
-            <td class='duration'>
-              <span>{{song.total_time}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     <p id='slider-wrapper'>
       <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' ng-mousedown='music_status.slider_dragging = true' tabindex="-1" />
     </p>

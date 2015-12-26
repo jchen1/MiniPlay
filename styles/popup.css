@@ -30,6 +30,13 @@ body {
   margin-top: -35px;
 }
 
+/* TODO: center properly */
+#loading {
+  position: absolute;
+  bottom: 116px;
+  left: 146px;
+}
+
 #playlist {
   height: 320;
   width: 320;
@@ -38,6 +45,7 @@ body {
   top: 0;
   left: 0;
   display: none;
+  z-index: 1;
   overflow: auto;
 }
 

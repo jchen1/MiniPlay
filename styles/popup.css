@@ -60,7 +60,7 @@ body {
   display: flex;
 }
 
-#playlist-table {
+.playlist-table {
   width: 100%;
   border: none;
 }
@@ -109,7 +109,7 @@ body {
   overflow: hidden;
 }
 
-#playlist-table img {
+.playlist-table img {
   height: 48;
   width: 48;
   padding: 8 8 8 0;
@@ -139,7 +139,7 @@ body {
   background-image: url('../img/eq_playing.gif');
 }
 
-#playlist-table .song-details-span {
+.playlist-table .song-details-span {
   display: block;
   position: relative;
   overflow: hidden;
@@ -148,21 +148,21 @@ body {
   padding-left: 16px;
 }
 
-#playlist-table .song-details {
+.playlist-table .song-details {
   display: inline-block;
   vertical-align: top;
   position: absolute;
   margin-top: 12px;
 }
 
-#playlist-table .song-title {
+.playlist-table .song-title {
   color: #212121;
   line-height: 20px;
   height: 20px;
   font-size: 15px;
 }
 
-#playlist-table .song-artist-album {
+.playlist-table .song-artist-album {
   line-height: 16px;
   height: 16px;
   font-size: 13px;
@@ -170,13 +170,13 @@ body {
   color: #616161;
 }
 
-#playlist-table .duration {
+.playlist-table .duration {
   text-align: right;
   vertical-align: middle;
   width: 60px;
 }
 
-#playlist-table .play-count {
+.playlist-table .play-count {
   text-align: right;
   vertical-align: middle;
   width: 50px;

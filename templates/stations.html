@@ -4,7 +4,7 @@
         <a href="#my-panel" class="mdl-tabs__tab">My Stations</a>
     </div>
     <div class="mdl-tabs__panel is-active" id="recents-panel">
-        <table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
+        <table class='mdl-data-table mdl-js-data-table playlist-table'>
           <tbody>
             <tr class='song-row' ng-repeat='station in data.stations.recent_stations' ng-click=''>
               <td class='song-details-span mdl-data-table__cell--non-numeric'>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="mdl-tabs__panel" id="my-panel">
-        <table class='mdl-data-table mdl-js-data-table' id='playlist-table'>
+        <table class='mdl-data-table mdl-js-data-table playlist-table'>
           <tbody>
             <tr class='song-row' ng-repeat='station in data.stations.my_stations' ng-click=''>
               <td class='song-details-span mdl-data-table__cell--non-numeric'>

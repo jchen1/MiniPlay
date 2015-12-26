@@ -77,6 +77,10 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       return ($scope.music_status.state == StateEnum.PLAYING ? '' : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), no-repeat ') + 'url(' + $scope.music_status.album_art + ')';
     };
 
+    $scope.artist_background = function(image) {
+      return 'url(' + image + ') center / cover';
+    }
+
     $scope.status_title = function() {
       return ($scope.music_status.status == StatusEnum.PAUSED) ? 'Play' : 'Pause';
     }
@@ -133,6 +137,20 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.settings_click = function($event) {
       chrome.tabs.create({url: chrome.extension.getURL('options.html')});
       $event.stopPropagation();
+    }
+
+    $scope.data_click = function(data) {
+      if ($scope.interface_port) {
+        $scope.interface_port.postMessage(
+        {
+          'action': 'data_click',
+          'click_type': 'album',
+          'offset': data.offset,
+          'id': data.id
+        });
+      }
+
+      $scope.status.displayed_content = 'loading';
     }
 
     $scope.drawer_click = function(clicked) {
@@ -286,15 +304,15 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
               $scope.set_disabled(response.disabled_buttons);
 
-              for (var i = 0; response.playlist && i < response.playlist.length; i++) {
-                if (response.playlist[i].title &&
-                    ($scope.playlist.length <= i ||
-                     response.playlist[i].title != $scope.playlist[i].title ||
-                     response.playlist[i].currently_playing != $scope.playlist[i].currently_playing)) {
-                  $scope.playlist[i] = response.playlist[i];
-                  $scope.playlist[i].index = i;
-                }
-              }
+              // for (var i = 0; response.playlist && i < response.playlist.length; i++) {
+              //   if (response.playlist[i].title &&
+              //       ($scope.playlist.length <= i ||
+              //        response.playlist[i].title != $scope.playlist[i].title ||
+              //        response.playlist[i].currently_playing != $scope.playlist[i].currently_playing)) {
+              //     $scope.playlist[i] = response.playlist[i];
+              //     $scope.playlist[i].index = i;
+              //   }
+              // }
             });
           }
         }

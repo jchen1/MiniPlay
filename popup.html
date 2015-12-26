@@ -4,8 +4,8 @@
   <link rel="stylesheet" href="styles/material.red-blue.min.css" />
   <link rel='stylesheet' href='styles/popup.css'>
 
-  <script src='scripts/angular.min.js'></script>
   <script src='scripts/jquery.js'></script>
+  <script src='scripts/angular.min.js'></script>
   <script src='scripts/enums.js'></script>
   <script src='scripts/popup.js'></script>
   <script src='scripts/controllers.js'></script>
@@ -38,7 +38,7 @@
         <i mp-control id='shuffle' class='material-icons' ng-class='{"top-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle'>shuffle</i>
       </div>
     </div>
-    <div id='list-content' ng-switch='status.displayed_content'>
+    <div id='list-content' ng-switch='status.displayed_content' infinite-scroll='scroll_data(status.displayed_content)' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='1'>
       <div ng-switch-when='playlist'>
         <div id='playlist' ng-include src='"templates/playlist.html"'></div>
       </div>

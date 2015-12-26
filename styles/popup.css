@@ -342,6 +342,11 @@ header {
   left: 146;
 }
 
+.end-loading {
+  left: 146;
+  margin: 10 0 10 0;
+}
+
 #list-none {
   display: none;
 }

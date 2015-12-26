@@ -65,30 +65,53 @@ function click(selector, callback) {
   document.querySelector(selector).click();
 }
 
-function get_artists() {
+function get_artists(msg) {
   click('a[data-type="my-library"]', function() {
     click('paper-tab[data-type="artists"]', function() {
-      var raw_artists = document.querySelectorAll('.lane-content > .material-card');
-      var artists = [];
-      for (var i = 0; i < raw_artists.length; i++) {
-        var artist = {};
-        artist.name = raw_artists[i].querySelector('a');
-        artist.name = artist.name == null ? "" : artist.name.innerText;
+      var cluster = document.querySelector('.material-card-grid');
+      var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
-        // TODO: placeholder artist image
-        artist.image = raw_artists[i].querySelector('img');
-        artist.image = artist.image == null ? "img/default_album.png" : artist.image.src;
+      var scroll_to_idx = function(idx, msg, cb) {
+        if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+               cluster.getAttribute('data-start-index') != idx) {
+          var cards = document.querySelectorAll('.lane-content > .material-card');
+          document.querySelector('#mainContainer').scrollTop = cards[cards.length-1].offsetTop;
 
-        artists.push(artist);
+          window.setTimeout(function() {scroll_to_idx(idx, msg, cb)}, 20);
+        }
+        else {
+          cb(msg);
+        }
       }
 
-      console.log(artists);
-      if (popup_port) {
-        popup_port.postMessage({
-          'type': 'artists',
-          'data': artists
-        });
-      }
+      scroll_to_idx(desired_start_index, msg, function(msg) {
+        var raw_artists = document.querySelectorAll('.lane-content > .material-card');
+        var artists = [];
+        for (var i = 0; i < raw_artists.length; i++) {
+          var artist = {};
+          artist.id = raw_artists[i].getAttribute('data-id');
+          if (!artist.id) continue;
+
+          artist.name = raw_artists[i].querySelector('a');
+          artist.name = artist.name == null ? "" : artist.name.innerText;
+
+          // TODO: placeholder artist image
+          artist.image = raw_artists[i].querySelector('img');
+          artist.image = artist.image == null ? "img/default_album.png" : artist.image.src;
+
+          artists.push(artist);
+        }
+
+        console.log(artists);
+        if (popup_port) {
+          popup_port.postMessage({
+            'type': 'artists',
+            'data': artists,
+            'offset': cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index'),
+            'count': parseInt(document.querySelector('#countSummary').innerText)
+          });
+        }
+      });
     });
   });
 }

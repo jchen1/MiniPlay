@@ -11,7 +11,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       vol_pressed: false,
       playlist_pressed: false,
       slider_dragging: false,
-      displayed_content: ''
+      displayed_content: '',
+      scrolling_busy: false
     };
 
     $scope.music_status = {
@@ -32,15 +33,21 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       thumb: ThumbEnum.NONE,
     };
 
-    $scope.playlist = [];
-    $scope.recents = [];
-    $scope.stations = {
-      'recent_stations': [],
-      'my_stations': []
-    };
-    $scope.artists = [];
-    $scope.albums = [];
-    $scope.playlists = [];
+    $scope.data = {
+      playlist: [],
+      recents: [],
+      stations: {
+        'recent_stations': [],
+        'my_stations': []
+      },
+      artists: [],
+      albums: [],
+      playlist: [],
+      loading: [],
+      '': []
+    }
+
+    $scope.counts = {};
 
     $scope.repeat_icon = function() {
       return ($scope.music_status.repeat == RepeatEnum.ONE) ? 'repeat_one' : 'repeat';
@@ -129,11 +136,11 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.drawer_click = function(clicked) {
-      console.log('hello');
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
         {
-          'action': clicked
+          'action': clicked,
+          'offset': 0
         });
       }
 
@@ -147,6 +154,29 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         chrome.tabs.get($scope.interface_port.id, function (tab) {
           chrome.windows.update(tab.windowId, {focused: true});
         });
+      }
+    }
+
+    $scope.scroll_data = function(content_type) {
+      if ($scope.interface_port) {
+        $scope.interface_port.postMessage(
+        {
+          'action': 'get_' + content_type,
+          'offset': (content_type == 'stations' ? 0 : $scope.data[content_type].length)
+        });
+      }
+      $scope.status.scrolling_busy = true;
+    }
+
+    $scope.should_disable_scroll = function() {
+      if ($scope.status.scrolling_busy) return true;
+
+
+      if ($scope.status.displayed_content == 'stations') {
+        // TODO
+      }
+      else {
+        return $scope.counts[$scope.status.displayed_content] == $scope.data[$scope.status.displayed_content].length;
       }
     }
 
@@ -205,20 +235,27 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         }
         else {
           if (msg.type === 'artists') {
-            $scope.artists = msg.data;
+            $scope.data.artists = $scope.data.artists.slice(0, msg.offset).concat(msg.data);
+            $scope.status.scrolling_busy = false;
+            $scope.counts['artists'] = msg.count;
+
+            console.log(msg.count, $scope.data.artists.length);
           }
-          else if (msg.type === 'albums') {
-            $scope.albums = msg.data;
+          else {
+            $scope.data[msg.type] = msg.data;
           }
-          else if (msg.type === 'stations') {
-            $scope.stations = msg.data;
-          }
-          else if (msg.type === 'recent') {
-            $scope.recents = msg.data;
-          }
-          else if (msg.type === 'playlists') {
-            $scope.playlists = msg.data;
-          }
+          // else if (msg.type === 'albums') {
+          //   $scope.albums = msg.data;
+          // }
+          // else if (msg.type === 'stations') {
+          //   $scope.stations = msg.data;
+          // }
+          // else if (msg.type === 'recent') {
+          //   $scope.recents = msg.data;
+          // }
+          // else if (msg.type === 'playlists') {
+          //   $scope.playlists = msg.data;
+          // }
           $scope.status.displayed_content = msg.type;
         }
       }

@@ -14,14 +14,14 @@
 <body ng-controller='PopupController' ng-keypress='handle_key($event)' ng-mouseup='status.slider_dragging = false'>
 
   <div id='popup' class='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
-    <header class='mdl-layout__header'>
+    <header class='mdl-layout__header' ng-click='status.displayed_content=""'>
       <div id='song-info' class='mdl-layout-title'>
         <div id='title'>{{music_status.title}}</div>
         <div id='subtitle'>{{music_status.artist}} - {{music_status.album}}</div>
       </div>
     </header>
     <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title">My Library</span>
+      <span class="mdl-layout-title" ng-click='drawer_click("library")'>MiniPlay</span>
       <nav class="mdl-navigation">
         <a class="mdl-navigation__link" href="">Search</a>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_recent")'>Recent</a>

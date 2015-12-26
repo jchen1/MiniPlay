@@ -144,7 +144,12 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         });
       }
 
-      $scope.status.displayed_content = 'loading';
+      if (clicked != 'library') {
+        $scope.status.displayed_content = 'loading';
+      }
+      else {
+        $scope.status.displayed_content = '';
+      }
       $('.mdl-layout__obfuscator').click();
     }
 

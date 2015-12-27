@@ -101,10 +101,10 @@ function get_artists(msg) {
 
         if (popup_port) {
           popup_port.postMessage({
-            'type': 'artists',
-            'data': artists,
-            'offset': cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index'),
-            'count': parseInt(document.querySelector('#countSummary').innerText)
+            type: 'artists',
+            data: artists,
+            offset: cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index'),
+            count: parseInt(document.querySelector('#countSummary').innerText)
           });
         }
 
@@ -181,18 +181,18 @@ function get_albums(msg) {
 
         if (popup_port) {
           popup_port.postMessage({
-            'type': 'albums',
-            'data': albums,
-            'offset': start_offset,
-            'count': parseInt(document.querySelector('#countSummary').innerText),
-            'history': [
+            type: 'albums',
+            data: albums,
+            offset: start_offset,
+            count: parseInt(document.querySelector('#countSummary').innerText),
+            history: [
               {
-                'type': 'selector',
-                'selector': 'a[data-type="my-library"]'
+                type: 'selector',
+                selector: 'a[data-type="my-library"]'
               },
               {
-                'type': 'selector',
-                'selector': 'paper-tab[data-type="albums"]'
+                type: 'selector',
+                selector: 'paper-tab[data-type="albums"]'
               }
             ]
           });
@@ -304,18 +304,24 @@ function get_stations() {
       }
 
       var stations = {
-        'recent_stations': recent_stations,
-        'my_stations': my_stations
+        recent_stations: recent_stations,
+        my_stations: my_stations
       };
 
       console.log(stations);
       if (popup_port) {
         popup_port.postMessage({
-          'type': 'stations',
-          'data': stations,
-          'history': [
-            'a[data-type="my-library"]',
-            'paper-tab[data-type="wms"]'
+          type: 'stations',
+          data: stations,
+          history: [
+            {
+              type: 'selector',
+              selector: 'a[data-type="my-library"]',
+            },
+            {
+              type: 'selector',
+              selector: 'paper-tab[data-type="wms"]'
+            }
           ]
         })
       }
@@ -403,9 +409,9 @@ function data_click(msg) {
         }
         if (popup_port) {
           popup_port.postMessage({
-            'type': 'playlist',
-            'data': songs,
-            'history': next_history
+            type: 'playlist',
+            data: songs,
+            history: next_history
           });
         }
       };
@@ -429,14 +435,14 @@ function data_click(msg) {
           if (observer != null) observer.disconnect();
         }
 
-        if (desired_start_index > cluster.getAttribute('data-end-index')) {
+        if (desired_start_index >= cluster.getAttribute('data-end-index')) {
           observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
               if (mutation.attributeName === 'data-start-index') {
                 var current_idx = cluster.getAttribute('data-start-index');
 
                 if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-                       desired_start_index > cluster.getAttribute('data-end-index')) {
+                       desired_start_index >= cluster.getAttribute('data-end-index')) {
                   document.querySelector('#mainContainer').scrollTop += scroll_step;
                   var evt = document.createEvent('HTMLEvents');
                   evt.initEvent('scroll', false, true);
@@ -465,8 +471,8 @@ function data_click(msg) {
         this_state(msg.offset, msg.id, cb);
       })
       next_history.push({
-        'type': 'func',
-        'id': history_funcs.length - 1
+        type: 'func',
+        id: history_funcs.length - 1
       });
 
       this_state(msg.offset, msg.id, parse_album);

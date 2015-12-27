@@ -37,8 +37,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       playlist: [],
       recents: [],
       stations: {
-        'recent_stations': [],
-        'my_stations': []
+        recent_stations: [],
+        my_stations: []
       },
       artists: [],
       albums: [],
@@ -125,10 +125,10 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         // });
         $scope.interface_port.postMessage(
         {
-          'action': 'data_click',
-          'click_type': 'playlist',
-          'index': index,
-          'history': $scope.data.last_history
+          action: 'data_click',
+          click_type: 'playlist',
+          index: index,
+          history: $scope.data.last_history
         });
       }
     }
@@ -152,11 +152,11 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
         {
-          'action': 'data_click',
-          'click_type': 'album',
-          'offset': data.offset,
-          'id': data.id,
-          'history': $scope.data.last_history,
+          action: 'data_click',
+          click_type: 'album',
+          offset: data.offset,
+          id: data.id,
+          history: $scope.data.last_history,
         });
       }
 
@@ -167,8 +167,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
         {
-          'action': clicked,
-          'offset': 0
+          action: clicked,
+          offset: 0
         });
       }
 
@@ -194,8 +194,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
         {
-          'action': 'get_' + content_type,
-          'offset': (content_type == 'stations' ? 0 : $scope.data[content_type].length)
+          action: 'get_' + content_type,
+          offset: (content_type == 'stations' ? 0 : $scope.data[content_type].length)
         });
       }
       $scope.status.scrolling_busy = true;
@@ -221,8 +221,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         if ($scope.interface_port) {
           $scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': 'play'
+            action: 'send_command',
+            type: 'play'
           });
         }
       }

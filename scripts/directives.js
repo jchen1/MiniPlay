@@ -14,9 +14,9 @@ popupApp.directive('mpSlider', function() {
         if (scope.interface_port) {
           scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': 'slider',
-            'position': $(element).val() / $(element).attr('max')
+            action: 'send_command',
+            type: 'slider',
+            position: $(element).val() / $(element).attr('max')
           });
         }
       }).on('input', function() {
@@ -54,9 +54,9 @@ popupApp.directive('mpVolslider', function() {
         if (scope.interface_port) {
           scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': 'vslider',
-            'position': $(element).val() / $(element).attr('max')
+            action: 'send_command',
+            type: 'vslider',
+            position: $(element).val() / $(element).attr('max')
           });
         }
       });
@@ -171,8 +171,8 @@ popupApp.directive('mpControl', function() {
         if (scope.interface_port) {
           scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': event.currentTarget.getAttribute('id')
+            action: 'send_command',
+            type: event.currentTarget.getAttribute('id')
           });
           event.stopPropagation();
         }

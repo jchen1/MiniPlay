@@ -58,12 +58,16 @@ function send_command(message) {
 }
 
 function click(selector, callback) {
+  document.getElementById('loading-overlay').style.display = "block";
+
   load_listeners.push({
     callback: callback,
     called: false
   });
 
-  document.getElementById('loading-overlay').style.display = "block";
+  if (document.querySelector(selector) == null) {
+    console.log(selector);
+  }
   document.querySelector(selector).click();
 }
 
@@ -129,7 +133,7 @@ function get_artists(msg) {
         });
 
         observer.observe(cluster, {attributes: true});
-        document.querySelector('#mainContainer').scrollTop += scroll_step;
+        document.querySelector('#mainContainer').scrollTop = scroll_step;
         var evt = document.createEvent('HTMLEvents');
         evt.initEvent('scroll', false, true);
         document.getElementById('mainContainer').dispatchEvent(evt);
@@ -218,7 +222,7 @@ function get_albums(msg) {
         });
 
         observer.observe(cluster, {attributes: true});
-        document.querySelector('#mainContainer').scrollTop += scroll_step;
+        document.querySelector('#mainContainer').scrollTop = scroll_step;
         var evt = document.createEvent('HTMLEvents');
         evt.initEvent('scroll', false, true);
         document.getElementById('mainContainer').dispatchEvent(evt);
@@ -340,6 +344,8 @@ function get_playlists() {
 }
 
 function restore_state(history, msg, cb) {
+  // console.debug(history);
+
   if (history.length == 0) {
     cb(msg);
   }
@@ -409,7 +415,9 @@ function data_click(msg) {
         var desired_start_index = Math.floor(offset / parseInt(cluster.getAttribute('data-col-count')));
 
         var cards = document.querySelectorAll('.lane-content > .material-card');
-        var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
+        var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count')) * 2].offsetTop -
+                          cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop + 4;
+
         var observer = null;
 
         var get_album = function() {
@@ -421,14 +429,14 @@ function data_click(msg) {
           if (observer != null) observer.disconnect();
         }
 
-        if (desired_start_index != 0) {
+        if (desired_start_index > cluster.getAttribute('data-end-index')) {
           observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
               if (mutation.attributeName === 'data-start-index') {
                 var current_idx = cluster.getAttribute('data-start-index');
 
                 if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-                       desired_start_index != current_idx) {
+                       desired_start_index > cluster.getAttribute('data-end-index')) {
                   document.querySelector('#mainContainer').scrollTop += scroll_step;
                   var evt = document.createEvent('HTMLEvents');
                   evt.initEvent('scroll', false, true);
@@ -443,7 +451,7 @@ function data_click(msg) {
           });
 
           observer.observe(cluster, {attributes: true});
-          document.querySelector('#mainContainer').scrollTop += scroll_step;
+          document.querySelector('#mainContainer').scrollTop = scroll_step;
           var evt = document.createEvent('HTMLEvents');
           evt.initEvent('scroll', false, true);
           document.getElementById('mainContainer').dispatchEvent(evt);
@@ -492,8 +500,8 @@ $(function() {
 
         load_listeners.forEach(function(listener) {
           if (listener.called === false) {
-            listener.callback();
             listener.called = true;
+            listener.callback();
           }
         });
 

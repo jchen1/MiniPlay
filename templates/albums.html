@@ -1,6 +1,6 @@
 <table class='mdl-data-table mdl-js-data-table playlist-table'>
   <tbody>
-    <tr class='song-row' ng-repeat='album in data.albums' ng-click=''>
+    <tr class='song-row' ng-repeat='album in data.albums' ng-click='data_click(album)'>
       <td class='song-details-span mdl-data-table__cell--non-numeric'>
         <span class='song-info'>
           <img class='small-art' ng-src='{{album.image}}'/>

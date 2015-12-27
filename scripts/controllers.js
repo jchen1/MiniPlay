@@ -44,7 +44,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       albums: [],
       playlist: [],
       loading: [],
-      '': []
+      '': [],
+      last_history: [],
     }
 
     $scope.counts = {};
@@ -115,11 +116,19 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
     $scope.playlist_click = function(index) {
       if ($scope.interface_port) {
+        // $scope.interface_port.postMessage(
+        // {
+        //   'action': 'send_command',
+        //   'type': 'playlist',
+        //   'index': index,
+        //   'history': $scope.data.last_history
+        // });
         $scope.interface_port.postMessage(
         {
-          'action': 'send_command',
-          'type': 'playlist',
-          'index': index
+          'action': 'data_click',
+          'click_type': 'playlist',
+          'index': index,
+          'history': $scope.data.last_history
         });
       }
     }
@@ -146,7 +155,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           'action': 'data_click',
           'click_type': 'album',
           'offset': data.offset,
-          'id': data.id
+          'id': data.id,
+          'history': $scope.data.last_history,
         });
       }
 
@@ -261,9 +271,11 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.data[msg.type] = $scope.data[msg.type].slice(0, msg.offset).concat(msg.data);
             $scope.status.scrolling_busy = false;
             $scope.counts[msg.type] = msg.count;
+            $scope.data.last_history = msg.history;
           }
           else {
             $scope.data[msg.type] = msg.data;
+            $scope.data.last_history = msg.history;
           }
           // else if (msg.type === 'albums') {
           //   $scope.albums = msg.data;

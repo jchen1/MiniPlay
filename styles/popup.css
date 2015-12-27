@@ -187,7 +187,6 @@ header {
 }
 
 #song-info {
-  font-weight: 300;
   overflow: hidden;
   white-space: nowrap;
   padding: 11 0 0 60;
@@ -206,6 +205,7 @@ header {
 #subtitle {
   z-index: 1;
   font-size: 12px;
+  font-weight: 300;
   position: relative;
 }
 
@@ -355,6 +355,7 @@ header {
   display: flex;
   flex-wrap: wrap;
   margin-right: -5;
+  width: 100%;
 }
 
 .card-image.mdl-card {

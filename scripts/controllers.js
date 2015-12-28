@@ -213,6 +213,12 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
+    $scope.is_song_playing = function(song) {
+      return (song.title == $scope.music_status.title &&
+              song.artist == $scope.music_status.artist &&
+              song.album == $scope.music_status.album);
+    }
+
     $scope.handle_key = function($event) {
       if ($event.keyCode == 32 || $event.charCode === 32) {
         $scope.$apply(function() {

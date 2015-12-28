@@ -146,92 +146,100 @@ function get_artists(msg) {
 }
 
 function get_albums(msg) {
-  click('a[data-type="my-library"]', function() {
-    click('paper-tab[data-type="albums"]', function() {
-      var cluster = document.querySelector('.material-card-grid');
-      var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
+  var history = [
+  {
+    type: 'selector',
+    selector: 'a[data-type="my-library"]'
+  },
+  {
+    type: 'selector',
+    selector: 'paper-tab[data-type="albums"]'
+  }];
 
-      var cards = document.querySelectorAll('.lane-content > .material-card');
-      var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
-      var observer = null;
+  restore_state(history, msg, function(msg) {
+    var cluster = document.querySelector('.material-card-grid');
+    var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
-      var parse_data = function() {
-        var raw_albums = document.querySelectorAll('.lane-content > .material-card');
-        var albums = [];
-        var start_offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
-        for (var i = 0; i < raw_albums.length; i++) {
-          var album = {};
+    var cards = document.querySelectorAll('.lane-content > .material-card');
+    var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
+    var observer = null;
 
-          album.offset = i + start_offset;
+    var parse_data = function() {
+      var raw_albums = document.querySelectorAll('.lane-content > .material-card');
+      var albums = [];
+      var start_offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
+      for (var i = 0; i < raw_albums.length; i++) {
+        var album = {};
 
-          album.id = raw_albums[i].getAttribute('data-id');
-          if (!album.id) continue;
+        album.offset = i + start_offset;
 
-          album.title = raw_albums[i].querySelector('.title');
-          album.title = album.title == null ? "" : album.title.innerText;
+        album.id = raw_albums[i].getAttribute('data-id');
+        if (!album.id) continue;
 
-          album.artist = raw_albums[i].querySelector('.sub-title');
-          album.artist = album.artist == null ? "" : album.artist.innerText;
+        album.title = raw_albums[i].querySelector('.title');
+        album.title = album.title == null ? "" : album.title.innerText;
 
-          album.image = raw_albums[i].querySelector('img');
-          album.image = album.image == null ? "img/default_album.png" : album.image.src;
+        album.artist = raw_albums[i].querySelector('.sub-title');
+        album.artist = album.artist == null ? "" : album.artist.innerText;
 
-          albums.push(album);
-        }
+        album.image = raw_albums[i].querySelector('img');
+        album.image = album.image == null ? "img/default_album.png" : album.image.src;
 
-        if (popup_port) {
-          popup_port.postMessage({
-            type: 'albums',
-            data: albums,
-            offset: start_offset,
-            count: parseInt(document.querySelector('#countSummary').innerText),
-            history: [
-              {
-                type: 'selector',
-                selector: 'a[data-type="my-library"]'
-              },
-              {
-                type: 'selector',
-                selector: 'paper-tab[data-type="albums"]'
-              }
-            ]
-          });
-        }
-        if (observer != null) observer.disconnect();
+        albums.push(album);
       }
 
-      if (desired_start_index != 0) {
-        observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'data-start-index') {
-              var current_idx = cluster.getAttribute('data-start-index');
-
-              if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-                     desired_start_index != current_idx) {
-                document.querySelector('#mainContainer').scrollTop += scroll_step;
-                var evt = document.createEvent('HTMLEvents');
-                evt.initEvent('scroll', false, true);
-                document.getElementById('mainContainer').dispatchEvent(evt);
-              }
-
-              else {
-                parse_data();
-              }
+      if (popup_port) {
+        popup_port.postMessage({
+          type: 'albums',
+          data: albums,
+          offset: start_offset,
+          count: parseInt(document.querySelector('#countSummary').innerText),
+          history: [
+            {
+              type: 'selector',
+              selector: 'a[data-type="my-library"]'
+            },
+            {
+              type: 'selector',
+              selector: 'paper-tab[data-type="albums"]'
             }
-          });
+          ]
         });
+      }
+      if (observer != null) observer.disconnect();
+    }
 
-        observer.observe(cluster, {attributes: true});
-        document.querySelector('#mainContainer').scrollTop = scroll_step;
-        var evt = document.createEvent('HTMLEvents');
-        evt.initEvent('scroll', false, true);
-        document.getElementById('mainContainer').dispatchEvent(evt);
-      }
-      else {
-        parse_data();
-      }
-    });
-  });
+    if (desired_start_index != 0) {
+      observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.attributeName === 'data-start-index') {
+            var current_idx = cluster.getAttribute('data-start-index');
+
+            if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                   desired_start_index != current_idx) {
+              document.querySelector('#mainContainer').scrollTop += scroll_step;
+              var evt = document.createEvent('HTMLEvents');
+              evt.initEvent('scroll', false, true);
+              document.getElementById('mainContainer').dispatchEvent(evt);
+            }
+
+            else {
+              parse_data();
+            }
+          }
+        });
+      });
+
+      observer.observe(cluster, {attributes: true});
+      document.querySelector('#mainContainer').scrollTop = scroll_step;
+      var evt = document.createEvent('HTMLEvents');
+      evt.initEvent('scroll', false, true);
+      document.getElementById('mainContainer').dispatchEvent(evt);
+    }
+    else {
+      parse_data();
+    }
+  })
 }
 
 function get_songs() {
@@ -363,7 +371,9 @@ function restore_state(history, msg, cb) {
       });
     }
     else if (next_state.type == 'func') {
-      history_funcs[next_state.id](function() { cb(msg); });
+      history_funcs[next_state.id](function() {
+        restore_state(history, msg, cb);
+      });
     }
     else {
       console.log('bad state ' + next_state);
@@ -377,7 +387,7 @@ function data_click(msg) {
     if (msg.click_type == 'album') {
 
       var parse_album = function() {
-        var raw_songs = document.querySelectorAll('#mainContainer .song-table .song-row');
+        var raw_songs = document.querySelectorAll('#music-content .song-table .song-row');
         var songs = [];
         for (var i = 0; i < raw_songs.length; i++) {
           var song = {};

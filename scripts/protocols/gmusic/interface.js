@@ -291,6 +291,8 @@ function get_stations() {
 
       for (var i = 0; i < raw_recent_stations.length; i++) {
         var station = {};
+        station.index = i;
+
         station.title = raw_recent_stations[i].querySelector('.title');
         station.title = station.title == null ? "" : station.title.innerText;
 
@@ -302,6 +304,8 @@ function get_stations() {
 
       for (var i = 0; i < raw_my_stations.length; i++) {
         var station = {};
+        station.index = i;
+
         station.title = raw_my_stations[i].querySelector('.title');
         station.title = station.title == null ? "" : station.title.innerText;
 
@@ -316,7 +320,6 @@ function get_stations() {
         my_stations: my_stations
       };
 
-      console.log(stations);
       if (popup_port) {
         popup_port.postMessage({
           type: 'stations',
@@ -490,6 +493,24 @@ function data_click(msg) {
 
     else if (msg.click_type == 'playlist') {
       $('.song-table > tbody > .song-row[data-index="'+msg.index+'"] button').click();
+
+      window.setTimeout( function() {
+        update();
+      }, 30);
+    }
+
+    else if (msg.click_type == 'recent_station') {
+      var stations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
+      stations[msg.index].querySelector('.play-button-container').click();
+
+      window.setTimeout( function() {
+        update();
+      }, 30);
+    }
+
+    else if (msg.click_type == 'my_station') {
+      var stations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
+      stations[msg.index].querySelector('.play-button-container').click();
 
       window.setTimeout( function() {
         update();

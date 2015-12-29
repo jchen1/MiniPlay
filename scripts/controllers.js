@@ -148,7 +148,44 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       $event.stopPropagation();
     }
 
-    $scope.data_click = function(data) {
+    $scope.data_click = function(type, data) {
+      if ($scope.interface_port) {
+        switch (type) {
+          case 'album':
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: 'album',
+              offset: data.offset,
+              id: data.id,
+              history: $scope.data.last_history,
+            });
+            $scope.status.displayed_content = 'loading';
+            break;
+          case 'recent_station':
+            console.log(data.index);
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: 'recent_station',
+              index: data.index,
+              history: $scope.data.last_history,
+            });
+            $scope.status.displayed_content = '';
+            break;
+          case 'my_station':
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: 'my_station',
+              index: data.index,
+              history: $scope.data.last_history,
+            });
+            $scope.status.displayed_content = '';
+            break;
+        }
+      }
+
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
         {
@@ -160,7 +197,6 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         });
       }
 
-      $scope.status.displayed_content = 'loading';
     }
 
     $scope.drawer_click = function(clicked) {

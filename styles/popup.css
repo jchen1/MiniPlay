@@ -60,7 +60,7 @@ body {
   display: flex;
 }
 
-#playlist-table {
+.playlist-table {
   width: 100%;
   border: none;
 }
@@ -109,7 +109,7 @@ body {
   overflow: hidden;
 }
 
-#playlist-table img {
+.playlist-table img {
   height: 48;
   width: 48;
   padding: 8 8 8 0;
@@ -139,7 +139,7 @@ body {
   background-image: url('../img/eq_playing.gif');
 }
 
-#playlist-table .song-details-span {
+.playlist-table .song-details-span {
   display: block;
   position: relative;
   overflow: hidden;
@@ -148,21 +148,21 @@ body {
   padding-left: 16px;
 }
 
-#playlist-table .song-details {
+.playlist-table .song-details {
   display: inline-block;
   vertical-align: top;
   position: absolute;
   margin-top: 12px;
 }
 
-#playlist-table .song-title {
+.playlist-table .song-title {
   color: #212121;
   line-height: 20px;
   height: 20px;
   font-size: 15px;
 }
 
-#playlist-table .song-artist-album {
+.playlist-table .song-artist-album {
   line-height: 16px;
   height: 16px;
   font-size: 13px;
@@ -170,13 +170,13 @@ body {
   color: #616161;
 }
 
-#playlist-table .duration {
+.playlist-table .duration {
   text-align: right;
   vertical-align: middle;
   width: 60px;
 }
 
-#playlist-table .play-count {
+.playlist-table .play-count {
   text-align: right;
   vertical-align: middle;
   width: 50px;
@@ -187,14 +187,13 @@ header {
 }
 
 #song-info {
-  font-weight: 300;
   overflow: hidden;
   white-space: nowrap;
   padding: 11 0 0 60;
 }
 
 .mdl-layout__drawer-button > i {
-  padding-top: 10px;
+  padding-top: 11px;
 }
 
 #title {
@@ -206,6 +205,7 @@ header {
 #subtitle {
   z-index: 1;
   font-size: 12px;
+  font-weight: 300;
   position: relative;
 }
 
@@ -342,22 +342,71 @@ header {
   left: 146;
 }
 
+.end-loading {
+  left: 146;
+  margin: 10 0 10 0;
+}
+
 #list-none {
   display: none;
 }
 
-#options-table {
-  table-layout: fixed;
-  width: 100%;
+#version {
+  padding-left: 16px;
+  color: #aaa;
+  font-size: 12px;
 }
 
-#options-table .mdl-data-table__cell--non-numeric {
-  width: 85%;
-  overflow-x: hidden;
-  line-height: 1.3;
+#options {
+  padding-left: 16px;
 }
 
+#options h3 {
+  font-size: 16px;
+  line-height: 24px;
+  margin: 10px 0;
+}
+
+#options p {
+  line-height: 1.4;
+  margin: 10px 0;
+}
+
+.mdl-layout__drawer {
+  overflow-y: hidden;
+}
 
 #options-table .mdl-data-table__cell--non-numeric span{
   font-size: 11px;
+}
+.card-table {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5;
+  width: 100%;
+}
+
+.card-image.mdl-card {
+  flex: 0 0 auto;
+  width: 150;
+  margin: 5;
+  display: flex;
+}
+
+.card-image > .mdl-card__actions {
+  height: 54px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.card-image__filename {
+  color: white;
+  font-size: 11px;
+  font-weight: 500;
+  overflow: hidden;
+  position: absolute;
+  padding: 8;
+  bottom: 0;
+  right: 0;
+  text-align: right;
 }

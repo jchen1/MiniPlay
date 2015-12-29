@@ -11,7 +11,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       vol_pressed: false,
       playlist_pressed: false,
       slider_dragging: false,
-      displayed_content: ''
+      displayed_content: '',
+      scrolling_busy: false
     };
 
     $scope.music_status = {
@@ -32,15 +33,22 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       thumb: ThumbEnum.NONE,
     };
 
-    $scope.playlist = [];
-    $scope.recents = [];
-    $scope.stations = {
-      'recent_stations': [],
-      'my_stations': []
-    };
-    $scope.artists = [];
-    $scope.albums = [];
-    $scope.playlists = [];
+    $scope.data = {
+      playlist: [],
+      recents: [],
+      stations: {
+        recent_stations: [],
+        my_stations: []
+      },
+      artists: [],
+      albums: [],
+      playlist: [],
+      loading: [],
+      '': [],
+      last_history: [],
+    }
+
+    $scope.counts = {};
 
     $scope.repeat_icon = function() {
       return ($scope.music_status.repeat == RepeatEnum.ONE) ? 'repeat_one' : 'repeat';
@@ -69,6 +77,10 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.album_art_background = function() {
       return ($scope.music_status.state == StateEnum.PLAYING ? '' : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), no-repeat ') + 'url(' + $scope.music_status.album_art + ')';
     };
+
+    $scope.artist_background = function(image) {
+      return 'url(' + image + ') center / cover';
+    }
 
     $scope.status_title = function() {
       return ($scope.music_status.status == StatusEnum.PAUSED) ? 'Play' : 'Pause';
@@ -104,11 +116,19 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
     $scope.playlist_click = function(index) {
       if ($scope.interface_port) {
+        // $scope.interface_port.postMessage(
+        // {
+        //   'action': 'send_command',
+        //   'type': 'playlist',
+        //   'index': index,
+        //   'history': $scope.data.last_history
+        // });
         $scope.interface_port.postMessage(
         {
-          'action': 'send_command',
-          'type': 'playlist',
-          'index': index
+          action: 'data_click',
+          click_type: 'playlist',
+          index: index,
+          history: $scope.data.last_history
         });
       }
     }
@@ -131,16 +151,36 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
     }
 
-    $scope.drawer_click = function(clicked) {
-      console.log('hello');
+    $scope.data_click = function(data) {
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
         {
-          'action': clicked
+          action: 'data_click',
+          click_type: 'album',
+          offset: data.offset,
+          id: data.id,
+          history: $scope.data.last_history,
         });
       }
 
       $scope.status.displayed_content = 'loading';
+    }
+
+    $scope.drawer_click = function(clicked) {
+      if ($scope.interface_port) {
+        $scope.interface_port.postMessage(
+        {
+          action: clicked,
+          offset: 0
+        });
+      }
+
+      if (clicked != 'library') {
+        $scope.status.displayed_content = 'loading';
+      }
+      else {
+        $scope.status.displayed_content = '';
+      }
       $('.mdl-layout__obfuscator').click();
     }
 
@@ -153,6 +193,35 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
+    $scope.scroll_data = function(content_type) {
+      if ($scope.interface_port) {
+        $scope.interface_port.postMessage(
+        {
+          action: 'get_' + content_type,
+          offset: (content_type == 'stations' ? 0 : $scope.data[content_type].length)
+        });
+      }
+      $scope.status.scrolling_busy = true;
+    }
+
+    $scope.should_disable_scroll = function() {
+      if ($scope.status.scrolling_busy) return true;
+
+
+      if ($scope.status.displayed_content == 'stations') {
+        // TODO
+      }
+      else {
+        return $scope.counts[$scope.status.displayed_content] == $scope.data[$scope.status.displayed_content].length;
+      }
+    }
+
+    $scope.is_song_playing = function(song) {
+      return (song.title == $scope.music_status.title &&
+              song.artist == $scope.music_status.artist &&
+              song.album == $scope.music_status.album);
+    }
+
     $scope.handle_key = function($event) {
       if ($event.keyCode == 32 || $event.charCode === 32) {
         $scope.$apply(function() {
@@ -161,8 +230,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         if ($scope.interface_port) {
           $scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': 'play'
+            action: 'send_command',
+            type: 'play'
           });
         }
       }
@@ -207,21 +276,28 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           update(msg.data);
         }
         else {
-          if (msg.type === 'artists') {
-            $scope.artists = msg.data;
+          if (msg.type === 'artists' || msg.type === 'albums') {
+            $scope.data[msg.type] = $scope.data[msg.type].slice(0, msg.offset).concat(msg.data);
+            $scope.status.scrolling_busy = false;
+            $scope.counts[msg.type] = msg.count;
+            $scope.data.last_history = msg.history;
           }
-          else if (msg.type === 'albums') {
-            $scope.albums = msg.data;
+          else {
+            $scope.data[msg.type] = msg.data;
+            $scope.data.last_history = msg.history;
           }
-          else if (msg.type === 'stations') {
-            $scope.stations = msg.data;
-          }
-          else if (msg.type === 'recent') {
-            $scope.recents = msg.data;
-          }
-          else if (msg.type === 'playlists') {
-            $scope.playlists = msg.data;
-          }
+          // else if (msg.type === 'albums') {
+          //   $scope.albums = msg.data;
+          // }
+          // else if (msg.type === 'stations') {
+          //   $scope.stations = msg.data;
+          // }
+          // else if (msg.type === 'recent') {
+          //   $scope.recents = msg.data;
+          // }
+          // else if (msg.type === 'playlists') {
+          //   $scope.playlists = msg.data;
+          // }
           $scope.status.displayed_content = msg.type;
         }
       }
@@ -249,15 +325,15 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
               $scope.set_disabled(response.disabled_buttons);
 
-              for (var i = 0; response.playlist && i < response.playlist.length; i++) {
-                if (response.playlist[i].title &&
-                    ($scope.playlist.length <= i ||
-                     response.playlist[i].title != $scope.playlist[i].title ||
-                     response.playlist[i].currently_playing != $scope.playlist[i].currently_playing)) {
-                  $scope.playlist[i] = response.playlist[i];
-                  $scope.playlist[i].index = i;
-                }
-              }
+              // for (var i = 0; response.playlist && i < response.playlist.length; i++) {
+              //   if (response.playlist[i].title &&
+              //       ($scope.playlist.length <= i ||
+              //        response.playlist[i].title != $scope.playlist[i].title ||
+              //        response.playlist[i].currently_playing != $scope.playlist[i].currently_playing)) {
+              //     $scope.playlist[i] = response.playlist[i];
+              //     $scope.playlist[i].index = i;
+              //   }
+              // }
             });
           }
         }

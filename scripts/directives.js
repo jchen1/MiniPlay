@@ -14,9 +14,9 @@ popupApp.directive('mpSlider', function() {
         if (scope.interface_port) {
           scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': 'slider',
-            'position': $(element).val() / $(element).attr('max')
+            action: 'send_command',
+            type: 'slider',
+            position: $(element).val() / $(element).attr('max')
           });
         }
       }).on('input', function() {
@@ -54,9 +54,9 @@ popupApp.directive('mpVolslider', function() {
         if (scope.interface_port) {
           scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': 'vslider',
-            'position': $(element).val() / $(element).attr('max')
+            action: 'send_command',
+            type: 'vslider',
+            position: $(element).val() / $(element).attr('max')
           });
         }
       });
@@ -102,6 +102,67 @@ popupApp.directive('mpScrollIf', function() {
   }
 });
 
+popupApp.directive('infiniteScroll', [
+  '$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
+    return {
+      link: function(scope, elem, attrs) {
+        var checkWhenEnabled, handler, scrollDistance, scrollEnabled;
+        $window = angular.element($window);
+        $elem = $(elem);
+        scrollDistance = 0;
+        if (attrs.infiniteScrollDistance != null) {
+          scope.$watch(attrs.infiniteScrollDistance, function(value) {
+            return scrollDistance = parseInt(value, 10);
+          });
+        }
+        scrollEnabled = true;
+        checkWhenEnabled = false;
+        if (attrs.infiniteScrollDisabled != null) {
+          scope.$watch(attrs.infiniteScrollDisabled, function(value) {
+            scrollEnabled = !value;
+            if (scrollEnabled && checkWhenEnabled) {
+              checkWhenEnabled = false;
+              return handler();
+            }
+          });
+        }
+        handler = function() {
+          var elementBottom, remaining, shouldScroll, windowBottom;
+          windowBottom = $elem.height() + $elem.scrollTop();
+          elementBottom = elem.scrollTop() + elem.height();
+          remaining = elementBottom - windowBottom;
+
+          remaining = $window.height() - elementBottom;
+          // console.log(remaining);
+          shouldScroll = remaining <= $elem.height() * scrollDistance;
+          if (shouldScroll && scrollEnabled) {
+            if ($rootScope.$$phase) {
+              return scope.$eval(attrs.infiniteScroll);
+            } else {
+              return scope.$apply(attrs.infiniteScroll);
+            }
+          } else if (shouldScroll) {
+            return checkWhenEnabled = true;
+          }
+        };
+        $elem.on('scroll', handler);
+        scope.$on('$destroy', function() {
+          return $elem.off('scroll', handler);
+        });
+        return $timeout((function() {
+          if (attrs.infiniteScrollImmediateCheck) {
+            if (scope.$eval(attrs.infiniteScrollImmediateCheck)) {
+              return handler();
+            }
+          } else {
+            return handler();
+          }
+        }), 0);
+      }
+    };
+  }
+]);
+
 popupApp.directive('mpControl', function() {
   return {
     restrict: 'A',
@@ -110,8 +171,8 @@ popupApp.directive('mpControl', function() {
         if (scope.interface_port) {
           scope.interface_port.postMessage(
           {
-            'action': 'send_command',
-            'type': event.currentTarget.getAttribute('id')
+            action: 'send_command',
+            type: event.currentTarget.getAttribute('id')
           });
           event.stopPropagation();
         }

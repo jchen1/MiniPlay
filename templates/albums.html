@@ -1,1 +1,17 @@
-<h1>ALBUMS</h1>
+<table class='mdl-data-table mdl-js-data-table playlist-table'>
+  <tbody>
+    <tr class='song-row' ng-repeat='album in data.albums' ng-click='data_click(album)'>
+      <td class='song-details-span mdl-data-table__cell--non-numeric'>
+        <span class='song-info'>
+          <img class='small-art' ng-src='{{album.image}}'/>
+          <div class='song-details'>
+            <div class='song-title'>{{album.title}}</div>
+            <div class='song-artist-album'>{{album.artist}}</div>
+          </div>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class='end-loading mdl-spinner mdl-js-spinner is-active' ng-style='{"display": counts.albums == data.albums.length ? "none" : "block"}'></div>

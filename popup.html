@@ -17,7 +17,7 @@
     <header class='mdl-layout__header' ng-click='status.displayed_content=""'>
       <div id='song-info' class='mdl-layout-title'>
         <div id='title'>{{music_status.title}}</div>
-        <div id='subtitle'>{{music_status.artist}} - {{music_status.album}}</div>
+        <div id='subtitle' ng-style='{"display": music_status.state == StateEnum.PLAYING ? "block": "none"}'>{{music_status.artist}} - {{music_status.album}}</div>
       </div>
     </header>
     <div class="mdl-layout__drawer">

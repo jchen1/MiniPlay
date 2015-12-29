@@ -1,25 +1,44 @@
-<table id='options-table' class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
-  <thead>
-    <tr>
-      <th class="mdl-data-table__cell--non-numeric">Setting</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="mdl-data-table__cell--non-numeric">Notifications</td>
-    </tr>
-    <tr>
-      <td class="mdl-data-table__cell--non-numeric">Shortcuts <br>
-        <span>Modify individual shortcuts by clicking on <br> Keyboard Shortcuts in <a href='#' id='extension'>chrome://extensions</a>.</span></td>
-    </tr>
-    <tr>
-      <td class="mdl-data-table__cell--non-numeric">Last.fm scrobbling <br>
-      <p id='login'>
-        <a href='#'>Authorize Last.fm account</a>
-        <p id='auth'>
-          You appear to be logged in. If you are having problems scrobbling, reauthorizing may fix the issue.
-        </p>
-      </p></td>
-    </tr>
-  </tbody>
-</table>
+<div class='options'>
+  <section>
+    <h3>
+      Notifications
+    </h3>
+    <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='enable-notifications'>
+        <span>Enable notifications</span>
+      </label>
+    </div>
+  </section>
+  <section>
+    <h3>
+      Shortcuts
+    </h3>
+    <p>
+      Modify individual shortcuts by clicking on Keyboard Shortcuts in <a href='#' id='extension'>chrome://extensions</a>.
+    </p>
+    <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='enable-shortcuts'>
+        <span>Enable shortcuts</span>
+      </label>
+    </div>
+  </section>
+  <section>
+    <h3>
+      Last.fm
+    </h3>
+    <div class='checkbox'>
+      <label>
+        <input type='checkbox' id='enable-scrobbling'>
+        <span>Enable Last.fm scrobbling</span>
+      </label>
+    </div>
+    <p id='login'>
+      <a href='#'>Authorize Last.fm account</a>
+      <p id='auth'>
+        You appear to be logged in. If you are having problems scrobbling, reauthorizing may fix the issue.
+      </p>
+    </p>
+  </section>
+</div>

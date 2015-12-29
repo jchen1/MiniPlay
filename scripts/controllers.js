@@ -34,7 +34,11 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     };
 
     $scope.data = {
-      playlist: [],
+      playlists: {
+        recent_playlists: [],
+        auto_playlists: [],
+        my_playlists: []
+      },
       recents: [],
       stations: {
         recent_stations: [],
@@ -163,21 +167,12 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.status.displayed_content = 'loading';
             break;
           case 'recent_station':
-            console.log(data.index);
-            $scope.interface_port.postMessage(
-            {
-              action: 'data_click',
-              click_type: 'recent_station',
-              index: data.index,
-              history: $scope.data.last_history,
-            });
-            $scope.status.displayed_content = '';
-            break;
           case 'my_station':
             $scope.interface_port.postMessage(
             {
               action: 'data_click',
-              click_type: 'my_station',
+              click_type: 'station',
+              station_type: type,
               index: data.index,
               history: $scope.data.last_history,
             });
@@ -315,6 +310,14 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.counts[msg.type] = msg.count;
             $scope.data.last_history = msg.history;
           }
+          else if (msg.type === 'playlists') {
+            $scope.data.playlists.my_playlists = $scope.data.playlists.my_playlists.slice(0, msg.offset).concat(msg.data.my_playlists);
+            $scope.data.playlists.auto_playlists = msg.data.auto_playlists;
+            $scope.data.playlists.recent_playlists = msg.data.recent_playlists;
+            $scope.status.scrolling_busy = false;
+            $scope.counts.playlists = msg.count;
+            $scope.data.last_history = msg.history;
+          }
           else {
             $scope.data[msg.type] = msg.data;
             $scope.data.last_history = msg.history;
@@ -327,9 +330,6 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           // }
           // else if (msg.type === 'recent') {
           //   $scope.recents = msg.data;
-          // }
-          // else if (msg.type === 'playlists') {
-          //   $scope.playlists = msg.data;
           // }
           $scope.status.displayed_content = msg.type;
         }

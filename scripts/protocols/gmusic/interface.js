@@ -161,7 +161,7 @@ function get_albums(msg) {
     var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
     var cards = document.querySelectorAll('.lane-content > .material-card');
-    var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
+    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop : 0);
     var observer = null;
 
     var parse_data = function() {
@@ -194,16 +194,7 @@ function get_albums(msg) {
           data: albums,
           offset: start_offset,
           count: parseInt(document.querySelector('#countSummary').innerText),
-          history: [
-            {
-              type: 'selector',
-              selector: 'a[data-type="my-library"]'
-            },
-            {
-              type: 'selector',
-              selector: 'paper-tab[data-type="albums"]'
-            }
-          ]
+          history: history
         });
       }
       if (observer != null) observer.disconnect();
@@ -239,7 +230,7 @@ function get_albums(msg) {
     else {
       parse_data();
     }
-  })
+  });
 }
 
 function get_songs() {
@@ -350,13 +341,125 @@ function get_time(time) {
   }).reduce(function(a, b) { return a + b; });
 }
 
-// TODO: do this lol
-function get_playlists() {
-  click('a[data-type="my-library"]', function() {
-    console.log('library!');
-    click('paper-tab[data-type="wmp"]', function() {
-      console.log('playlists!');
-    });
+// TODO: use all four images in the playlist instead of just one
+function get_playlists(msg) {
+  var history = [
+  {
+    type: 'selector',
+    selector: 'a[data-type="my-library"]'
+  },
+  {
+    type: 'selector',
+    selector: 'paper-tab[data-type="wmp"]'
+  }];
+  restore_state(history, msg, function(msg) {
+    var recent_playlists = [], auto_playlists = [], my_playlists = [];
+
+    var raw_playlists = document.querySelectorAll('.g-content .cluster');
+
+    var raw_recent_playlists = raw_playlists[0].querySelectorAll('.lane-content .material-card');
+    var raw_auto_playlists = raw_playlists[1].querySelectorAll('.lane-content .material-card');
+
+    for (var i = 0; i < raw_recent_playlists.length; i++) {
+      var playlist = {};
+      playlist.index = i;
+
+      playlist.title = raw_recent_playlists[i].querySelector('.title');
+      playlist.title = (playlist.title == null) ? '' : playlist.title.innerText;
+
+      playlist.image = raw_recent_playlists[i].querySelector('img');
+      playlist.image = (playlist.image == null) ? 'img/default_album.png' : playlist.image.src;
+
+      recent_playlists.push(playlist);
+    }
+
+    for (var i = 0; i < raw_auto_playlists.length; i++) {
+      var playlist = {};
+      playlist.index = i;
+
+      playlist.title = raw_auto_playlists[i].querySelector('.title');
+      playlist.title = (playlist.title == null) ? '' : playlist.title.innerText;
+
+      playlist.image = raw_auto_playlists[i].querySelector('img');
+      playlist.image = (playlist.image == null) ? 'img/default_album.png' : playlist.image.src;
+
+      auto_playlists.push(playlist);
+    }
+
+    var cluster = document.querySelector('.material-card-grid');
+    var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
+
+    var cards = cluster.querySelectorAll('.lane-content > .material-card');
+    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop : 0);
+    var observer = null;
+
+    var parse_data = function() {
+      var raw_my_playlists = raw_playlists[2].querySelectorAll('.lane-content .material-card');
+      var start_offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
+      for (var i = 0; i < raw_my_playlists.length; i++) {
+        var playlist = {};
+
+        playlist.index = i + start_offset;
+
+        playlist.title = raw_my_playlists[i].querySelector('.title');
+        playlist.title = playlist.title == null ? "" : playlist.title.innerText;
+
+        playlist.image = raw_my_playlists[i].querySelector('img');
+        playlist.image = playlist.image == null ? "img/default_album.png" : playlist.image.src;
+
+        my_playlists.push(playlist);
+      }
+
+      var playlists = {
+        recent_playlists: recent_playlists,
+        auto_playlists: auto_playlists,
+        my_playlists: my_playlists
+      }
+
+      if (popup_port) {
+        popup_port.postMessage({
+          type: 'playlists',
+          data: playlists,
+          offset: start_offset,
+          count: parseInt(document.querySelector('#countSummary').innerText),
+          history: history
+        });
+      }
+      if (observer != null) observer.disconnect();
+    }
+
+    if (desired_start_index != 0) {
+      observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.attributeName === 'data-start-index') {
+            var current_idx = cluster.getAttribute('data-start-index');
+
+            if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                   desired_start_index != current_idx) {
+              document.querySelector('#mainContainer').scrollTop += scroll_step;
+              var evt = document.createEvent('HTMLEvents');
+              evt.initEvent('scroll', false, true);
+              document.getElementById('mainContainer').dispatchEvent(evt);
+            }
+
+            else {
+              parse_data();
+            }
+          }
+        });
+      });
+
+      observer.observe(cluster, {attributes: true});
+      // TODO: is this enough?? (probably not since my stations starts pretty low)
+      // testing requires making like a billion new playlists though
+      document.querySelector('#mainContainer').scrollTop = scroll_step;
+      var evt = document.createEvent('HTMLEvents');
+      evt.initEvent('scroll', false, true);
+      document.getElementById('mainContainer').dispatchEvent(evt);
+    }
+    else {
+      parse_data();
+    }
   });
 }
 
@@ -499,17 +602,14 @@ function data_click(msg) {
       }, 30);
     }
 
-    else if (msg.click_type == 'recent_station') {
-      var stations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
-      stations[msg.index].querySelector('.play-button-container').click();
-
-      window.setTimeout( function() {
-        update();
-      }, 30);
-    }
-
-    else if (msg.click_type == 'my_station') {
-      var stations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
+    else if (msg.click_type == 'station') {
+      var stations;
+      if (msg.station_type == 'my_station') {
+        stations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
+      }
+      else if (msg.station_type == 'recent_station') {
+        stations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
+      }
       stations[msg.index].querySelector('.play-button-container').click();
 
       window.setTimeout( function() {

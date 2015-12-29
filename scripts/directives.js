@@ -127,14 +127,9 @@ popupApp.directive('infiniteScroll', [
           });
         }
         handler = function() {
-          var elementBottom, remaining, shouldScroll, windowBottom;
-          windowBottom = $elem.height() + $elem.scrollTop();
-          elementBottom = elem.scrollTop() + elem.height();
-          remaining = elementBottom - windowBottom;
+          var remaining = $elem.prop('scrollHeight') - $elem.height() - $elem.scrollTop();
 
-          remaining = $window.height() - elementBottom;
-          // console.log(remaining);
-          shouldScroll = remaining <= $elem.height() * scrollDistance;
+          var shouldScroll = remaining <= $elem.height() * scrollDistance;
           if (shouldScroll && scrollEnabled) {
             if ($rootScope.$$phase) {
               return scope.$eval(attrs.infiniteScroll);

@@ -2,21 +2,24 @@
 
 chrome.storage.local.set({'last_notification': ''});
 
-var interface_port = null, popup_port = null, loader_port = null;
+var interface_port = null, popup_port = null;
+var loader_ports = {};
 
 chrome.runtime.onConnect.addListener(function(port) {
-  if (port.name == "loader" && !loader_port) {
-    loader_port = port;
-    loader_port.id = port.sender.tab.id;
+  if (port.name == "loader") {
+    port.id = port.sender.tab.id;
+    loader_ports[port.id] = port;
     port.onMessage.addListener(function(msg) {
       if (msg.protocol) {
-        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/global.js"});
-        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/status.js"});
-        chrome.tabs.executeScript(loader_port.id, {file: "scripts/protocols/" + msg.protocol + "/interface.js"});
+        chrome.tabs.executeScript(port.id, {file: "scripts/enums.js"});
+        chrome.tabs.executeScript(port.id, {file: "scripts/jquery.js"});
+        chrome.tabs.executeScript(port.id, {file: "scripts/protocols/global.js"});
+        chrome.tabs.executeScript(port.id, {file: "scripts/protocols/" + msg.protocol + "/status.js"});
+        chrome.tabs.executeScript(port.id, {file: "scripts/protocols/" + msg.protocol + "/interface.js"});
       }
     });
     port.onDisconnect.addListener(function() {
-      loader_port = null;
+      loader_ports[port.id] = null;
     });
   }
   if (port.name == "interface" && !interface_port) {
@@ -109,6 +112,16 @@ chrome.runtime.onInstalled.addListener(function (details) {
         chrome.storage.sync.set({'scrobbling-enabled': true});
       }
       chrome.tabs.create({url: chrome.extension.getURL('options.html')});
+    });
+  }
+
+  if (details.reason == 'install' || details.reason == 'update') {
+    chrome.tabs.query({}, function(tabs) {
+      tabs.forEach(function(tab) {
+        if (tab.url.search('http') >= 0 && tab.url.search('chrome.google.com/webstore') == -1) {
+          chrome.tabs.executeScript(tab.id, {file: "scripts/loader.js"});
+        }
+      });
     });
   }
 });

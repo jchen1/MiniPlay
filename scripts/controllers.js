@@ -39,7 +39,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         auto_playlists: [],
         my_playlists: []
       },
-      recents: [],
+      recent: [],
       stations: {
         recent_stations: [],
         my_stations: []
@@ -178,20 +178,18 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             });
             $scope.status.displayed_content = '';
             break;
+          case 'recent':
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: 'recent',
+              index: data.index,
+              history: $scope.data.last_history,
+            });
+            $scope.status.displayed_content = '';
+            break;
         }
       }
-
-      if ($scope.interface_port) {
-        $scope.interface_port.postMessage(
-        {
-          action: 'data_click',
-          click_type: 'album',
-          offset: data.offset,
-          id: data.id,
-          history: $scope.data.last_history,
-        });
-      }
-
     }
 
     $scope.drawer_click = function(clicked) {

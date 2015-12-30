@@ -271,63 +271,63 @@ function get_genres() {
   });
 }
 
-function get_stations() {
-  click('a[data-type="my-library"]', function() {
-    click('paper-tab[data-type="wms"]', function() {
-      var raw_recent_stations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
-      var raw_my_stations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
+function get_stations(msg) {
+  var history =
+  [
+    {
+      type: 'selector',
+      selector: 'a[data-type="my-library"]',
+    },
+    {
+      type: 'selector',
+      selector: 'paper-tab[data-type="wms"]'
+    }
+  ];
+  restore_state(history, msg, function(msg) {
+    var raw_recent_stations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
+    var raw_my_stations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
 
-      var recent_stations = [];
-      var my_stations = [];
+    var recent_stations = [];
+    var my_stations = [];
 
-      for (var i = 0; i < raw_recent_stations.length; i++) {
-        var station = {};
-        station.index = i;
+    for (var i = 0; i < raw_recent_stations.length; i++) {
+      var station = {};
+      station.index = i;
 
-        station.title = raw_recent_stations[i].querySelector('.title');
-        station.title = station.title == null ? "" : station.title.innerText;
+      station.title = raw_recent_stations[i].querySelector('.title');
+      station.title = station.title == null ? "" : station.title.innerText;
 
-        station.image = raw_recent_stations[i].querySelector('img');
-        station.image = station.image == null ? "img/default_album.png" : station.image.src;
+      station.image = raw_recent_stations[i].querySelector('img');
+      station.image = station.image == null ? "img/default_album.png" : station.image.src;
 
-        recent_stations.push(station);
-      }
+      recent_stations.push(station);
+    }
 
-      for (var i = 0; i < raw_my_stations.length; i++) {
-        var station = {};
-        station.index = i;
+    for (var i = 0; i < raw_my_stations.length; i++) {
+      var station = {};
+      station.index = i;
 
-        station.title = raw_my_stations[i].querySelector('.title');
-        station.title = station.title == null ? "" : station.title.innerText;
+      station.title = raw_my_stations[i].querySelector('.title');
+      station.title = station.title == null ? "" : station.title.innerText;
 
-        station.image = raw_my_stations[i].querySelector('img');
-        station.image = station.image == null ? "img/default_album.png" : station.image.src;
+      station.image = raw_my_stations[i].querySelector('img');
+      station.image = station.image == null ? "img/default_album.png" : station.image.src;
 
-        my_stations.push(station);
-      }
+      my_stations.push(station);
+    }
 
-      var stations = {
-        recent_stations: recent_stations,
-        my_stations: my_stations
-      };
+    var stations = {
+      recent_stations: recent_stations,
+      my_stations: my_stations
+    };
 
-      if (popup_port) {
-        popup_port.postMessage({
-          type: 'stations',
-          data: stations,
-          history: [
-            {
-              type: 'selector',
-              selector: 'a[data-type="my-library"]',
-            },
-            {
-              type: 'selector',
-              selector: 'paper-tab[data-type="wms"]'
-            }
-          ]
-        })
-      }
-    });
+    if (popup_port) {
+      popup_port.postMessage({
+        type: 'stations',
+        data: stations,
+        history: history
+      });
+    }
   });
 }
 
@@ -339,6 +339,42 @@ function get_time(time) {
   return time.split(':').map(function(num, index, arr) {
     return parseInt(num, 10) * Math.pow(60, arr.length - index - 1);
   }).reduce(function(a, b) { return a + b; });
+}
+
+function get_recent(msg) {
+  var history = [
+  {
+    type: 'selector',
+    selector: 'a[data-type="now"]'
+  }];
+  restore_state(history, msg, function(msg) {
+    var raw_recent = document.querySelectorAll('.cluster[data-type="recent"] .material-card');
+
+    var recent = [];
+    for (var i = 0; i < raw_recent.length; i++) {
+      var item = {};
+      item.index = i;
+
+      item.title = raw_recent[i].querySelector('.title');
+      item.title = (item.title == null) ? '' : item.title.innerText;
+
+      item.subtitle = raw_recent[i].querySelector('.sub-title');
+      item.subtitle = (item.subtitle == null) ? '' : item.subtitle.innerText;
+
+      item.image = raw_recent[i].querySelector('img');
+      item.image = (item.image == null) ? 'img/default_album.png' : item.image.src;
+
+      recent.push(item);
+    }
+
+    if (popup_port) {
+      popup_port.postMessage({
+        type: 'recent',
+        data: recent,
+        history: history
+      });
+    }
+  });
 }
 
 // TODO: use all four images in the playlist instead of just one
@@ -595,7 +631,15 @@ function data_click(msg) {
     }
 
     else if (msg.click_type == 'playlist') {
-      $('.song-table > tbody > .song-row[data-index="'+msg.index+'"] button').click();
+      document.querySelector('.song-table > tbody > .song-row[data-index="'+msg.index+'"] button').click();
+
+      window.setTimeout( function() {
+        update();
+      }, 30);
+    }
+
+    else if (msg.click_type == 'recent') {
+      document.querySelector('.cluster[data-type="recent"] .material-card[data-log-position="'+msg.index+'"] .play-button-container').click();
 
       window.setTimeout( function() {
         update();
@@ -626,6 +670,7 @@ $(function() {
   route('get_playlists', get_playlists);
   route('get_songs', get_songs);
   route('get_stations', get_stations);
+  route('get_recent', get_recent);
   route('data_click', data_click);
   route('send_command', send_command);
 

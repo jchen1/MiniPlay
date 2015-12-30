@@ -47,6 +47,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       artists: [],
       albums: [],
       playlist: [],
+      current_playlist: [],
       loading: [],
       '': [],
       last_history: [],
@@ -140,7 +141,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.playlist_button_pressed = function() {
       $scope.status.playlist_pressed=!$scope.status.playlist_pressed;
       if ($scope.status.playlist_pressed) {
-        $scope.status.displayed_content = 'playlist';
+        $scope.status.displayed_content = 'current_playlist';
       }
       else {
         $scope.status.displayed_content = '';
@@ -369,15 +370,15 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
               $scope.set_disabled(response.disabled_buttons);
 
-              // for (var i = 0; response.playlist && i < response.playlist.length; i++) {
-              //   if (response.playlist[i].title &&
-              //       ($scope.playlist.length <= i ||
-              //        response.playlist[i].title != $scope.playlist[i].title ||
-              //        response.playlist[i].currently_playing != $scope.playlist[i].currently_playing)) {
-              //     $scope.playlist[i] = response.playlist[i];
-              //     $scope.playlist[i].index = i;
-              //   }
-              // }
+              for (var i = 0; response.playlist && i < response.playlist.length; i++) {
+                if (response.playlist[i].title &&
+                    ($scope.data.current_playlist.length <= i ||
+                     response.playlist[i].title != $scope.data.current_playlist[i].title ||
+                     response.playlist[i].currently_playing != $scope.data.current_playlist[i].currently_playing)) {
+                  $scope.data.current_playlist[i] = response.playlist[i];
+                  $scope.data.current_playlist[i].index = i;
+                }
+              }
             });
           }
         }

@@ -1,6 +1,5 @@
 // Interfaces with the Google Play Music tab
 var load_listeners = [];
-
 var history_funcs = [];
 
 function update_slider(position, slidername) {  //position is in %
@@ -57,6 +56,23 @@ function send_command(message) {
   }, 30);
 }
 
+function go_to_url(url, callback) {
+  var hash_index = window.location.href.search('#');
+  if (window.location.href.substring(hash_index) != url) {
+    document.getElementById('loading-overlay').style.display = "block";
+
+    load_listeners.push({
+      callback: callback,
+      called: false
+    });
+
+    window.location.href = window.location.href.substring(0, hash_index) + url;
+  }
+  else {
+    callback();
+  }
+}
+
 function click(selector, callback) {
   document.getElementById('loading-overlay').style.display = "block";
 
@@ -72,88 +88,87 @@ function click(selector, callback) {
 }
 
 function get_artists(msg) {
-  click('a[data-type="my-library"]', function() {
-    click('paper-tab[data-type="artists"]', function() {
-      var cluster = document.querySelector('.material-card-grid');
-      var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
+  var history =
+  [
+    {
+      type: 'url',
+      url: '#/artists'
+    }
+  ];
+  restore_state(history, msg, function(msg) {
+    var cluster = document.querySelector('.material-card-grid');
+    var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
-      var cards = document.querySelectorAll('.lane-content > .material-card');
-      var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
-      var observer = null;
+    var cards = document.querySelectorAll('.lane-content > .material-card');
+    var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
+    var observer = null;
 
-      var parse_data = function() {
-        var raw_artists = document.querySelectorAll('.lane-content > .material-card');
-        var artists = [];
-        for (var i = 0; i < raw_artists.length; i++) {
-          var artist = {};
-          artist.id = raw_artists[i].getAttribute('data-id');
-          if (!artist.id) continue;
+    var parse_data = function() {
+      var raw_artists = document.querySelectorAll('.lane-content > .material-card');
+      var artists = [];
+      for (var i = 0; i < raw_artists.length; i++) {
+        var artist = {};
+        artist.id = raw_artists[i].getAttribute('data-id');
+        if (!artist.id) continue;
 
-          artist.name = raw_artists[i].querySelector('a');
-          artist.name = artist.name == null ? "" : artist.name.innerText;
+        artist.name = raw_artists[i].querySelector('a');
+        artist.name = artist.name == null ? "" : artist.name.innerText;
 
-          // TODO: placeholder artist image
-          artist.image = raw_artists[i].querySelector('img');
-          artist.image = artist.image == null ? "img/default_album.png" : artist.image.src;
+        // TODO: placeholder artist image
+        artist.image = raw_artists[i].querySelector('img');
+        artist.image = artist.image == null ? "img/default_album.png" : artist.image.src;
 
-          artists.push(artist);
-        }
-
-        if (popup_port) {
-          popup_port.postMessage({
-            type: 'artists',
-            data: artists,
-            offset: cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index'),
-            count: parseInt(document.querySelector('#countSummary').innerText)
-          });
-        }
-
-        if (observer != null) observer.disconnect();
+        artists.push(artist);
       }
 
-      if (desired_start_index != 0) {
-        observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'data-start-index') {
-              var current_idx = cluster.getAttribute('data-start-index');
-
-              if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-                     desired_start_index != current_idx) {
-                document.querySelector('#mainContainer').scrollTop += scroll_step;
-                var evt = document.createEvent('HTMLEvents');
-                evt.initEvent('scroll', false, true);
-                document.getElementById('mainContainer').dispatchEvent(evt);
-              }
-
-              else {
-                parse_data();
-              }
-            }
-          });
+      if (popup_port) {
+        popup_port.postMessage({
+          type: 'artists',
+          data: artists,
+          offset: cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index'),
+          count: parseInt(document.querySelector('#countSummary').innerText)
         });
+      }
 
-        observer.observe(cluster, {attributes: true});
-        document.querySelector('#mainContainer').scrollTop = scroll_step;
-        var evt = document.createEvent('HTMLEvents');
-        evt.initEvent('scroll', false, true);
-        document.getElementById('mainContainer').dispatchEvent(evt);
-      }
-      else {
-        parse_data();
-      }
+      if (observer != null) observer.disconnect();
+    }
+
+    observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'data-start-index') {
+          var current_idx = cluster.getAttribute('data-start-index');
+
+          if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                 desired_start_index != current_idx) {
+            document.querySelector('#mainContainer').scrollTop += scroll_step;
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent('scroll', false, true);
+            document.getElementById('mainContainer').dispatchEvent(evt);
+          }
+
+          else {
+            parse_data();
+          }
+        }
+      });
     });
+
+    observer.observe(cluster, {attributes: true});
+
+    cluster.setAttribute('data-start-index', '1');
+    document.querySelector('#mainContainer').scrollTop = 0;
+    var evt = document.createEvent('HTMLEvents');
+    evt.initEvent('scroll', false, true);
+    document.getElementById('mainContainer').dispatchEvent(evt);
+
   });
 }
 
 function get_albums(msg) {
   var history = [
   {
-    type: 'selector',
-    selector: 'a[data-type="my-library"]'
-  },
-  {
-    type: 'selector',
-    selector: 'paper-tab[data-type="albums"]'
+    type: 'url',
+    url: '#/albums'
   }];
 
   restore_state(history, msg, function(msg) {
@@ -200,36 +215,34 @@ function get_albums(msg) {
       if (observer != null) observer.disconnect();
     }
 
-    if (desired_start_index != 0) {
-      observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          if (mutation.attributeName === 'data-start-index') {
-            var current_idx = cluster.getAttribute('data-start-index');
+    observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'data-start-index') {
 
-            if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-                   desired_start_index != current_idx) {
-              document.querySelector('#mainContainer').scrollTop += scroll_step;
-              var evt = document.createEvent('HTMLEvents');
-              evt.initEvent('scroll', false, true);
-              document.getElementById('mainContainer').dispatchEvent(evt);
-            }
+          var current_idx = cluster.getAttribute('data-start-index');
 
-            else {
-              parse_data();
-            }
+          if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                 desired_start_index != current_idx) {
+            document.querySelector('#mainContainer').scrollTop += scroll_step;
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent('scroll', false, true);
+            document.getElementById('mainContainer').dispatchEvent(evt);
           }
-        });
-      });
 
-      observer.observe(cluster, {attributes: true});
-      document.querySelector('#mainContainer').scrollTop = scroll_step;
-      var evt = document.createEvent('HTMLEvents');
-      evt.initEvent('scroll', false, true);
-      document.getElementById('mainContainer').dispatchEvent(evt);
-    }
-    else {
-      parse_data();
-    }
+          else {
+            parse_data();
+          }
+        }
+      });
+    });
+
+    observer.observe(cluster, {attributes: true});
+
+    cluster.setAttribute('data-start-index', '1');
+    document.querySelector('#mainContainer').scrollTop = 0;
+    var evt = document.createEvent('HTMLEvents');
+    evt.initEvent('scroll', false, true);
+    document.getElementById('mainContainer').dispatchEvent(evt);
   });
 }
 
@@ -275,12 +288,8 @@ function get_stations(msg) {
   var history =
   [
     {
-      type: 'selector',
-      selector: 'a[data-type="my-library"]',
-    },
-    {
-      type: 'selector',
-      selector: 'paper-tab[data-type="wms"]'
+      type: 'url',
+      url: '#/wms'
     }
   ];
   restore_state(history, msg, function(msg) {
@@ -344,8 +353,8 @@ function get_time(time) {
 function get_recent(msg) {
   var history = [
   {
-    type: 'selector',
-    selector: 'a[data-type="now"]'
+    type: 'url',
+    url: '#/now'
   }];
   restore_state(history, msg, function(msg) {
     var raw_recent = document.querySelectorAll('.cluster[data-type="recent"] .material-card');
@@ -380,14 +389,11 @@ function get_recent(msg) {
 // TODO: use all four images in the playlist instead of just one
 function get_playlists(msg) {
   var history = [
-  {
-    type: 'selector',
-    selector: 'a[data-type="my-library"]'
-  },
-  {
-    type: 'selector',
-    selector: 'paper-tab[data-type="wmp"]'
-  }];
+    {
+      type: 'url',
+      url: '#/wmp'
+    }
+  ];
   restore_state(history, msg, function(msg) {
     var recent_playlists = [], auto_playlists = [], my_playlists = [];
 
@@ -464,38 +470,35 @@ function get_playlists(msg) {
       if (observer != null) observer.disconnect();
     }
 
-    if (desired_start_index != 0) {
-      observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          if (mutation.attributeName === 'data-start-index') {
-            var current_idx = cluster.getAttribute('data-start-index');
+    observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'data-start-index') {
+          var current_idx = cluster.getAttribute('data-start-index');
 
-            if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-                   desired_start_index != current_idx) {
-              document.querySelector('#mainContainer').scrollTop += scroll_step;
-              var evt = document.createEvent('HTMLEvents');
-              evt.initEvent('scroll', false, true);
-              document.getElementById('mainContainer').dispatchEvent(evt);
-            }
-
-            else {
-              parse_data();
-            }
+          if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                 desired_start_index != current_idx) {
+            document.querySelector('#mainContainer').scrollTop += scroll_step;
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent('scroll', false, true);
+            document.getElementById('mainContainer').dispatchEvent(evt);
           }
-        });
-      });
 
-      observer.observe(cluster, {attributes: true});
-      // TODO: is this enough?? (probably not since my stations starts pretty low)
-      // testing requires making like a billion new playlists though
-      document.querySelector('#mainContainer').scrollTop = scroll_step;
-      var evt = document.createEvent('HTMLEvents');
-      evt.initEvent('scroll', false, true);
-      document.getElementById('mainContainer').dispatchEvent(evt);
-    }
-    else {
-      parse_data();
-    }
+          else {
+            parse_data();
+          }
+        }
+      });
+    });
+
+    observer.observe(cluster, {attributes: true});
+    // TODO: is this enough?? (probably not since my stations starts pretty low)
+    // testing requires making like a billion new playlists though
+
+    cluster.setAttribute('data-start-index', '1');
+    document.querySelector('#mainContainer').scrollTop = 0;
+    var evt = document.createEvent('HTMLEvents');
+    evt.initEvent('scroll', false, true);
+    document.getElementById('mainContainer').dispatchEvent(evt);
   });
 }
 
@@ -509,6 +512,11 @@ function restore_state(history, msg, cb) {
     var next_state = history.shift();
     if (next_state.type == 'selector') {
       click(next_state.selector, function() {
+        restore_state(history, msg, cb);
+      });
+    }
+    else if (next_state.type == 'url') {
+      go_to_url(next_state.url, function() {
         restore_state(history, msg, cb);
       });
     }
@@ -562,71 +570,70 @@ function data_click(msg) {
           popup_port.postMessage({
             type: 'playlist',
             data: songs,
-            history: msg.history
+            history: [{
+              type: 'url',
+              url: window.location.href.substring(window.location.href.search('#'))
+            }]
           });
         }
       };
 
-      var this_state = function(offset, id, cb) {
-        var cluster = document.querySelector('.material-card-grid');
-        var desired_start_index = Math.floor(offset / parseInt(cluster.getAttribute('data-col-count')));
+      var cluster = document.querySelector('.material-card-grid');
+      var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
-        var cards = document.querySelectorAll('.lane-content > .material-card');
-        var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count')) * 2].offsetTop -
-                          cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop + 4;
+      var cards = document.querySelectorAll('.lane-content > .material-card');
+      var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count')) * 2].offsetTop -
+                        cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop + 4;
 
-        var observer = null;
+      var selector = '#music-content .lane-content > .material-card[data-id="' + msg.id + '"]';
+      var observer = null;
 
-        var get_album = function() {
-          var raw_albums = document.querySelectorAll('.lane-content > .material-card');
-          var offset = offset - desired_start_index * parseInt(cluster.getAttribute('data-col-count'));
+      document.querySelector('#mainContainer').scrollTop = 0;
+      var evt = document.createEvent('HTMLEvents');
+      evt.initEvent('scroll', false, true);
+      document.getElementById('mainContainer').dispatchEvent(evt);
 
-          click('#music-content .lane-content > .material-card[data-id="' + id + '"]', cb);
+      var get_album = function() {
+        var raw_albums = document.querySelectorAll('.lane-content > .material-card');
+        var offset = msg.offset - desired_start_index * parseInt(cluster.getAttribute('data-col-count'));
 
-          if (observer != null) observer.disconnect();
-        }
+        click(selector, parse_album);
 
-        if (desired_start_index >= cluster.getAttribute('data-end-index')) {
-          observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-              if (mutation.attributeName === 'data-start-index') {
-                var current_idx = cluster.getAttribute('data-start-index');
-
-                if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-                       desired_start_index >= cluster.getAttribute('data-end-index')) {
-                  document.querySelector('#mainContainer').scrollTop += scroll_step;
-                  var evt = document.createEvent('HTMLEvents');
-                  evt.initEvent('scroll', false, true);
-                  document.getElementById('mainContainer').dispatchEvent(evt);
-                }
-
-                else {
-                  get_album(cb);
-                }
-              }
-            });
-          });
-
-          observer.observe(cluster, {attributes: true});
-          document.querySelector('#mainContainer').scrollTop = scroll_step;
-          var evt = document.createEvent('HTMLEvents');
-          evt.initEvent('scroll', false, true);
-          document.getElementById('mainContainer').dispatchEvent(evt);
-        }
-        else {
-          get_album(cb);
-        }
+        if (observer != null) observer.disconnect();
       }
 
-      history_funcs.push(function(cb) {
-        this_state(msg.offset, msg.id, cb);
-      })
-      msg.history.push({
-        type: 'func',
-        id: history_funcs.length - 1
-      });
+      if (desired_start_index >= cluster.getAttribute('data-end-index')) {
+        observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'data-start-index') {
+              var current_idx = cluster.getAttribute('data-start-index');
 
-      this_state(msg.offset, msg.id, parse_album);
+              if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
+                  document.querySelector(selector) == null) {
+                document.querySelector('#mainContainer').scrollTop += scroll_step;
+                var evt = document.createEvent('HTMLEvents');
+                evt.initEvent('scroll', false, true);
+                document.getElementById('mainContainer').dispatchEvent(evt);
+              }
+
+              else {
+                get_album();
+              }
+            }
+          });
+        });
+
+        observer.observe(cluster, {attributes: true});
+
+        cluster.setAttribute('data-start-index', '1');
+        document.querySelector('#mainContainer').scrollTop = 0;
+        var evt = document.createEvent('HTMLEvents');
+        evt.initEvent('scroll', false, true);
+        document.getElementById('mainContainer').dispatchEvent(evt);
+      }
+      else {
+        get_album();
+      }
     }
 
     else if (msg.click_type == 'playlist') {

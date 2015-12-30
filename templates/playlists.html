@@ -24,7 +24,7 @@
     <div class="mdl-tabs__panel" id="auto-panel">
         <table class='mdl-data-table mdl-js-data-table playlist-table'>
           <tbody>
-            <tr class='song-row' ng-repeat='playlist in data.playlists.auto_playlists' ng-click='data_click("auto_playlists", playlist)'>
+            <tr class='song-row' ng-repeat='playlist in data.playlists.auto_playlists' ng-click='data_click("auto_playlist", playlist)'>
               <td class='song-details-span mdl-data-table__cell--non-numeric'>
                 <span class='song-info'>
                   <img class='small-art' ng-src='{{playlist.image}}'/>
@@ -41,7 +41,7 @@
     <div class="mdl-tabs__panel" id="my-panel">
         <table class='mdl-data-table mdl-js-data-table playlist-table'>
           <tbody>
-            <tr class='song-row' ng-repeat='playlist in data.playlists.my_playlists' ng-click='data_click("my_playlists", playlist)'>
+            <tr class='song-row' ng-repeat='playlist in data.playlists.my_playlists' ng-click='data_click("my_playlist", playlist)'>
               <td class='song-details-span mdl-data-table__cell--non-numeric'>
                 <span class='song-info'>
                   <img class='small-art' ng-src='{{playlist.image}}'/>

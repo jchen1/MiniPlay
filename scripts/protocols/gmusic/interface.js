@@ -644,6 +644,23 @@ function data_click(msg) {
       }, 30);
     }
 
+    else if (msg.click_type == 'playlists') {
+      var idx = 0;
+      switch (msg.playlist_type) {
+        case 'recent_playlist': idx = 0; break;
+        case 'auto_playlist': idx = 1; break;
+        case 'my_playlist': idx = 2; break;
+      }
+      var raw_playlists = document.querySelectorAll('.g-content .cluster')[idx].querySelectorAll('.lane-content .material-card');
+
+      if (msg.playlist_type != 'my_playlist') {
+        raw_playlists[msg.index].querySelector('.play-button-container').click();
+      }
+      else {
+        // TODO because scrolling :(
+      }
+    }
+
     else if (msg.click_type == 'recent') {
       document.querySelector('.cluster[data-type="recent"] .material-card[data-log-position="'+msg.index+'"] .play-button-container').click();
 

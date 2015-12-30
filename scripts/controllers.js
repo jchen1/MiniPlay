@@ -178,6 +178,19 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             });
             $scope.status.displayed_content = '';
             break;
+          case 'recent_playlist':
+          case 'auto_playlist':
+          case 'my_playlist':
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: 'playlists',
+              playlist_type: type,
+              index: data.index,
+              history: $scope.data.last_history,
+            });
+            $scope.status.displayed_content = '';
+            break;
           case 'recent':
             $scope.interface_port.postMessage(
             {

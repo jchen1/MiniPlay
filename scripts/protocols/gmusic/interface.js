@@ -500,7 +500,7 @@ function get_playlists(msg) {
 }
 
 function restore_state(history, msg, cb) {
-  // console.debug(history);
+  var history = history.slice(0);
 
   if (history.length == 0) {
     cb(msg);
@@ -524,7 +524,6 @@ function restore_state(history, msg, cb) {
 }
 
 function data_click(msg) {
-  var next_history = msg.history.concat([]);
   restore_state(msg.history, msg, function(msg) {
     if (msg.click_type == 'album') {
 
@@ -563,7 +562,7 @@ function data_click(msg) {
           popup_port.postMessage({
             type: 'playlist',
             data: songs,
-            history: next_history
+            history: msg.history
           });
         }
       };
@@ -622,7 +621,7 @@ function data_click(msg) {
       history_funcs.push(function(cb) {
         this_state(msg.offset, msg.id, cb);
       })
-      next_history.push({
+      msg.history.push({
         type: 'func',
         id: history_funcs.length - 1
       });

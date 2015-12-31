@@ -161,7 +161,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             {
               action: 'data_click',
               click_type: 'album',
-              offset: data.offset,
+              offset: data.index,
               id: data.id,
               history: $scope.data.last_history,
             });

@@ -1,0 +1,66 @@
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+    <div class="mdl-tabs__tab-bar">
+        <a href="#artists-panel" class="mdl-tabs__tab is-active">Artists</a>
+        <a href="#albums-panel" class="mdl-tabs__tab">Albums</a>
+        <a href="#songs-panel" class="mdl-tabs__tab">Songs</a>
+    </div>
+    <div class="mdl-tabs__panel is-active" id="artists-panel">
+      <div class='card-table'>
+        <div class='card-image mdl-card mdl-shadow--2dp' ng-repeat='artist in data.search.artists' ng-style='{"background": artist_background(artist.image)}' ng-click='data_click("artist", artist)'>
+          <div class="mdl-card__title mdl-card--expand"></div>
+          <div class="mdl-card__actions">
+            <span class="card-image__filename">{{artist.name}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mdl-tabs__panel" id="albums-panel">
+      <table class='mdl-data-table mdl-js-data-table playlist-table'>
+        <tbody>
+          <tr class='song-row' ng-repeat='album in data.search.albums' ng-click='data_click("album", album)'>
+            <td class='song-details-span mdl-data-table__cell--non-numeric'>
+              <span class='song-info'>
+                <img class='small-art' ng-src='{{album.image}}'/>
+                <div class='song-details'>
+                  <div class='song-title'>{{album.title}}</div>
+                  <div class='song-artist-album'>{{album.artist}}</div>
+                </div>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mdl-tabs__panel" id="songs-panel">
+      <table class='mdl-data-table mdl-js-data-table playlist-table'>
+        <thead>
+          <tr>
+            <th id='song_header' class='mdl-data-table__cell--non-numeric'>Song</th>
+            <th>
+              <i id='schedule_icon' class="material-icons">schedule</i>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class='song-row' ng-repeat='song in data.search.songs' ng-click='playlist_click(song.id)'>
+            <td class='song-details-span mdl-data-table__cell--non-numeric'>
+              <span class='song-info'>
+                <img class='small-art' ng-src='{{song.album_art}}' ng-style='{opacity: is_song_playing(song) ? 0 : 100}'/>
+                <div class='song-details'>
+                  <div class='song-title'>{{song.title}}</div>
+                  <div class='song-artist-album'>{{song.artist}} - {{song.album}}</div>
+                </div>
+                <div class='song-indicator' ng-class='{"song-indicator-active" : is_song_playing(song) && music_status.status == StatusEnum.PLAYING}' ng-disabled='!is_song_playing(song)'></div>
+              </span>
+            </td>
+            <td class='duration'>
+              <span>{{song.total_time}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+

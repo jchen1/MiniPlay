@@ -11,7 +11,7 @@
   <script src='scripts/controllers.js'></script>
   <script src='scripts/directives.js'></script>
 </head>
-<body ng-controller='PopupController' ng-keypress='handle_key($event)' ng-mouseup='status.slider_dragging = false'>
+<body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false'>
 
   <div id='popup' class='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header' ng-click='status.displayed_content=""'>
@@ -23,7 +23,15 @@
     <div class="mdl-layout__drawer">
       <span class="mdl-layout-title" ng-click='drawer_click("library")'>MiniPlay</span>
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="">Search</a>
+        <form class='search' ng-submit='search()'>
+          <div class="mdl-textfield mdl-js-textfield">
+            <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
+              <i class="material-icons">search</i>
+            </label>
+            <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search">
+            <label class="mdl-textfield__label" for="search">Search...</label>
+          </div>
+        </form>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_recent")'>Recent</a>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_playlists")'>Playlists</a>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_stations")'>Stations</a>
@@ -60,8 +68,14 @@
       <div ng-switch-when='artists'>
         <div id='artists' ng-include src='"templates/artists.html"'></div>
       </div>
+      <div ng-switch-when='artist'>
+        <div id='artist' ng-include src='"templates/artist.html"'></div>
+      </div>
       <div ng-switch-when='albums'>
         <div id='albums' ng-include src='"templates/albums.html"'></div>
+      </div>
+      <div ng-switch-when='search'>
+        <div id='search' ng-include src='"templates/search.html"'></div>
       </div>
       <div id='list-none' ng-switch-default></div>
     </div>

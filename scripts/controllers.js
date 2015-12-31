@@ -70,6 +70,24 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       return ($scope.music_status.repeat == RepeatEnum.ONE) ? 'repeat_one' : 'repeat';
     };
 
+    $scope.menu_icon = function() {
+      return ($scope.status.displayed_content == '' || $scope.status.displayed_content == 'current_playlist') ? 'menu' : 'arrow_back';
+    };
+
+    $scope.menu_icon_click = function() {
+      if ($scope.status.displayed_content == '' || $scope.status.displayed_content == 'current_playlist') {
+        $('.mdl-layout__drawer, .mdl-layout__obfuscator').addClass('is-visible');
+      }
+      else {
+        $scope.close_drawer();
+        $scope.status.displayed_content = '';
+      }
+    };
+
+    $scope.close_drawer = function() {
+      $('.mdl-layout__drawer, .mdl-layout__obfuscator').removeClass('is-visible');
+    }
+
     $scope.volume_icon = function() {
       if ($scope.music_status.volume == 0) {
         return 'volume_mute';
@@ -110,7 +128,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           query: $scope.data.query
         });
         $scope.status.displayed_content = 'loading';
-        $('.mdl-layout__obfuscator').click();
+        $scope.close_drawer();
       }
     }
 
@@ -254,7 +272,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       else {
         $scope.status.displayed_content = '';
       }
-      $('.mdl-layout__obfuscator').click();
+      $scope.close_drawer();
     }
 
     $scope.album_art_click = function() {
@@ -365,12 +383,6 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.data.last_history = msg.history;
             $scope.data.title = msg.type;
           }
-          else if (msg.type === 'playlist') {
-            $scope.data[msg.type] = msg.data;
-            $scope.data.last_history = msg.history;
-            $scope.data.title = msg.title;
-            console.log(msg.title);
-          }
           else if (msg.type === 'search') {
             $scope.data.search = msg.data;
             $scope.data.last_history = msg.history;
@@ -379,7 +391,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           else {
             $scope.data[msg.type] = msg.data;
             $scope.data.last_history = msg.history;
-            $scope.data.title = msg.title;
+            $scope.data.title = msg.type;
           }
           // else if (msg.type === 'albums') {
           //   $scope.albums = msg.data;

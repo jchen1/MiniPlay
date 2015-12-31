@@ -170,6 +170,13 @@ body {
   color: #616161;
 }
 
+.playlist-table .song-title, .playlist-table .song-artist-album {
+  text-overflow: ellipsis;
+  max-width: 175px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .playlist-table .duration {
   text-align: right;
   vertical-align: middle;
@@ -198,7 +205,7 @@ header {
 
 #title {
   z-index: 1;
-  padding: 5 0 10 0;
+  padding: 5 20 10 0;
   position: relative;
 }
 
@@ -207,6 +214,13 @@ header {
   font-size: 12px;
   font-weight: 300;
   position: relative;
+  padding-right: 20;
+}
+
+#title, #subtitle {
+  width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #top-controls {

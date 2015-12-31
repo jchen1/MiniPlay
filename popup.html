@@ -16,8 +16,8 @@
   <div id='popup' class='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header' ng-click='status.displayed_content=""'>
       <div id='song-info' class='mdl-layout-title'>
-        <div id='title'>{{music_status.title}}</div>
-        <div id='subtitle' ng-style='{"display": music_status.state == StateEnum.PLAYING ? "block": "none"}'>{{music_status.artist}} - {{music_status.album}}</div>
+        <div id='title' ng-style='{"text-transform": status.displayed_content == "" ? "none" : "capitalize"}'>{{status.displayed_content == "" ? music_status.title : data.title}}</div>
+        <div id='subtitle' ng-style='{"display": music_status.state == StateEnum.PLAYING && status.displayed_content == "" ? "block": "none"}'>{{music_status.artist}} - {{music_status.album}}</div>
       </div>
     </header>
     <div class="mdl-layout__drawer">

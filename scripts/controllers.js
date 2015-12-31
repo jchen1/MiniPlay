@@ -60,7 +60,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       artist: {
         albums: [],
         songs: []
-      }
+      },
+      title: ''
     }
 
     $scope.counts = {};
@@ -353,6 +354,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.status.scrolling_busy = false;
             $scope.counts[msg.type] = msg.count;
             $scope.data.last_history = msg.history;
+            $scope.data.title = msg.type;
           }
           else if (msg.type === 'playlists') {
             $scope.data.playlists.my_playlists = $scope.data.playlists.my_playlists.slice(0, msg.offset).concat(msg.data.my_playlists);
@@ -361,14 +363,23 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.status.scrolling_busy = false;
             $scope.counts.playlists = msg.count;
             $scope.data.last_history = msg.history;
+            $scope.data.title = msg.type;
+          }
+          else if (msg.type === 'playlist') {
+            $scope.data[msg.type] = msg.data;
+            $scope.data.last_history = msg.history;
+            $scope.data.title = msg.title;
+            console.log(msg.title);
           }
           else if (msg.type === 'search') {
             $scope.data.search = msg.data;
             $scope.data.last_history = msg.history;
+            $scope.data.title = $scope.data.query;
           }
           else {
             $scope.data[msg.type] = msg.data;
             $scope.data.last_history = msg.history;
+            $scope.data.title = msg.title;
           }
           // else if (msg.type === 'albums') {
           //   $scope.albums = msg.data;

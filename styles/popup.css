@@ -391,3 +391,7 @@ header {
 .search input, .search .mdl-textfield__label {
   padding-left: 30px;
 }
+
+.mdl-layout__drawer .mdl-navigation {
+  padding-top: 0;
+}

@@ -597,8 +597,10 @@ function data_click(msg) {
             data: songs,
             history: [{
               type: 'url',
-              url: url
-            }]
+              url: url,
+            }],
+            title: document.querySelector('#mainContainer .title').innerText,
+            subtitle: document.querySelector('#mainContainer .creator-name').innerText
           });
         }
       };
@@ -625,7 +627,8 @@ function data_click(msg) {
             history: [{
               type: 'url',
               url: url
-            }]
+            }],
+            title: document.querySelector('#mainContainer .name').innerText
           });
         }
       }

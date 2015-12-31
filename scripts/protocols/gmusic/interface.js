@@ -176,7 +176,7 @@ function send_command(message) {
     case 'vslider':
       update_slider(message.position, 'material-vslider'); break;
     case 'playlist':
-      $button = $('.song-table > tbody > .song-row[data-index="'+message.index+'"] > td[data-col="song-details"] button'); break;
+      $button = $('.song-table > tbody > .song-row[data-id="'+message.id+'"] > td[data-col="song-details"] button'); break;
     case 'playlist-button':
       // Toggle the playlist to set it up for viewing
       if (!$('#queue-overlay').hasClass('sj-opened')) {

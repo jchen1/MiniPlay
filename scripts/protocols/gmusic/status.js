@@ -70,6 +70,8 @@ var music_status = {
       item.play_count = playlist_item.find('td[data-col="play-count"] > span').text();
       item.currently_playing = playlist_item.hasClass('currently-playing');
 
+      item.id = playlist_item.attr('data-id');
+
       playlist.push(item);
     }
 

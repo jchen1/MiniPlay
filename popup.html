@@ -14,11 +14,14 @@
 <body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false'>
 
   <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
-    <header class='mdl-layout__header' ng-click='status.displayed_content=""'>
+    <header class='mdl-layout__header'>
       <div class="mdl-layout__drawer-button" ng-click="menu_icon_click()"><i class="material-icons">{{menu_icon()}}</i></div>
       <div id='song-info' class='mdl-layout-title'>
-        <div id='title' ng-style='{"text-transform": status.displayed_content == "" ? "none" : "capitalize"}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? music_status.title : data.title}}</div>
-        <div id='subtitle' ng-style='{"display": music_status.state == StateEnum.PLAYING && status.displayed_content == "" ? "block": "none"}'>{{music_status.artist}} - {{music_status.album}}</div>
+        <div id='title' ng-style='{"text-transform": status.displayed_content == "" || status.displayed_content == "current_playlist" ? "none" : "capitalize"}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? music_status.title : data.title}}</div>
+        <div id='subtitle' ng-switch='status.displayed_content == "" || status.displayed_content == "current_playlist"'>
+          <div ng-switch-when='true' ng-hide='music_status.state != StateEnum.PLAYING'>{{music_status.artist}} - {{music_status.album}}</div>
+          <div ng-switch-when='false'>{{data.subtitle}}</div>
+        </div>
       </div>
     </header>
     <div class="mdl-layout__drawer">
@@ -33,11 +36,11 @@
             <label class="mdl-textfield__label" for="search">Search...</label>
           </div>
         </form>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_recent")'>Recent</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_playlists")'>Playlists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_stations")'>Stations</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_artists")'>Artists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_albums")'>Albums</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("recent")'>Recent</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("playlists")'>Playlists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("stations")'>Stations</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("artists")'>Artists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("albums")'>Albums</a>
         <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'>Settings</a>
       </nav>
     </div>

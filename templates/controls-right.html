@@ -1,18 +1,18 @@
-<button mp-control id='up' class='mdl-button mdl-js-button mdl-button--icon thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.UP}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.up' title='Thumbs up' ng-style='{"display": status.vol_pressed ? "none" : "block"}' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.UP ? ThumbEnum.NONE : ThumbEnum.UP'>
+<button mp-control id='up' class='mdl-button mdl-js-button mdl-button--icon thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.UP}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.up' title='Thumbs up' ng-hide='status.vol_pressed' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.UP ? ThumbEnum.NONE : ThumbEnum.UP'>
   <i class="material-icons">thumb_up</i>
 </button>
-<button mp-control id='down' class='mdl-button mdl-js-button mdl-button--icon thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.DOWN}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.down' title='Thumbs down' ng-style='{"display": status.vol_pressed ? "none" : "block"}' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.DOWN ? ThumbEnum.NONE : ThumbEnum.DOWN'>
+<button mp-control id='down' class='mdl-button mdl-js-button mdl-button--icon thumb' ng-class='{"mdl-button--colored": music_status.thumb == ThumbEnum.DOWN}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.down' title='Thumbs down' ng-hide='status.vol_pressed' ng-click='music_status.thumb = music_status.thumb == ThumbEnum.DOWN ? ThumbEnum.NONE : ThumbEnum.DOWN'>
   <i class="material-icons">thumb_down</i>
 </button>
 <button id='vol' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vslider' title='Volume' ng-click='status.vol_pressed=!status.vol_pressed'>
   <i class='material-icons'>{{volume_icon()}}</i>
 </button>
-<p id='vol-wrapper' ng-style='{"display": status.vol_pressed ? "block" : "none"}'>
+<p id='vol-wrapper' ng-show='status.vol_pressed'>
   <input class='mp-volslider mdl-slider mdl-js-slider' type='range' min='0' max='100' value='{{music_status.volume}}' />
 </p>
-<button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vol' title='Volume' ng-click='status.vol_pressed=!status.vol_pressed' ng-style='{"display": status.vol_pressed ? "block" : "none"}'>
+<button id='vol-up' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.vol' title='Volume' ng-click='status.vol_pressed=!status.vol_pressed' ng-show='status.vol_pressed' >
   <i class='material-icons'>volume_up</i>
 </button>
-<button mp-control id='playlist-button' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.playlist' title='Playlist' ng-click='playlist_button_pressed()' ng-style='{"display": status.vol_pressed ? "none" : "block"}'>
+<button mp-control id='playlist-button' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.playlist' title='Playlist' ng-click='playlist_button_pressed()' ng-hide='status.vol_pressed' '>
   <i class='material-icons'>queue_music</i>
 </button>

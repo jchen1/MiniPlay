@@ -223,43 +223,6 @@ header {
   text-overflow: ellipsis;
 }
 
-#top-controls {
-  position: absolute;
-  list-style-type: none;
-  top: 17;
-  margin: 0;
-  right: 15;
-}
-
-#top-controls > li {
-  outline: none;
-  border: none;
-  color: white;
-  -webkit-filter: brightness(90%);
-}
-
-#top-controls > li:hover {
-  -webkit-animation: animbrightness 0.4s;
-  -webkit-filter: brightness(110%);
-}
-
-@-webkit-keyframes animbrightness {
-  0% {
-    -webkit-filter: brightness(90%);
-  }
-  100% {
-    -webkit-filter: brightness(110%);
-  }
-}
-
-#top-controls > li[disabled] {
-  display: none;
-}
-
-.top-control-active {
-  color: rgb(255, 87, 34)!important;
-}
-
 #current-time, #total-time {
   font-size: 11px;
   color: rgba(0, 0, 0, 0.870588);
@@ -328,7 +291,6 @@ header {
 
 #vol-wrapper {
   width: 150;
-  display: none;
   margin: 0 -10 0 -20;
 }
 

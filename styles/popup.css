@@ -196,7 +196,7 @@ header {
 #song-info {
   overflow: hidden;
   white-space: nowrap;
-  padding: 11 0 0 60;
+  padding: 11 0 0 20;
 }
 
 .mdl-layout__drawer-button > i {

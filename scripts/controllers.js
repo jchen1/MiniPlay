@@ -31,6 +31,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       disabled: {},
       volume: 100,
       thumb: ThumbEnum.NONE,
+      protocol: ''
     };
 
     $scope.data = {
@@ -77,20 +78,25 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     };
 
     $scope.menu_icon_click = function() {
-      if ($scope.status.displayed_content == '' || $scope.status.displayed_content == 'current_playlist') {
-        $('.mdl-layout__drawer, .mdl-layout__obfuscator').addClass('is-visible');
-      }
-      else {
-        $scope.close_drawer();
-        if ($scope.data.view_stack.length > 0) {
-          var old_view = $scope.data.view_stack.pop();
-          $scope.status.displayed_content = old_view.content;
-          $scope.data.title = old_view.title;
-          $scope.data.subtitle = old_view.subtitle;
+      if ($scope.music_status.protocol == 'gmusic') {
+        if ($scope.status.displayed_content == '' || $scope.status.displayed_content == 'current_playlist') {
+          $('.mdl-layout__drawer, .mdl-layout__obfuscator').addClass('is-visible');
         }
         else {
-          $scope.status.displayed_content = '';
+          $scope.close_drawer();
+          if ($scope.data.view_stack.length > 0) {
+            var old_view = $scope.data.view_stack.pop();
+            $scope.status.displayed_content = old_view.content;
+            $scope.data.title = old_view.title;
+            $scope.data.subtitle = old_view.subtitle;
+          }
+          else {
+            $scope.status.displayed_content = '';
+          }
         }
+      }
+      else {
+        // todo: something??
       }
     };
 
@@ -405,6 +411,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           });
         }
         else {
+          $.extend($scope.music_status, response);
           if (response.title === '') {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.NO_SONG);
@@ -417,7 +424,6 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
                 response.current_time_s = $scope.current_time_s;
                 response.current_time = $scope.current_time;
               }
-              $.extend($scope.music_status, response);
 
               $scope.set_disabled(response.disabled_buttons);
 

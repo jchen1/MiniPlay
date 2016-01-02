@@ -11,7 +11,7 @@
   <script src='scripts/controllers.js'></script>
   <script src='scripts/directives.js'></script>
 </head>
-<body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false' ng-keypress='handle_key($event)'>
+<body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false' ng-keyup='handle_key($event)'>
 
   <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header'>
@@ -25,7 +25,7 @@
       </div>
     </header>
     <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title" ng-click='drawer_click("library")'>MiniPlay</span>
+      <span class="mdl-layout-title" ng-click=''>MiniPlay</span>
       <nav class="mdl-navigation">
         <form class='search' ng-submit='search()'>
           <div class="mdl-textfield mdl-js-textfield">

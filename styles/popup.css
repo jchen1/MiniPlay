@@ -372,6 +372,10 @@ header {
   padding-top: 0;
 }
 
+.mdl-layout__drawer {
+  overflow-x: hidden;
+}
+
 .mdl-layout__drawer .mdl-navigation__link .material-icons {
   padding-right: 10px;
   font-size: 18px;

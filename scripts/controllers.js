@@ -323,7 +323,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.handle_key = function($event) {
-      if ($('.mdl-layout__drawer').hasClass('is-visible') == false && ($event.keyCode == 32 || $event.charCode === 32)) {
+      if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode == 32) {
         $scope.music_status.status = !$scope.music_status.status;
         if ($scope.interface_port) {
           $scope.interface_port.postMessage(
@@ -331,6 +331,17 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             action: 'send_command',
             type: 'play'
           });
+        }
+      }
+      else if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode == 8) {
+        if ($scope.data.view_stack.length > 0) {
+          var old_view = $scope.data.view_stack.pop();
+          $scope.status.displayed_content = old_view.content;
+          $scope.data.title = old_view.title;
+          $scope.data.subtitle = old_view.subtitle;
+        }
+        else {
+          $scope.status.displayed_content = '';
         }
       }
     }

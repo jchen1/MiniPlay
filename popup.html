@@ -11,7 +11,7 @@
   <script src='scripts/controllers.js'></script>
   <script src='scripts/directives.js'></script>
 </head>
-<body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false'>
+<body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false' ng-keypress='handle_key($event)'>
 
   <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header'>
@@ -32,7 +32,7 @@
             <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
               <i class="material-icons">search</i>
             </label>
-            <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search">
+            <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search" focus-me='is_drawer_open()'>
             <label class="mdl-textfield__label" for="search">Search in library...</label>
           </div>
         </form>

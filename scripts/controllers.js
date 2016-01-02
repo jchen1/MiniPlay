@@ -318,11 +318,13 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
               song.album == $scope.music_status.album);
     }
 
+    $scope.is_drawer_open = function() {
+      return $('.mdl-layout__drawer').hasClass('is-visible');
+    }
+
     $scope.handle_key = function($event) {
-      if ($('.mdl-layout__drawer').hasClass('is-visible') == false && $event.keyCode == 32 || $event.charCode === 32) {
-        $scope.$apply(function() {
-          $scope.music_status.status = !$scope.music_status.status;
-        });
+      if ($('.mdl-layout__drawer').hasClass('is-visible') == false && ($event.keyCode == 32 || $event.charCode === 32)) {
+        $scope.music_status.status = !$scope.music_status.status;
         if ($scope.interface_port) {
           $scope.interface_port.postMessage(
           {

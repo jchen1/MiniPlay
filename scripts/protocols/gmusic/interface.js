@@ -17,8 +17,7 @@ var artist_map = [
   name: 'image',
   selector: 'img',
   property: 'src',
-  // TODO: placeholder artist image
-  if_null: 'img/default_album.png'
+  if_null: 'img/default_artist.png'
 }];
 
 var album_map = [

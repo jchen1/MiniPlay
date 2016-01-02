@@ -94,7 +94,7 @@ popupApp.directive('mpScrollIf', function() {
         if (value) {
           var sp = getScrollingParent(element[0]);
           if (sp) {
-            sp.scrollTop = $(element[0]).offset().top;
+            sp.scrollTop = $(element[0]).offset().top - $(element[0]).height();
           }
         }
       });

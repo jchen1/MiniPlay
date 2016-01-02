@@ -36,12 +36,12 @@
             <label class="mdl-textfield__label" for="search">Search in library...</label>
           </div>
         </form>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("recent")'>Recent</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("playlists")'>Playlists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("stations")'>Stations</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("artists")'>Artists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("albums")'>Albums</a>
-        <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'>Settings</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("recent")'><i class='material-icons'>replay</i>Recent</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("playlists")'><i class='material-icons'>playlist_play</i>Playlists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("stations")'><i class='material-icons'>radio</i>Stations</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("artists")'><i class='material-icons'>person</i>Artists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("albums")'><i class='material-icons'>album</i>Albums</a>
+        <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'><i class='material-icons'>settings</i>Settings</a>
       </nav>
     </div>
     <div class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>

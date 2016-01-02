@@ -371,3 +371,9 @@ header {
 .mdl-layout__drawer .mdl-navigation {
   padding-top: 0;
 }
+
+.mdl-layout__drawer .mdl-navigation__link .material-icons {
+  padding-right: 10px;
+  font-size: 18px;
+  transform: translateY(4px);
+}

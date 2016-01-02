@@ -137,8 +137,9 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           action: 'search',
           query: $scope.data.query
         });
-        $scope.data.title = $scope.data.query;
+        $scope.data.title = 'Search: ' + $scope.data.query;
         $scope.status.displayed_content = 'loading';
+        $scope.status.playlist_pressed = false;
         $scope.close_drawer();
       }
     }
@@ -267,6 +268,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       else {
         $scope.status.displayed_content = '';
       }
+
+      $scope.status.playlist_pressed = false;
 
       $scope.close_drawer();
     }

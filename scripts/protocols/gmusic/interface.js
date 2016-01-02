@@ -290,7 +290,7 @@ function get_artists(msg) {
     var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
     var cards = document.querySelectorAll('.lane-content > .material-card');
-    var scroll_step = cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop;
+    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop : 0);
     var observer = null;
 
     var parse_data = function() {
@@ -353,7 +353,7 @@ function get_albums(msg) {
     var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
     var cards = document.querySelectorAll('.lane-content > .material-card');
-    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop : 0);
+    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop - cards[0].offsetTop + 4: 0);
     var observer = null;
 
     var parse_data = function() {
@@ -396,7 +396,7 @@ function get_albums(msg) {
 
     observer.observe(cluster, {attributes: true});
 
-    cluster.setAttribute('data-start-index', cluster.getAttribute('data-end-index') + 1);
+    cluster.setAttribute('data-start-index', cluster.getAttribute('data-end-index'));
     document.querySelector('#mainContainer').scrollTop = 0;
     var evt = document.createEvent('HTMLEvents');
     evt.initEvent('scroll', false, true);
@@ -524,7 +524,8 @@ function get_playlists(msg) {
     var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
 
     var cards = cluster.querySelectorAll('.lane-content > .material-card');
-    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop : 0);
+    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop - cards[0].offsetTop + 4: 0);
+
     var observer = null;
 
     var parse_data = function() {

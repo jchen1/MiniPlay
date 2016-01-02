@@ -5,7 +5,7 @@ var old_status = null;
 var routes = {};
 
 function update() {
-  if (background_port) {
+  if (background_port && typeof(background_port) !== 'undefined') {
     old_status = JSON.parse(JSON.stringify(music_status));
     music_status.update();
     var msg = create_background_msg(old_status, music_status);

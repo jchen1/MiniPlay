@@ -27,15 +27,15 @@
     <div class="mdl-layout__drawer" ng-class='{"is-visible": status.drawer_open}'>
       <span class="mdl-layout-title" ng-click=''>MiniPlay</span>
       <nav class="mdl-navigation">
-        <form class='search' ng-submit='search()'>
-          <div class="mdl-textfield mdl-js-textfield">
-            <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-              <i class="material-icons">search</i>
-            </label>
-            <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search" focus-me='status.drawer_open' tabindex="-1" >
-            <label class="mdl-textfield__label" for="search">Search in library...</label>
-          </div>
-        </form>
+        <div class='search-container'>
+          <i class="material-icons">search</i>
+          <form class='search' ng-submit='search()'>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search" focus-me='status.drawer_open' tabindex="-1" >
+              <label class="mdl-textfield__label" for="search">Search in library...</label>
+            </div>
+          </form>
+        </div>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("recent")'><i class='material-icons'>replay</i>Recent</a>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("playlists")'><i class='material-icons'>playlist_play</i>Playlists</a>
         <a class="mdl-navigation__link" href="" ng-click='drawer_click("stations")'><i class='material-icons'>radio</i>Stations</a>

@@ -359,13 +359,20 @@ header {
   text-align: right;
 }
 
-.search {
+.search-container {
   padding: 0 16;
-  margin-bottom: 0;
+  color: #757575;
 }
 
-.search input, .search .mdl-textfield__label {
-  padding-left: 30px;
+.search-container i {
+  font-size: 18px;
+  position: absolute;
+  margin-top: 26px;
+}
+
+.search {
+  margin-bottom: 0;
+  padding-left: 28px;
 }
 
 .mdl-layout__drawer .mdl-navigation {

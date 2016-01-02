@@ -217,7 +217,7 @@ header {
   padding-right: 20;
 }
 
-#title, #subtitle {
+#title, #subtitle div{
   width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;

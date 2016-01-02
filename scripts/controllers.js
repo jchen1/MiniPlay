@@ -32,6 +32,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       disabled: {},
       volume: 100,
       thumb: ThumbEnum.NONE,
+      artist_id: '',
+      album_id: '',
       protocol: ''
     };
 
@@ -205,7 +207,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
     $scope.data_click = function(type, data) {
       var old_content = $scope.status.displayed_content;
-      if ($scope.interface_port) {
+      if ($scope.interface_port && $scope.music_status.protocol == 'gmusic') {
         $scope.status.displayed_content = 'loading';
         switch (type) {
           case 'recent':

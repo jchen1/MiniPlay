@@ -15,6 +15,8 @@ var music_status = {
   status : '',
   volume : '',
   playlist : [],
+  artist_id: '',
+  album_id: '',
   protocol : 'gmusic',
 
   get_time : function (time) {
@@ -81,7 +83,9 @@ var music_status = {
   update : function() {
     this.title = $('#currently-playing-title').text();
     this.artist = $('#player-artist').text();
+    this.artist_id = $('#player-artist').attr('data-id');
     this.album = $('.player-album').text();
+    this.album_id = $('.player-album').attr('data-id');
     this.album_art = get_album_art($('#playerBarArt').attr('src'));
     this.current_time = $('#time_container_current').text();
     this.total_time = $('#time_container_duration').text();

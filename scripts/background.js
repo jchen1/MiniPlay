@@ -60,7 +60,16 @@ function notify_helper(details, url) {
     title: details.title,
     message: details.artist,
     contextMessage: details.album,
-    iconUrl: url
+    iconUrl: url,
+    buttons: [
+      {
+        title: 'Play/Pause',
+        iconUrl: 'img/notification_pp.png'
+      },
+      {
+        title: 'Next song',
+        iconUrl: 'img/notification_ff.png'
+      }]
   }, function(id){
     chrome.storage.local.get('last_notification', function (data) {
       if (data['last_notification']) {
@@ -95,6 +104,19 @@ chrome.notifications.onClicked.addListener(function (id) {
     }
     else if (interface_port) {
       chrome.tabs.update(interface_port.id, {highlighted: true});
+    }
+  });
+});
+
+chrome.notifications.onButtonClicked.addListener(function(id, buttonIndex) {
+  chrome.storage.local.get('last_notification', function(data) {
+    if (data['last_notification'] == id && interface_port) {
+      switch (buttonIndex) {
+        case 0: // Play/Pause
+          interface_port.postMessage({action: 'send_command', type: 'play'}); break;
+        case 1: // Next
+          interface_port.postMessage({action: 'send_command', type: 'ff'}); break;
+      }
     }
   });
 });

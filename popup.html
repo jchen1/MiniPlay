@@ -46,8 +46,8 @@
     </div>
     <div class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>
       <div id='art-controls'>
-        <i mp-control id='repeat' class='material-icons' ng-class='{"top-control-active": music_status.repeat != RepeatEnum.NONE}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
-        <i mp-control id='shuffle' class='material-icons' ng-class='{"top-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle'>shuffle</i>
+        <i mp-control id='repeat' class='material-icons' ng-class='{"art-control-active": music_status.repeat != RepeatEnum.NONE}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
+        <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle'>shuffle</i>
       </div>
     </div>
     <div id='list-content' ng-switch='status.displayed_content' infinite-scroll='scroll_data(status.displayed_content)' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>

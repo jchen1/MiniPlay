@@ -3,7 +3,7 @@
 
   "name": "MiniPlay",
   "short_name": "MiniPlay",
-  "description": "Control streaming music players from anywhere in Chrome",
+  "description": "Control Google Music, Pandora, and Spotify with a popup and keyboard shortcuts.",
   "version": "0.7.0",
 
   "icons": {

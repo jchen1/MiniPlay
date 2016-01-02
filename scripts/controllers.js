@@ -62,7 +62,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         songs: []
       },
       title: '',
-      subtitle: ''
+      subtitle: '',
+      view_stack: []
     }
 
     $scope.counts = {};
@@ -81,7 +82,15 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
       else {
         $scope.close_drawer();
-        $scope.status.displayed_content = '';
+        if ($scope.data.view_stack.length > 0) {
+          var old_view = $scope.data.view_stack.pop();
+          $scope.status.displayed_content = old_view.content;
+          $scope.data.title = old_view.title;
+          $scope.data.subtitle = old_view.subtitle;
+        }
+        else {
+          $scope.status.displayed_content = '';
+        }
       }
     };
 
@@ -190,6 +199,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.data_click = function(type, data) {
+      var old_content = $scope.status.displayed_content;
       if ($scope.interface_port) {
         $scope.status.displayed_content = 'loading';
         switch (type) {
@@ -204,6 +214,11 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
               index: data.index,
               id: data.id,
               history: $scope.data.last_history,
+            });
+            if (type != 'recent') $scope.data.view_stack.push({
+              content: old_content,
+              title: $scope.data.title,
+              subtitle: $scope.data.subtitle
             });
             break;
           case 'recent_station':
@@ -247,6 +262,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       if (clicked != 'library') {
         $scope.status.displayed_content = 'loading';
         $scope.data.title = clicked;
+        $scope.data.view_stack.length = 0;
       }
       else {
         $scope.status.displayed_content = '';

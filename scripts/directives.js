@@ -166,6 +166,9 @@ popupApp.directive('focusMe', function($parse) {
         if (value === true) {
           element[0].focus();
         }
+        else {
+          element[0].blur();
+        }
       });
     }
   };

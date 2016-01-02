@@ -12,7 +12,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       playlist_pressed: false,
       slider_dragging: false,
       displayed_content: '',
-      scrolling_busy: false
+      scrolling_busy: false,
+      drawer_open: false
     };
 
     $scope.music_status = {
@@ -80,10 +81,11 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.menu_icon_click = function() {
       if ($scope.music_status.protocol == 'gmusic') {
         if ($scope.status.displayed_content == '' || $scope.status.displayed_content == 'current_playlist') {
-          $('.mdl-layout__drawer, .mdl-layout__obfuscator').addClass('is-visible');
+          $scope.status.drawer_open = true;
         }
         else {
-          $scope.close_drawer();
+          $scope.status.drawer_open = false;
+
           if ($scope.data.view_stack.length > 0) {
             var old_view = $scope.data.view_stack.pop();
             $scope.status.displayed_content = old_view.content;
@@ -99,10 +101,6 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         // todo: something??
       }
     };
-
-    $scope.close_drawer = function() {
-      $('.mdl-layout__drawer, .mdl-layout__obfuscator').removeClass('is-visible');
-    }
 
     $scope.volume_icon = function() {
       if ($scope.music_status.volume == 0) {
@@ -146,7 +144,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         $scope.data.title = 'Search: ' + $scope.data.query;
         $scope.status.displayed_content = 'loading';
         $scope.status.playlist_pressed = false;
-        $scope.close_drawer();
+        $scope.status.drawer_open = false;
       }
     }
 
@@ -277,7 +275,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
       $scope.status.playlist_pressed = false;
 
-      $scope.close_drawer();
+      $scope.status.drawer_open = false;
     }
 
     $scope.album_art_click = function() {

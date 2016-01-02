@@ -599,7 +599,7 @@ function data_click(msg) {
               type: 'url',
               url: url,
             }],
-            title: document.querySelector('#mainContainer .title').innerText,
+            title: document.querySelector('#mainContainer .title').firstChild.nodeValue,
             subtitle: document.querySelector('#mainContainer .creator-name').innerText
           });
         }

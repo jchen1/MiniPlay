@@ -94,7 +94,7 @@ popupApp.directive('mpScrollIf', function() {
         if (value) {
           var sp = getScrollingParent(element[0]);
           if (sp) {
-            sp.scrollTop = $(element[0]).offset().top;
+            sp.scrollTop = $(element[0]).offset().top - $(element[0]).height();
           }
         }
       });
@@ -127,14 +127,9 @@ popupApp.directive('infiniteScroll', [
           });
         }
         handler = function() {
-          var elementBottom, remaining, shouldScroll, windowBottom;
-          windowBottom = $elem.height() + $elem.scrollTop();
-          elementBottom = elem.scrollTop() + elem.height();
-          remaining = elementBottom - windowBottom;
+          var remaining = $elem.prop('scrollHeight') - $elem.height() - $elem.scrollTop();
 
-          remaining = $window.height() - elementBottom;
-          // console.log(remaining);
-          shouldScroll = remaining <= $elem.height() * scrollDistance;
+          var shouldScroll = remaining <= $elem.height() * scrollDistance;
           if (shouldScroll && scrollEnabled) {
             if ($rootScope.$$phase) {
               return scope.$eval(attrs.infiniteScroll);
@@ -162,6 +157,22 @@ popupApp.directive('infiniteScroll', [
     };
   }
 ]);
+
+popupApp.directive('focusMe', function($parse) {
+  return {
+    link: function(scope, element, attrs) {
+      var model = $parse(attrs.focusMe);
+      scope.$watch(model, function(value) {
+        if (value === true) {
+          element[0].focus();
+        }
+        else {
+          element[0].blur();
+        }
+      });
+    }
+  };
+});
 
 popupApp.directive('mpControl', function() {
   return {

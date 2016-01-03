@@ -1,1 +1,15 @@
-<h1>RECENTS</h1>
+<table class='mdl-data-table mdl-js-data-table playlist-table'>
+  <tbody>
+    <tr class='song-row' ng-repeat='item in data.recent' ng-click='data_click("recent", item)'>
+      <td class='song-details-span mdl-data-table__cell--non-numeric'>
+        <span class='song-info'>
+          <img class='small-art' ng-src='{{item.image}}'/>
+          <div class='song-details'>
+            <div class='song-title'>{{item.title}}</div>
+            <div class='song-artist-album'>{{item.subtitle}}</div>
+          </div>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>

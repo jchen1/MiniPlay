@@ -15,6 +15,8 @@ var music_status = {
   status : '',
   volume : '',
   playlist : [],
+  artist_id: '',
+  album_id: '',
   protocol : 'gmusic',
 
   get_time : function (time) {
@@ -36,14 +38,14 @@ var music_status = {
   },
 
   get_shuffle : function() {
-    return ($('paper-icon-button[data-id="shuffle"]').attr('value') == 'ALL_SHUFFLE');
+    return ($('paper-icon-button[data-id="shuffle"]').hasClass('active'));
   },
 
   get_repeat : function() {
-    switch ($('paper-icon-button[data-id="repeat"]').attr('value')) {
-      case 'NO_REPEAT': return RepeatEnum.NONE;
-      case 'SINGLE_REPEAT': return RepeatEnum.ONE;
-      case 'LIST_REPEAT': return RepeatEnum.ALL;
+    switch ($('paper-icon-button[data-id="repeat"]').attr('title').split(' ')[1]) {
+      case 'Off.': return RepeatEnum.NONE;
+      case 'Current': return RepeatEnum.ONE;
+      case 'All': return RepeatEnum.ALL;
     }
   },
 
@@ -70,6 +72,8 @@ var music_status = {
       item.play_count = playlist_item.find('td[data-col="play-count"] > span').text();
       item.currently_playing = playlist_item.hasClass('currently-playing');
 
+      item.id = playlist_item.attr('data-id');
+
       playlist.push(item);
     }
 
@@ -79,7 +83,9 @@ var music_status = {
   update : function() {
     this.title = $('#currently-playing-title').text();
     this.artist = $('#player-artist').text();
+    this.artist_id = $('#player-artist').attr('data-id');
     this.album = $('.player-album').text();
+    this.album_id = $('.player-album').attr('data-id');
     this.album_art = get_album_art($('#playerBarArt').attr('src'));
     this.current_time = $('#time_container_current').text();
     this.total_time = $('#time_container_duration').text();

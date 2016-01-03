@@ -1,1 +1,59 @@
-<h1>PLAYLISTS</h1>
+<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+    <div class="mdl-tabs__tab-bar">
+        <a href="#recents-panel" class="mdl-tabs__tab is-active">Recent</a>
+        <a href="#auto-panel" class="mdl-tabs__tab">Auto</a>
+        <a href="#my-panel" class="mdl-tabs__tab">Yours</a>
+    </div>
+    <div class="mdl-tabs__panel is-active" id="recents-panel">
+        <table class='mdl-data-table mdl-js-data-table playlist-table'>
+          <tbody>
+            <tr class='song-row' ng-repeat='playlist in data.playlists.recent_playlists' ng-click='data_click("recent_playlist", playlist)'>
+              <td class='song-details-span mdl-data-table__cell--non-numeric'>
+                <span class='song-info'>
+                  <img class='small-art' ng-src='{{playlist.image}}'/>
+                  <div class='song-details'>
+                    <div class='song-title'>{{playlist.title}}</div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+    <div class="mdl-tabs__panel" id="auto-panel">
+        <table class='mdl-data-table mdl-js-data-table playlist-table'>
+          <tbody>
+            <tr class='song-row' ng-repeat='playlist in data.playlists.auto_playlists' ng-click='data_click("auto_playlist", playlist)'>
+              <td class='song-details-span mdl-data-table__cell--non-numeric'>
+                <span class='song-info'>
+                  <img class='small-art' ng-src='{{playlist.image}}'/>
+                  <div class='song-details'>
+                    <div class='song-title'>{{playlist.title}}</div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+    <div class="mdl-tabs__panel" id="my-panel">
+        <table class='mdl-data-table mdl-js-data-table playlist-table'>
+          <tbody>
+            <tr class='song-row' ng-repeat='playlist in data.playlists.my_playlists' ng-click='data_click("my_playlist", playlist)'>
+              <td class='song-details-span mdl-data-table__cell--non-numeric'>
+                <span class='song-info'>
+                  <img class='small-art' ng-src='{{playlist.image}}'/>
+                  <div class='song-details'>
+                    <div class='song-title'>{{playlist.title}}</div>
+                  </div>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class='end-loading mdl-spinner mdl-js-spinner is-active' ng-style='{"display": "none"}'></div>
+    </div>
+</div>
+

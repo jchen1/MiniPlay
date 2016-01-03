@@ -12,7 +12,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       playlist_pressed: false,
       slider_dragging: false,
       displayed_content: '',
-      scrolling_busy: false
+      scrolling_busy: false,
+      drawer_open: false
     };
 
     $scope.music_status = {
@@ -31,11 +32,18 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       disabled: {},
       volume: 100,
       thumb: ThumbEnum.NONE,
+      artist_id: '',
+      album_id: '',
+      protocol: ''
     };
 
     $scope.data = {
-      playlist: [],
-      recents: [],
+      playlists: {
+        recent_playlists: [],
+        auto_playlists: [],
+        my_playlists: []
+      },
+      recent: [],
       stations: {
         recent_stations: [],
         my_stations: []
@@ -43,15 +51,57 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       artists: [],
       albums: [],
       playlist: [],
+      current_playlist: [],
       loading: [],
       '': [],
       last_history: [],
+      query: '',
+      search: {
+        artists: [],
+        albums: [],
+        songs: []
+      },
+      artist: {
+        albums: [],
+        songs: []
+      },
+      title: '',
+      subtitle: '',
+      view_stack: []
     }
 
     $scope.counts = {};
 
     $scope.repeat_icon = function() {
       return ($scope.music_status.repeat == RepeatEnum.ONE) ? 'repeat_one' : 'repeat';
+    };
+
+    $scope.menu_icon = function() {
+      return ($scope.status.displayed_content == '' || $scope.status.displayed_content == 'current_playlist') ? 'menu' : 'arrow_back';
+    };
+
+    $scope.menu_icon_click = function() {
+      if ($scope.music_status.protocol == 'gmusic') {
+        if ($scope.status.displayed_content == '' || $scope.status.displayed_content == 'current_playlist') {
+          $scope.status.drawer_open = true;
+        }
+        else {
+          $scope.status.drawer_open = false;
+
+          if ($scope.data.view_stack.length > 0) {
+            var old_view = $scope.data.view_stack.pop();
+            $scope.status.displayed_content = old_view.content;
+            $scope.data.title = old_view.title;
+            $scope.data.subtitle = old_view.subtitle;
+          }
+          else {
+            $scope.status.displayed_content = '';
+          }
+        }
+      }
+      else {
+        // todo: something??
+      }
     };
 
     $scope.volume_icon = function() {
@@ -86,6 +136,20 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       return ($scope.music_status.status == StatusEnum.PAUSED) ? 'Play' : 'Pause';
     }
 
+    $scope.search = function() {
+      if ($scope.interface_port) {
+        $scope.interface_port.postMessage(
+        {
+          action: 'search',
+          query: $scope.data.query
+        });
+        $scope.data.title = 'Search: ' + $scope.data.query;
+        $scope.status.displayed_content = 'loading';
+        $scope.status.playlist_pressed = false;
+        $scope.status.drawer_open = false;
+      }
+    }
+
     $scope.set_state = function(state) {
       $scope.music_status.state = state;
       switch (state) {
@@ -114,20 +178,13 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
-    $scope.playlist_click = function(index) {
+    $scope.playlist_click = function(id) {
       if ($scope.interface_port) {
-        // $scope.interface_port.postMessage(
-        // {
-        //   'action': 'send_command',
-        //   'type': 'playlist',
-        //   'index': index,
-        //   'history': $scope.data.last_history
-        // });
         $scope.interface_port.postMessage(
         {
           action: 'data_click',
           click_type: 'playlist',
-          index: index,
+          id: id,
           history: $scope.data.last_history
         });
       }
@@ -136,7 +193,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.playlist_button_pressed = function() {
       $scope.status.playlist_pressed=!$scope.status.playlist_pressed;
       if ($scope.status.playlist_pressed) {
-        $scope.status.displayed_content = 'playlist';
+        $scope.status.displayed_content = 'current_playlist';
       }
       else {
         $scope.status.displayed_content = '';
@@ -151,37 +208,79 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
     }
 
-    $scope.data_click = function(data) {
-      if ($scope.interface_port) {
-        $scope.interface_port.postMessage(
-        {
-          action: 'data_click',
-          click_type: 'album',
-          offset: data.offset,
-          id: data.id,
-          history: $scope.data.last_history,
-        });
+    $scope.data_click = function(type, data) {
+      var old_content = $scope.status.displayed_content;
+      if ($scope.interface_port && $scope.music_status.protocol == 'gmusic') {
+        $scope.status.displayed_content = 'loading';
+        switch (type) {
+          case 'recent':
+            $scope.status.displayed_content = '';
+          case 'album':
+          case 'artist':
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: type,
+              index: data.index,
+              id: data.id,
+              history: $scope.data.last_history,
+            });
+            if (type != 'recent') $scope.data.view_stack.push({
+              content: old_content,
+              title: $scope.data.title,
+              subtitle: $scope.data.subtitle
+            });
+            break;
+          case 'recent_station':
+          case 'my_station':
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: 'station',
+              station_type: type,
+              index: data.index,
+              history: $scope.data.last_history,
+            });
+            $scope.status.displayed_content = '';
+            break;
+          case 'recent_playlist':
+          case 'auto_playlist':
+          case 'my_playlist':
+            $scope.interface_port.postMessage(
+            {
+              action: 'data_click',
+              click_type: 'playlists',
+              playlist_type: type,
+              index: data.index,
+              history: $scope.data.last_history,
+            });
+            $scope.status.displayed_content = '';
+            break;
+        }
       }
-
-      $scope.status.displayed_content = 'loading';
     }
 
     $scope.drawer_click = function(clicked) {
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
         {
-          action: clicked,
+          action: 'get_' + clicked,
           offset: 0
         });
       }
 
       if (clicked != 'library') {
         $scope.status.displayed_content = 'loading';
+        $scope.data.title = clicked;
+        $scope.data.view_stack.length = 0;
       }
       else {
         $scope.status.displayed_content = '';
       }
-      $('.mdl-layout__obfuscator').click();
+
+      $scope.status.playlist_pressed = false;
+
+      $scope.status.drawer_open = false;
     }
 
     $scope.album_art_click = function() {
@@ -222,17 +321,30 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
               song.album == $scope.music_status.album);
     }
 
+    $scope.is_drawer_open = function() {
+      return $('.mdl-layout__drawer').hasClass('is-visible');
+    }
+
     $scope.handle_key = function($event) {
-      if ($event.keyCode == 32 || $event.charCode === 32) {
-        $scope.$apply(function() {
-          $scope.music_status.status = !$scope.music_status.status;
-        });
+      if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode == 32) {
+        $scope.music_status.status = !$scope.music_status.status;
         if ($scope.interface_port) {
           $scope.interface_port.postMessage(
           {
             action: 'send_command',
             type: 'play'
           });
+        }
+      }
+      else if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode == 8) {
+        if ($scope.data.view_stack.length > 0) {
+          var old_view = $scope.data.view_stack.pop();
+          $scope.status.displayed_content = old_view.content;
+          $scope.data.title = old_view.title;
+          $scope.data.subtitle = old_view.subtitle;
+        }
+        else {
+          $scope.status.displayed_content = '';
         }
       }
     }
@@ -280,24 +392,30 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.data[msg.type] = $scope.data[msg.type].slice(0, msg.offset).concat(msg.data);
             $scope.status.scrolling_busy = false;
             $scope.counts[msg.type] = msg.count;
-            $scope.data.last_history = msg.history;
+          }
+          else if (msg.type === 'playlists') {
+            $scope.data.playlists.my_playlists = $scope.data.playlists.my_playlists.slice(0, msg.offset).concat(msg.data.my_playlists);
+            $scope.data.playlists.auto_playlists = msg.data.auto_playlists;
+            $scope.data.playlists.recent_playlists = msg.data.recent_playlists;
+            $scope.status.scrolling_busy = false;
+            $scope.counts.playlists = msg.count;
+          }
+          else if (msg.type === 'search') {
+            $scope.data.search = msg.data;
+          }
+          else if (msg.type === 'artist') {
+            $scope.data.artist = msg.data;
+            $scope.data.title = msg.title;
+          }
+          else if (msg.type === 'playlist') {
+            $scope.data.playlist = msg.data;
+            $scope.data.title = msg.title;
+            $scope.data.subtitle = msg.subtitle;
           }
           else {
             $scope.data[msg.type] = msg.data;
-            $scope.data.last_history = msg.history;
           }
-          // else if (msg.type === 'albums') {
-          //   $scope.albums = msg.data;
-          // }
-          // else if (msg.type === 'stations') {
-          //   $scope.stations = msg.data;
-          // }
-          // else if (msg.type === 'recent') {
-          //   $scope.recents = msg.data;
-          // }
-          // else if (msg.type === 'playlists') {
-          //   $scope.playlists = msg.data;
-          // }
+          $scope.data.last_history = msg.history;
           $scope.status.displayed_content = msg.type;
         }
       }
@@ -309,6 +427,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           });
         }
         else {
+          $.extend($scope.music_status, response);
           if (response.title === '') {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.NO_SONG);
@@ -321,19 +440,18 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
                 response.current_time_s = $scope.current_time_s;
                 response.current_time = $scope.current_time;
               }
-              $.extend($scope.music_status, response);
 
               $scope.set_disabled(response.disabled_buttons);
 
-              // for (var i = 0; response.playlist && i < response.playlist.length; i++) {
-              //   if (response.playlist[i].title &&
-              //       ($scope.playlist.length <= i ||
-              //        response.playlist[i].title != $scope.playlist[i].title ||
-              //        response.playlist[i].currently_playing != $scope.playlist[i].currently_playing)) {
-              //     $scope.playlist[i] = response.playlist[i];
-              //     $scope.playlist[i].index = i;
-              //   }
-              // }
+              for (var i = 0; response.playlist && i < response.playlist.length; i++) {
+                if (response.playlist[i].title &&
+                    ($scope.data.current_playlist.length <= i ||
+                     response.playlist[i].title != $scope.data.current_playlist[i].title ||
+                     response.playlist[i].currently_playing != $scope.data.current_playlist[i].currently_playing)) {
+                  $scope.data.current_playlist[i] = response.playlist[i];
+                  $scope.data.current_playlist[i].index = i;
+                }
+              }
             });
           }
         }

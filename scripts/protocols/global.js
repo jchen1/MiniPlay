@@ -5,17 +5,19 @@ var old_status = null;
 var routes = {};
 
 function update() {
-  old_status = JSON.parse(JSON.stringify(music_status));
-  music_status.update();
-  var msg = create_background_msg(old_status, music_status);
-  if (msg != null) {
-    background_port.postMessage(msg);
-  }
-  if (popup_port) {
-    popup_port.postMessage({
-      'type': 'status',
-      'data': music_status
-    });
+  if (background_port && typeof(background_port) !== 'undefined') {
+    old_status = JSON.parse(JSON.stringify(music_status));
+    music_status.update();
+    var msg = create_background_msg(old_status, music_status);
+    if (msg != null) {
+      background_port.postMessage(msg);
+    }
+    if (popup_port) {
+      popup_port.postMessage({
+        'type': 'status',
+        'data': music_status
+      });
+    }
   }
 }
 

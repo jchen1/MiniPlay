@@ -170,6 +170,13 @@ body {
   color: #616161;
 }
 
+.playlist-table .song-title, .playlist-table .song-artist-album {
+  text-overflow: ellipsis;
+  max-width: 175px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .playlist-table .duration {
   text-align: right;
   vertical-align: middle;
@@ -189,7 +196,7 @@ header {
 #song-info {
   overflow: hidden;
   white-space: nowrap;
-  padding: 11 0 0 60;
+  padding: 11 0 0 20;
 }
 
 .mdl-layout__drawer-button > i {
@@ -198,7 +205,7 @@ header {
 
 #title {
   z-index: 1;
-  padding: 5 0 10 0;
+  padding: 5 20 10 0;
   position: relative;
 }
 
@@ -207,43 +214,19 @@ header {
   font-size: 12px;
   font-weight: 300;
   position: relative;
+  padding-right: 20;
 }
 
-#top-controls {
-  position: absolute;
-  list-style-type: none;
-  top: 17;
-  margin: 0;
-  right: 15;
-}
-
-#top-controls > li {
-  outline: none;
-  border: none;
+#subtitle a {
   color: white;
-  -webkit-filter: brightness(90%);
+  text-decoration: none;
+  font-weight: 300;
 }
 
-#top-controls > li:hover {
-  -webkit-animation: animbrightness 0.4s;
-  -webkit-filter: brightness(110%);
-}
-
-@-webkit-keyframes animbrightness {
-  0% {
-    -webkit-filter: brightness(90%);
-  }
-  100% {
-    -webkit-filter: brightness(110%);
-  }
-}
-
-#top-controls > li[disabled] {
-  display: none;
-}
-
-.top-control-active {
-  color: rgb(255, 87, 34)!important;
+#title, #subtitle div{
+  width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #current-time, #total-time {
@@ -314,7 +297,6 @@ header {
 
 #vol-wrapper {
   width: 150;
-  display: none;
   margin: 0 -10 0 -20;
 }
 
@@ -409,4 +391,38 @@ header {
   bottom: 0;
   right: 0;
   text-align: right;
+}
+
+.search-container {
+  padding: 0 16;
+  color: #757575;
+}
+
+.search-container i {
+  font-size: 18px;
+  position: absolute;
+  margin-top: 26px;
+}
+
+.search {
+  margin-bottom: 0;
+  padding-left: 28px;
+}
+
+.mdl-layout__drawer .mdl-navigation {
+  padding-top: 0;
+}
+
+.mdl-layout__drawer {
+  overflow-x: hidden;
+}
+
+.art-control-active {
+  color: rgb(255, 87, 34)!important;
+}
+
+.mdl-layout__drawer .mdl-navigation__link .material-icons {
+  padding-right: 10px;
+  font-size: 18px;
+  transform: translateY(4px);
 }

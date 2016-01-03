@@ -11,38 +11,54 @@
   <script src='scripts/controllers.js'></script>
   <script src='scripts/directives.js'></script>
 </head>
-<body ng-controller='PopupController' ng-keypress='handle_key($event)' ng-mouseup='status.slider_dragging = false'>
+<body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false' ng-keyup='handle_key($event)'>
 
-  <div id='popup' class='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
-    <header class='mdl-layout__header' ng-click='status.displayed_content=""'>
-      <div id='song-info' class='mdl-layout-title'>
-        <div id='title'>{{music_status.title}}</div>
-        <div id='subtitle' ng-style='{"display": music_status.state == StateEnum.PLAYING ? "block": "none"}'>{{music_status.artist}} - {{music_status.album}}</div>
+  <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
+    <header class='mdl-layout__header'>
+      <div class="mdl-layout__drawer-button" ng-click="menu_icon_click()" ng-if='music_status.protocol == "gmusic"'><i class="material-icons">{{menu_icon()}}</i></div>
+      <div id='song-info' class='mdl-layout-title' ng-style='{"padding-left": music_status.protocol == "gmusic" ? 60 : 20}'>
+        <div id='title' ng-style='{"text-transform": status.displayed_content == "" || status.displayed_content == "current_playlist" ? "none" : "capitalize", width: music_status.protocol == "gmusic" ? 240 : 280}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? music_status.title : data.title}}</div>
+        <div id='subtitle' ng-switch='status.displayed_content == "" || status.displayed_content == "current_playlist"' ng-style='{width: music_status.protocol == "gmusic" ? 240 : 280}'>
+          <div ng-switch-when='true' ng-hide='music_status.state != StateEnum.PLAYING'><a href='#' ng-click='data_click("artist", {id: music_status.artist_id})'>{{music_status.artist}}</a> <span ng-hide='music_status.album.length == 0'>-</span> <a href='#' ng-click='data_click("album", {id: music_status.album_id})'>{{music_status.album}}</a></div>
+          <div ng-switch-when='false'>{{data.subtitle}}</div>
+        </div>
       </div>
     </header>
-    <div class="mdl-layout__drawer">
-      <span class="mdl-layout-title" ng-click='drawer_click("library")'>MiniPlay</span>
+    <div class="mdl-layout__drawer" ng-class='{"is-visible": status.drawer_open}'>
+      <span class="mdl-layout-title" ng-click=''>MiniPlay</span>
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="">Search</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_recent")'>Recent</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_playlists")'>Playlists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_stations")'>Stations</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_artists")'>Artists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("get_albums")'>Albums</a>
-        <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'>Settings</a>
-        <p id='version'>MiniPlay v0.7.0 by Jeff Chen</p>
-
+        <div class='search-container'>
+          <i class="material-icons">search</i>
+          <form class='search' ng-submit='search()'>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search" focus-me='status.drawer_open' tabindex="-1" >
+              <label class="mdl-textfield__label" for="search">Search in library...</label>
+            </div>
+          </form>
+        </div>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("recent")'><i class='material-icons'>replay</i>Recent</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("playlists")'><i class='material-icons'>playlist_play</i>Playlists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("stations")'><i class='material-icons'>radio</i>Stations</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("artists")'><i class='material-icons'>person</i>Artists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("albums")'><i class='material-icons'>album</i>Albums</a>
+        <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'><i class='material-icons'>settings</i>Settings</a>
       </nav>
     </div>
     <div class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>
       <div id='art-controls'>
-        <i mp-control id='repeat' class='material-icons' ng-class='{"top-control-active": music_status.repeat != RepeatEnum.NONE}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
-        <i mp-control id='shuffle' class='material-icons' ng-class='{"top-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle'>shuffle</i>
+        <i mp-control id='repeat' class='material-icons' ng-class='{"art-control-active": music_status.repeat != RepeatEnum.NONE}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
+        <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": music_status.shuffle == true}' ng-disabled='music_status.state != StateEnum.PLAYING || music_status.disabled.shuffle' title='Shuffle songs' ng-click='music_status.shuffle=!music_status.shuffle'>shuffle</i>
       </div>
     </div>
-    <div id='list-content' ng-switch='status.displayed_content' infinite-scroll='scroll_data(status.displayed_content)' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='1'>
+    <div id='list-content' ng-switch='status.displayed_content' infinite-scroll='scroll_data(status.displayed_content)' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
       <div ng-switch-when='playlist'>
         <div id='playlist' ng-include src='"templates/playlist.html"'></div>
+      </div>
+      <div ng-switch-when='current_playlist'>
+        <div id='current_playlist' ng-include src='"templates/current_playlist.html"'></div>
+      </div>
+      <div ng-switch-when='playlists'>
+        <div id='playlists' ng-include src='"templates/playlists.html"'></div>
       </div>
       <div ng-switch-when='loading'>
         <div id='loading' ng-include src='"templates/loading.html"'></div>
@@ -56,11 +72,17 @@
       <div ng-switch-when='artists'>
         <div id='artists' ng-include src='"templates/artists.html"'></div>
       </div>
+      <div ng-switch-when='artist'>
+        <div id='artist' ng-include src='"templates/artist.html"'></div>
+      </div>
       <div ng-switch-when='albums'>
         <div id='albums' ng-include src='"templates/albums.html"'></div>
       </div>
       <div ng-switch-when='options'>
         <div id='options' ng-include src='"templates/options.html"'></div>
+      </div>
+      <div ng-switch-when='search'>
+        <div id='search' ng-include src='"templates/search.html"'></div>
       </div>
       <div id='list-none' ng-switch-default></div>
     </div>
@@ -75,6 +97,8 @@
       <div id='controls-right' ng-include src='"templates/controls-right.html"'></div>
 
     </div>
+
+    <div class='mdl-layout__obfuscator' ng-click='status.drawer_open = false' ng-class='{"is-visible": status.drawer_open}'></div>
   </div>
 
   <script src="scripts/material.min.js"></script>

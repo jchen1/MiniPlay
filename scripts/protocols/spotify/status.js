@@ -24,7 +24,7 @@ var music_status = {
 
   get_album_art : function () {
     var url = $('#app-player').contents().find('.sp-image-img').css('background-image');
-    return url ? url.substring(url.search('http'), url.indexOf(')')) : 'img/default_album.png';
+    return url ? url.substring(url.search('http'), url.indexOf(')') - 1) : 'img/default_album.png';
   },
 
   update : function() {

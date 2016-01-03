@@ -1,6 +1,5 @@
 // Finds which interface script to use
-
-$(function() {
+function load() {
   var urls = {
     gmusic: "play.google.com/music",
     pandora: "pandora.com",
@@ -14,4 +13,6 @@ $(function() {
       background_port.postMessage({"protocol": protocol});
     }
   }
-});
+}
+
+load();

@@ -339,10 +339,6 @@ header {
   font-size: 12px;
 }
 
-#options {
-  padding-left: 16px;
-}
-
 #options h3 {
   font-size: 16px;
   line-height: 24px;
@@ -358,9 +354,6 @@ header {
   overflow-y: hidden;
 }
 
-#options-table .mdl-data-table__cell--non-numeric span{
-  font-size: 11px;
-}
 .card-table {
   display: flex;
   flex-wrap: wrap;
@@ -425,4 +418,9 @@ header {
   padding-right: 10px;
   font-size: 18px;
   transform: translateY(4px);
+}
+
+.settings-group {
+  padding: 10 16;
+  border-bottom: 1px solid #757575;
 }

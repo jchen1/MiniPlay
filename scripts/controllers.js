@@ -7,13 +7,21 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.background_port = null;
     $scope.interface_port = null;
 
+    $scope.colors = {
+      gmusic: '#ef6c00',
+      pandora: '#455774',
+      spotify: '#84bd00',
+      none: 'rgb(244, 67, 54)'
+    };
+
     $scope.status = {
       vol_pressed: false,
       playlist_pressed: false,
       slider_dragging: false,
       displayed_content: '',
       scrolling_busy: false,
-      drawer_open: false
+      drawer_open: false,
+      current_color: $scope.colors.none
     };
 
     $scope.music_status = {
@@ -34,7 +42,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       thumb: ThumbEnum.NONE,
       artist_id: '',
       album_id: '',
-      protocol: ''
+      protocol: 'gmusic'
     };
 
     $scope.data = {
@@ -353,6 +361,20 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
+    $scope.change_color = function(new_color) {
+      var old_color = $scope.status.current_color;
+      for (var i = 0; i < document.styleSheets.length; i++) {
+        if (document.styleSheets[i].href) {
+          $.each(document.styleSheets[i].cssRules, function(index, rule) {
+            if (rule && rule.style && rule.cssText.indexOf(old_color) != -1) {
+              rule.style.cssText = rule.style.cssText.replace(old_color, new_color);
+            }
+          });
+        }
+      }
+      $scope.status.current_color = new_color;
+    }
+
     $scope.$on('$includeContentLoaded', function () {
       componentHandler.upgradeDom();
     });
@@ -435,11 +457,14 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           if (response.title === '') {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.NO_SONG);
+              $scope.change_color($scope.colors[response.protocol]);
             });
           }
           else {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.PLAYING);
+              $scope.change_color($scope.colors[response.protocol]);
+
               if ($scope.status.slider_dragging === true) {
                 response.current_time_s = $scope.current_time_s;
                 response.current_time = $scope.current_time;

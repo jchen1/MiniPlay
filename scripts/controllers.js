@@ -289,6 +289,13 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
+    $scope.clear_stack = function() {
+      $scope.data.view_stack.length = 0;
+      $scope.status.displayed_content = '';
+      $scope.data.title = '';
+      $scope.data.subtitle = '';
+    }
+
     $scope.scroll_data = function(content_type) {
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(

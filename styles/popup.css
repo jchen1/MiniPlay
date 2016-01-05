@@ -223,8 +223,8 @@ header {
   font-weight: 300;
 }
 
-#title, #subtitle div{
-  width: 240px;
+#title, #subtitle div {
+  width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -397,4 +397,17 @@ header {
   padding-right: 10px;
   font-size: 18px;
   transform: translateY(4px);
+}
+
+.settings-group {
+  padding: 10 16;
+  border-bottom: 1px solid #757575;
+}
+
+.close-button {
+  margin: 4px;
+  position: absolute;
+  right: 10px;
+  top: 11px;
+  z-index: 2;
 }

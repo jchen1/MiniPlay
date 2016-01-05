@@ -16,9 +16,10 @@
   <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header'>
       <div class="mdl-layout__drawer-button" ng-click="menu_icon_click()" ng-if='music_status.protocol == "gmusic"'><i class="material-icons">{{menu_icon()}}</i></div>
+      <i class='material-icons close-button' ng-click='clear_stack()' ng-show='data.view_stack.length > 0'>close</i>
       <div id='song-info' class='mdl-layout-title' ng-style='{"padding-left": music_status.protocol == "gmusic" ? 60 : 20}'>
-        <div id='title' ng-style='{"text-transform": status.displayed_content == "" || status.displayed_content == "current_playlist" ? "none" : "capitalize", width: music_status.protocol == "gmusic" ? 240 : 280}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? music_status.title : data.title}}</div>
-        <div id='subtitle' ng-switch='status.displayed_content == "" || status.displayed_content == "current_playlist"' ng-style='{width: music_status.protocol == "gmusic" ? 240 : 280}'>
+        <div id='title' ng-style='{"text-transform": status.displayed_content == "" || status.displayed_content == "current_playlist" ? "none" : "capitalize", width: music_status.protocol == "gmusic" ? 220 : 260}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? music_status.title : data.title}}</div>
+        <div id='subtitle' ng-switch='status.displayed_content == "" || status.displayed_content == "current_playlist"' ng-style='{width: music_status.protocol == "gmusic" ? 220 : 260}'>
           <div ng-switch-when='true' ng-hide='music_status.state != StateEnum.PLAYING'><a href='#' ng-click='data_click("artist", {id: music_status.artist_id})'>{{music_status.artist}}</a> <span ng-hide='music_status.album.length == 0'>-</span> <a href='#' ng-click='data_click("album", {id: music_status.album_id})'>{{music_status.album}}</a></div>
           <div ng-switch-when='false'>{{data.subtitle}}</div>
         </div>

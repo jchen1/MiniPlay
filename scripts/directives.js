@@ -46,6 +46,29 @@ popupApp.directive('mpSlider', function() {
   }
 });
 
+popupApp.directive('mdlSwitch', function() {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      scope.$watch(attrs.ngModel, function(newValue, oldValue) {
+        var mdl_switch = element[0].parentElement.MaterialSwitch;
+        var func = (newValue) ? 'on' : 'off';
+        var attr = element[0].getAttribute('ng-model').split('"')[1];
+
+        if (mdl_switch) mdl_switch[func]();
+
+        console.log(attr + ', ' + newValue);
+
+        if (typeof(newValue) !== 'undefined') {
+          var new_setting = {};
+          new_setting[attr] = newValue;
+          chrome.storage.sync.set(new_setting);
+        }
+      });
+    }
+  }
+})
+
 popupApp.directive('mpVolslider', function() {
   return {
     restrict: 'C',

@@ -78,6 +78,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       view_stack: []
     }
 
+    $scope.settings = {};
+
     $scope.counts = {};
 
     $scope.repeat_icon = function() {
@@ -209,8 +211,9 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.settings_click = function($event) {
-      chrome.tabs.create({url: chrome.extension.getURL('options.html')});
-      $event.stopPropagation();
+      $scope.status.displayed_content = 'options';
+      $scope.status.drawer_open = false;
+      $scope.data.title = 'options';
     }
 
     $scope.data_click = function(type, data) {
@@ -315,6 +318,14 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       $scope.status.scrolling_busy = true;
     }
 
+    $scope.lastfm_auth = function() {
+      chrome.runtime.sendMessage({type: 'auth'}, function (response) {});
+    }
+
+    $scope.launch_settings = function() {
+      chrome.tabs.create({url: "chrome://extensions"});
+    }
+
     $scope.should_disable_scroll = function() {
       if ($scope.status.scrolling_busy) return true;
 
@@ -377,6 +388,14 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
     $scope.$on('$includeContentLoaded', function () {
       componentHandler.upgradeDom();
+
+      if (src == 'templates/options.html') {
+        chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'], function(data) {
+          $scope.$apply(function() {
+            $.extend($scope.settings, data);
+          });
+        });
+      }
     });
 
     var init = function () {
@@ -397,6 +416,25 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.set_state(StateEnum.NO_SONG);
           });
         }
+      });
+
+      chrome.storage.onChanged.addListener(function(changes, area) {
+        $scope.$apply(function() {
+          if (area == 'sync') {
+            if (changes['notifications-enabled']) {
+              $scope.settings['notifications-enabled'] = changes['notifications-enabled'].newValue;
+            }
+            if (changes['shortcuts-enabled']) {
+              $scope.settings['shortcuts-enabled'] = changes['shortcuts-enabled'].newValue;
+            }
+            if (changes['scrobbling-enabled']) {
+              $scope.settings['scrobbling-enabled'] = changes['scrobbling-enabled'].newValue;
+            }
+            if (changes['lastfm_sessionID']) {
+              $scope.settings['lastfm_sessionID'] = changes['lastfm_sessionID'].newValue;
+            }
+          }
+        });
       });
 
       function setupAnalytics() {

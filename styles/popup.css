@@ -333,6 +333,27 @@ header {
   display: none;
 }
 
+#version {
+  padding-left: 16px;
+  color: #aaa;
+  font-size: 12px;
+}
+
+#options h3 {
+  font-size: 16px;
+  line-height: 24px;
+  margin: 10px 0;
+}
+
+#options p {
+  line-height: 1.4;
+  margin: 10px 0;
+}
+
+.mdl-layout__drawer {
+  overflow-y: hidden;
+}
+
 .card-table {
   display: flex;
   flex-wrap: wrap;

@@ -51,13 +51,13 @@ var music_status = {
 
   get_playlist : function() {
     var playlist_root = document.querySelector('#queueContainer > .queue-song-table > .song-table > tbody');
+    if (!playlist_root) {
+      return [];
+    }
+
     var playlist_count = playlist_root.getAttribute('data-count');
     var playlist_arr = playlist_root.querySelectorAll('.song-row');
     var playlist = [];
-
-    if (!playlist_count) {
-      return [];
-    }
 
     for (var i = 0; i < playlist_count; i++) {
       var playlist_item = playlist_arr[i];
@@ -81,14 +81,30 @@ var music_status = {
   },
 
   update : function() {
-    this.title = document.querySelector('#currently-playing-title').innerText;
-    this.artist = document.querySelector('#player-artist').innerText;
-    this.artist_id = document.querySelector('#player-artist').getAttribute('data-id');
-    this.album = document.querySelector('.player-album').innerText;
-    this.album_id = document.querySelector('.player-album').getAttribute('data-id');
-    this.album_art = get_album_art(document.querySelector('#playerBarArt').getAttribute('src'));
-    this.current_time = document.querySelector('#time_container_current').innerText;
-    this.total_time = document.querySelector('#time_container_duration').innerText;
+    this.title = document.querySelector('#currently-playing-title');
+    this.title = (this.title == null) ? '' : this.title.innerText;
+
+    this.artist = document.querySelector('#player-artist');
+    this.artist = (this.artist == null) ? '' : this.artist.innerText;
+
+    this.artist_id = document.querySelector('#player-artist');
+    this.artist_id = (this.artist_id == null) ? '' : this.artist_id.getAttribute('data-id');
+
+    this.album = document.querySelector('.player-album');
+    this.album = (this.album == null) ? '' : this.album.innerText;
+
+    this.album_id = document.querySelector('.player-album');
+    this.album_id = (this.album_id == null) ? '' : this.album_id.getAttribute('data-id');
+
+    this.album_art = document.querySelector('#playerBarArt');
+    this.album_art = get_album_art((this.album_art == null) ? 'http://undefined' : this.album_art.getAttribute('src'));
+
+    this.current_time = document.querySelector('#time_container_current');
+    this.current_time = (this.current_time == null) ? '' : this.current_time.innerText;
+
+    this.total_time = document.querySelector('#time_container_duration');
+    this.total_time = (this.total_time == null) ? '' : this.total_time.innerText;
+
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.get_time(this.total_time);
     this.thumb = this.get_thumb();

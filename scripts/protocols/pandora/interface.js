@@ -22,25 +22,25 @@ function update_slider(position) {  //position is in %
 }
 
 function send_command(message) {
-  var $button = null;
+  var button = null;
   switch (message.type) {
     case 'play':
-      $button = $('.playButton');
-      if ($button.css('display') == "none") {
-        $button = $('.pauseButton');
+      button = document.querySelector('.playButton');
+      if (getComputedStyle(button).display === "none") {
+        button = document.querySelector('.pauseButton');
       }
       break;
     case 'ff':
-      $button = $('.skipButton'); break;
+      button = document.querySelector('.skipButton'); break;
     case 'up':
-      $button = $('.thumbUpButton'); break;
+      button = document.querySelector('.thumbUpButton'); break;
     case 'down':
-      $button = $('.thumbDownButton'); break;
+      button = document.querySelector('.thumbDownButton'); break;
     case 'vslider':
       update_slider(message.position); break;
   }
-  if ($button !== null) {
-    $button.click();
+  if (button !== null) {
+    button.click();
   }
   window.setTimeout( function() {
     update();

@@ -386,7 +386,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       $scope.status.current_color = new_color;
     }
 
-    $scope.$on('$includeContentLoaded', function () {
+    $scope.$on('$includeContentLoaded', function (event, src) {
       componentHandler.upgradeDom();
 
       if (src == 'templates/options.html') {

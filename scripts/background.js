@@ -14,6 +14,7 @@ chrome.runtime.onConnect.addListener(function(port) {
         chrome.tabs.executeScript(port.id, {file: "scripts/enums.js"});
         chrome.tabs.executeScript(port.id, {file: "scripts/jquery.js"});
         chrome.tabs.executeScript(port.id, {file: "scripts/protocols/global.js"});
+        chrome.tabs.executeScript(port.id, {file: "scripts/protocols/" + msg.protocol + "/constants.js"});
         chrome.tabs.executeScript(port.id, {file: "scripts/protocols/" + msg.protocol + "/status.js"});
         chrome.tabs.executeScript(port.id, {file: "scripts/protocols/" + msg.protocol + "/interface.js"});
       }

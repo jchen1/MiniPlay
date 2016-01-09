@@ -153,41 +153,41 @@ function update_slider(position, slidername) {  //position is in %
 }
 
 function send_command(message) {
-  var $button = null;
+  var button = null;
   switch (message.type) {
     case 'play':
-      $button = $('paper-icon-button[data-id="play-pause"]');
+      button = document.querySelector('paper-icon-button[data-id="play-pause"]');
       break;
     case 'rew':
-      $button = $('paper-icon-button[data-id="rewind"]'); break;
+      button = document.querySelector('paper-icon-button[data-id="rewind"]'); break;
     case 'ff':
-      $button = $('paper-icon-button[data-id="forward"]'); break;
+      button = document.querySelector('paper-icon-button[data-id="forward"]'); break;
     case 'up':
-      $button = $('paper-icon-button[data-rating="5"]'); break;
+      button = document.querySelector('paper-icon-button[data-rating="5"]'); break;
     case 'down':
-      $button = $('paper-icon-button[data-rating="1"]'); break;
+      button = document.querySelector('paper-icon-button[data-rating="1"]'); break;
     case 'shuffle':
-      $button = $('paper-icon-button[data-id="shuffle"]'); break;
+      button = document.querySelector('paper-icon-button[data-id="shuffle"]'); break;
     case 'repeat':
-      $button = $('paper-icon-button[data-id="repeat"]'); break;
+      button = document.querySelector('paper-icon-button[data-id="repeat"]'); break;
     case 'slider':
       update_slider(message.position, 'material-player-progress'); break;
     case 'vslider':
       update_slider(message.position, 'material-vslider'); break;
     case 'playlist':
-      $button = $('.song-table > tbody > .song-row[data-id="'+message.id+'"] > td[data-col="song-details"] button'); break;
+      button = document.querySelector('.song-table > tbody > .song-row[data-id="'+message.id+'"] > td[data-col="song-details"] button'); break;
     case 'playlist-button':
       // Toggle the playlist to set it up for viewing
-      if (!$('#queue-overlay').hasClass('sj-opened')) {
-        $('#queue').click();
+      if (!document.querySelector('#queue-overlay').classList.contains('sj-opened')) {
+        document.querySelector('#queue').click();
         window.setTimeout(function() {
-          $('#queue').click();
+          document.querySelector('#queue').click();
         }, 100);
       }
       break;
   }
-  if ($button !== null) {
-    $button.click();
+  if (button !== null) {
+    button.click();
   }
   window.setTimeout( function() {
     update();

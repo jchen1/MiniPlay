@@ -92,8 +92,8 @@
       <p id='slider-wrapper'>
         <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{music_status.total_time_s}}' value='{{music_status.current_time_s}}' ng-mousedown='status.slider_dragging = true' tabindex="-1" />
       </p>
-      <div id='current-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.current_time}}</div>
-      <div id='total-time' ng-disabled='music_status.state != StateEnum.PLAYING'>{{music_status.total_time}}</div>
+      <div id='current-time' ng-show='music_status.state == StateEnum.PLAYING'>{{music_status.current_time}}</div>
+      <div id='total-time' ng-show='music_status.state == StateEnum.PLAYING'>{{music_status.total_time}}</div>
       <div id='controls-left' ng-include src='"templates/controls-left.html"'></div>
       <div id='controls-right' ng-include src='"templates/controls-right.html"'></div>
     </footer>

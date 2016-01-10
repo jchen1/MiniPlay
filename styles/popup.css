@@ -431,4 +431,5 @@ header {
   right: 10px;
   top: 11px;
   z-index: 2;
+  cursor: pointer;
 }

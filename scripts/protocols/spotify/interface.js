@@ -56,6 +56,11 @@ function send_command(message) {
   }, 30);
 }
 
-$(function() {
+function init() {
   route('send_command', send_command);
-});
+}
+
+document.addEventListener('DOMContentLoaded', init);
+if (document.readyState != 'loading') {
+  init();
+}

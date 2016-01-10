@@ -502,7 +502,7 @@ function data_click(msg) {
   });
 }
 
-$(function() {
+function init() {
   route('get_artists', get_artists);
   route('get_albums', get_albums);
   route('get_playlists', get_playlists);
@@ -533,4 +533,9 @@ $(function() {
   });
 
   observer.observe(trigger, {attributes: true});
-});
+}
+
+document.addEventListener('DOMContentLoaded', init);
+if (document.readyState != 'loading') {
+  init();
+}

@@ -61,6 +61,8 @@ var music_status = {
 
     for (var i = 0; i < playlist_count; i++) {
       var playlist_item = playlist_arr[i];
+      if (playlist_item == null) continue;
+      
       var item = {};
       item.title = playlist_item.querySelector('.song-title').innerText;
       item.artist = playlist_item.querySelector('td[data-col="artist"] > span > a').innerText;
@@ -69,7 +71,9 @@ var music_status = {
       item.total_time = playlist_item.querySelector('td[data-col="duration"] > span').innerText;
       item.total_time_s = this.get_time(item.total_time);
 
-      item.play_count = playlist_item.querySelector('td[data-col="play-count"] > span').innerText;
+      item.play_count = playlist_item.querySelector('td[data-col="play-count"] > span');
+      if (item.play_count == null) item.play_count = '0';
+
       item.currently_playing = playlist_item.classList.contains('currently-playing');
 
       item.id = playlist_item.getAttribute('data-id');

@@ -363,7 +363,7 @@ header {
 
 .card-image.mdl-card {
   flex: 0 0 auto;
-  width: 150;
+  width: calc(50% - 10px);
   margin: 5;
   display: flex;
 }

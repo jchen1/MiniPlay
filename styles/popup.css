@@ -249,6 +249,7 @@ header {
   width: 372;
   margin: -8 0 0 -26;
   z-index: 1;
+  top: 0;
   position: absolute;
 }
 

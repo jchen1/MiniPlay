@@ -7,13 +7,21 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     $scope.background_port = null;
     $scope.interface_port = null;
 
+    $scope.colors = {
+      gmusic: '#ef6c00',
+      pandora: '#455774',
+      spotify: '#84bd00',
+      none: 'rgb(244, 67, 54)'
+    };
+
     $scope.status = {
       vol_pressed: false,
       playlist_pressed: false,
       slider_dragging: false,
       displayed_content: '',
       scrolling_busy: false,
-      drawer_open: false
+      drawer_open: false,
+      current_color: $scope.colors.none
     };
 
     $scope.music_status = {
@@ -34,7 +42,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       thumb: ThumbEnum.NONE,
       artist_id: '',
       album_id: '',
-      protocol: ''
+      protocol: 'gmusic'
     };
 
     $scope.data = {
@@ -69,6 +77,8 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       subtitle: '',
       view_stack: []
     }
+
+    $scope.settings = {};
 
     $scope.counts = {};
 
@@ -201,8 +211,9 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.settings_click = function($event) {
-      chrome.tabs.create({url: chrome.extension.getURL('options.html')});
-      $event.stopPropagation();
+      $scope.status.displayed_content = 'options';
+      $scope.status.drawer_open = false;
+      $scope.data.title = 'options';
     }
 
     $scope.data_click = function(type, data) {
@@ -289,6 +300,13 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
+    $scope.clear_stack = function() {
+      $scope.data.view_stack.length = 0;
+      $scope.status.displayed_content = '';
+      $scope.data.title = '';
+      $scope.data.subtitle = '';
+    }
+
     $scope.scroll_data = function(content_type) {
       if ($scope.interface_port) {
         $scope.interface_port.postMessage(
@@ -298,6 +316,14 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         });
       }
       $scope.status.scrolling_busy = true;
+    }
+
+    $scope.lastfm_auth = function() {
+      chrome.runtime.sendMessage({type: 'auth'}, function (response) {});
+    }
+
+    $scope.launch_settings = function() {
+      chrome.tabs.create({url: "chrome://extensions"});
     }
 
     $scope.should_disable_scroll = function() {
@@ -346,8 +372,30 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       }
     }
 
-    $scope.$on('$includeContentLoaded', function () {
+    $scope.change_color = function(new_color) {
+      var old_color = $scope.status.current_color;
+      for (var i = 0; i < document.styleSheets.length; i++) {
+        if (document.styleSheets[i].href) {
+          $.each(document.styleSheets[i].cssRules, function(index, rule) {
+            if (rule && rule.style && rule.cssText.indexOf(old_color) != -1) {
+              rule.style.cssText = rule.style.cssText.replace(old_color, new_color);
+            }
+          });
+        }
+      }
+      $scope.status.current_color = new_color;
+    }
+
+    $scope.$on('$includeContentLoaded', function (event, src) {
       componentHandler.upgradeDom();
+
+      if (src == 'templates/options.html') {
+        chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'], function(data) {
+          $scope.$apply(function() {
+            $.extend($scope.settings, data);
+          });
+        });
+      }
     });
 
     var init = function () {
@@ -368,6 +416,25 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
             $scope.set_state(StateEnum.NO_SONG);
           });
         }
+      });
+
+      chrome.storage.onChanged.addListener(function(changes, area) {
+        $scope.$apply(function() {
+          if (area == 'sync') {
+            if (changes['notifications-enabled']) {
+              $scope.settings['notifications-enabled'] = changes['notifications-enabled'].newValue;
+            }
+            if (changes['shortcuts-enabled']) {
+              $scope.settings['shortcuts-enabled'] = changes['shortcuts-enabled'].newValue;
+            }
+            if (changes['scrobbling-enabled']) {
+              $scope.settings['scrobbling-enabled'] = changes['scrobbling-enabled'].newValue;
+            }
+            if (changes['lastfm_sessionID']) {
+              $scope.settings['lastfm_sessionID'] = changes['lastfm_sessionID'].newValue;
+            }
+          }
+        });
       });
 
       function setupAnalytics() {
@@ -428,11 +495,14 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
           if (response.title === '') {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.NO_SONG);
+              $scope.change_color($scope.colors[response.protocol]);
             });
           }
           else {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.PLAYING);
+              $scope.change_color($scope.colors[response.protocol]);
+
               if ($scope.status.slider_dragging === true) {
                 response.current_time_s = $scope.current_time_s;
                 response.current_time = $scope.current_time;

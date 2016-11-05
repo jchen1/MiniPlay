@@ -223,8 +223,8 @@ header {
   font-weight: 300;
 }
 
-#title, #subtitle div{
-  width: 240px;
+#title, #subtitle div {
+  width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -249,6 +249,7 @@ header {
   width: 372;
   margin: -8 0 0 -26;
   z-index: 1;
+  top: 0;
   position: absolute;
 }
 
@@ -333,6 +334,27 @@ header {
   display: none;
 }
 
+#version {
+  padding-left: 16px;
+  color: #aaa;
+  font-size: 12px;
+}
+
+#options h3 {
+  font-size: 16px;
+  line-height: 24px;
+  margin: 10px 0;
+}
+
+#options p {
+  line-height: 1.4;
+  margin: 10px 0;
+}
+
+.mdl-layout__drawer {
+  overflow-y: hidden;
+}
+
 .card-table {
   display: flex;
   flex-wrap: wrap;
@@ -390,11 +412,25 @@ header {
 }
 
 .art-control-active {
-  color: rgb(255, 87, 34)!important;
+  color: rgb(244, 67, 54)!important;
 }
 
 .mdl-layout__drawer .mdl-navigation__link .material-icons {
   padding-right: 10px;
   font-size: 18px;
   transform: translateY(4px);
+}
+
+.settings-group {
+  padding: 10 16;
+  border-bottom: 1px solid #757575;
+}
+
+.close-button {
+  margin: 4px;
+  position: absolute;
+  right: 10px;
+  top: 11px;
+  z-index: 2;
+  cursor: pointer;
 }

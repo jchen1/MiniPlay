@@ -1,0 +1,29 @@
+<div class='options'>
+  <div class='settings-group'>
+    <label class="mdl-switch mdl-js-switch" for="switch_notifications">
+      <input type="checkbox" id="switch_notifications" class="mdl-switch__input" ng-model='settings["notifications-enabled"]' mdl-switch>
+      <span class="mdl-switch__label">Notifications</span>
+    </label>
+  </div>
+  <div class='settings-group'>
+    <label class="mdl-switch mdl-js-switch" for="switch_shortcuts">
+      <input type="checkbox" id="switch_shortcuts" class="mdl-switch__input" ng-model='settings["shortcuts-enabled"]' mdl-switch>
+      <span class="mdl-switch__label">Shortcuts</span>
+    </label>
+    <p>
+      Modify individual shortcuts by clicking on Keyboard Shortcuts at the bottom of <a href='#' id='extension' ng-click='launch_settings()'>chrome://extensions</a>.
+    </p>
+  </div>
+  <div class='settings-group'>
+    <label class="mdl-switch mdl-js-switch" for="switch_lastfm">
+      <input type="checkbox" id="switch_lastfm" class="mdl-switch__input" ng-model='settings["scrobbling-enabled"]' mdl-switch>
+      <span class="mdl-switch__label">Last.fm scrobbling</span>
+    </label>
+    <p id='login' ng-show='settings["scrobbling-enabled"]'>
+      <a href='#' ng-click='lastfm_auth()'>Authorize Last.fm account</a>
+      <p id='auth' ng-show='settings["lastfm_sessionID"]'>
+        You appear to be logged in. If you are having problems scrobbling, reauthorizing may fix the issue.
+      </p>
+    </p>
+  </div>
+</div>

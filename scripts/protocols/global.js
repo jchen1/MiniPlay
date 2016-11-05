@@ -48,7 +48,7 @@ function handle_message(msg) {
   }
 }
 
-$(function() {
+function global_init() {
   background_port = chrome.runtime.connect({name: "interface"});
 
   route('update_status', update);
@@ -67,5 +67,10 @@ $(function() {
   });
 
   window.setInterval(update, 1000);
-});
+}
+
+document.addEventListener('DOMContentLoaded', global_init);
+if (document.readyState != 'loading') {
+  global_init();
+}
 

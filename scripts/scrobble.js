@@ -31,7 +31,7 @@ function get_session_id(cb) {
       auth();
       cb('');
     }
-    else if (data['lastfm_sessionID'] !== undefined) {
+    else if (data['lastfm_sessionID'] !== undefined && data['lastfm_sessionID'].length > 0) {
       cb(data['lastfm_sessionID']);
     }
     else {

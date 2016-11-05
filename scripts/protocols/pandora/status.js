@@ -23,21 +23,21 @@ var music_status = {
   },
 
   get_album_art : function () {
-    var array = $('.slidesForeground .art');
+    var array = document.querySelectorAll('.slidesForeground .art');
     for (var i = 0; i < array.length; i++) {
       var item = array[i];
-      if ($(item).css('display') == 'inline') {
-        return $(item).attr('src');
+      if (getComputedStyle(item).display == 'inline') {
+        return item.getAttribute('src');
       }
     }
     return 'img/default_album.png';
   },
 
   get_thumb : function () {
-    if ($('.thumbUpButton').hasClass('indicator')) {
+    if (document.querySelector('.thumbUpButton').classList.contains('indicator')) {
       return ThumbEnum.UP;
     }
-    else if ($('.thumbDownButton').hasClass('indicator')) {
+    else if (document.querySelector('.thumbDownButton').classList.contains('indicator')) {
       return ThumbEnum.DOWN;
     }
     else {
@@ -46,17 +46,17 @@ var music_status = {
   },
 
   update : function() {
-    this.title = $('.playerBarSong').text();
-    this.artist = $('.playerBarArtist').text();
-    this.album = $('.playerBarAlbum').text();
+    this.title = document.querySelector('.playerBarSong').innerText;
+    this.artist = document.querySelector('.playerBarArtist').innerText;
+    this.album = document.querySelector('.playerBarAlbum').innerText;
     this.album_art = this.get_album_art();
-    this.current_time = $('.elapsedTime').text();
-    this.total_time = $('.remainingTime').text();
+    this.current_time = document.querySelector('.elapsedTime').innerText;
+    this.total_time = document.querySelector('.remainingTime').innerText;
     this.current_time_s = this.get_time(this.current_time);
     this.total_time_s = this.current_time_s + this.get_time(this.total_time);
     this.thumb = this.get_thumb();
-    this.volume = (parseInt($('.volumeKnob').css('left'), 10) - 20) / 82 * 100;
-    this.status = ($('.playButton').css('display') == "none") ? StatusEnum.PLAYING : StatusEnum.PAUSED;
+    this.volume = (parseInt(getComputedStyle(document.querySelector('.volumeKnob')).left, 10) - 20) / 82 * 100;
+    this.status = (getComputedStyle(document.querySelector('.playButton')).display == "none") ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     return this;
   }
 };

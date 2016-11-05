@@ -30,32 +30,37 @@ function update_slider(position, slider) {  //position is in %
 }
 
 function send_command(message) {
-  var iframe = $('#app-player').contents();
-  var $button = null;
+  var iframe = document.querySelector('#app-player').contentDocument;
+  var button = null;
   switch (message.type) {
     case 'play':
-      $button = iframe.find('#play-pause'); break;
+      button = iframe.querySelector('#play-pause'); break;
     case 'rew':
-      $button = iframe.find('#previous'); break;
+      button = iframe.querySelector('#previous'); break;
     case 'ff':
-      $button = iframe.find('#next'); break;
+      button = iframe.querySelector('#next'); break;
     case 'shuffle':
-      $button = iframe.find('#shuffle'); break;
+      button = iframe.querySelector('#shuffle'); break;
     case 'repeat':
-      $button = iframe.find('#repeat'); break;
+      button = iframe.querySelector('#repeat'); break;
     case 'slider':
       update_slider(message.position, 'slider'); break;
     case 'vslider':
       update_slider(message.position, 'vslider'); break;
   }
-  if ($button !== null) {
-    $button.click();
+  if (button !== null) {
+    button.click();
   }
   window.setTimeout( function() {
     update();
   }, 30);
 }
 
-$(function() {
+function init() {
   route('send_command', send_command);
-});
+}
+
+document.addEventListener('DOMContentLoaded', init);
+if (document.readyState != 'loading') {
+  init();
+}

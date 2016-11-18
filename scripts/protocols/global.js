@@ -28,12 +28,12 @@ function create_background_msg(oldValue, newValue) {
   if (oldValue !== undefined && (oldValue.title != newValue.title ||
       oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
 
-    // There's a bug wwhere 2 notifications are shown sometimes
+    // There's a bug where 2 notifications are shown sometimes
     // because the album artwork takes a while to load. The first
     // notification will have the new title and artist, but old artwork.
     //
     // This fix prevents that notification from being displayed, showing
-    // the notification only once the new artwork is also fetched.
+    // the notification only once the new artwork is also fetched.p
     if (oldValue.title != newValue.title && oldValue.artist != newValue.artist &&
        oldValue.album_art == newValue.album_art) {
       return null;

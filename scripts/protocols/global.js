@@ -18,6 +18,7 @@ function update() {
         'data': music_status
       });
     }
+
   }
 }
 
@@ -27,6 +28,13 @@ function create_background_msg(oldValue, newValue) {
   msg.newValue = newValue;
   if (oldValue !== undefined && (oldValue.title != newValue.title ||
       oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
+
+    // hacky check for fake out
+    if (oldValue.title != newValue.title && oldValue.artist != newValue.artist &&
+       oldValue.album_art == newValue.album_art) {
+      return null;
+    }
+
     msg.scrobble = true;
     if (newValue.title != '') {
       msg.notify = true;

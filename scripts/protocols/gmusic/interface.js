@@ -287,11 +287,11 @@ function get_recent(msg) {
   var history = [
   {
     type: 'url',
-    url: '#/now'
+    url: '#/recents'
   }];
 
   restore_state(history, msg, function(msg) {
-    var raw_recent = document.querySelectorAll('.cluster[data-type="recent"] .material-card');
+    var raw_recent = document.querySelectorAll('.gpm-card-grid sj-card');
 
     var recent = parse_raw_data(raw_recent, 0, recent_map);
 
@@ -477,12 +477,16 @@ function data_click(msg) {
       }
     }
 
+    // TODO do this without going to the album page...
     else if (msg.click_type == 'recent') {
-      document.querySelector('.cluster[data-type="recent"] .material-card[data-log-position="'+msg.index+'"] .play-button-container').click();
-
-      window.setTimeout( function() {
-        update();
-      }, 30);
+      var card = document.querySelectorAll('gpm-card-grid sj-card')[msg.index];
+      var url = card.getAttribute('data-type') + '/' + card.getAttribute('data-id');
+      go_to_url('#/' + url, function() {
+        document.querySelector('paper-fab[data-id="play"]').click();
+        window.setTimeout( function() {
+          update();
+        }, 30);
+      });
     }
 
     else if (msg.click_type == 'station') {

@@ -10,9 +10,7 @@
       <input type="checkbox" id="switch_shortcuts" class="mdl-switch__input" ng-model='settings["shortcuts-enabled"]' mdl-switch>
       <span class="mdl-switch__label">Shortcuts</span>
     </label>
-    <p>
-      Modify individual shortcuts by clicking on Keyboard Shortcuts at the bottom of <a href='#' id='extension' ng-click='launch_settings()'>chrome://extensions</a>.
-    </p>
+    <a href='#' ng-click='launch_settings()'>Modify keybindings</a>
   </div>
   <div class='settings-group'>
     <label class="mdl-switch mdl-js-switch" for="switch_lastfm">

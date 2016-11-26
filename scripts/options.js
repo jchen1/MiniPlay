@@ -1,6 +1,6 @@
 $(function() {
   $('#extension').click(function() {
-    chrome.tabs.create({url: "chrome://chrome/extensions"});
+    chrome.tabs.create({url: "chrome://extensions/configureCommands"});
   });
 
   chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'], function (data) {

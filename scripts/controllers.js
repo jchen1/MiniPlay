@@ -323,7 +323,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
     }
 
     $scope.launch_settings = function() {
-      chrome.tabs.create({url: "chrome://extensions"});
+      chrome.tabs.create({url: "chrome://extensions/configureCommands"});
     }
 
     $scope.should_disable_scroll = function() {

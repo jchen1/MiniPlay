@@ -1,37 +1,36 @@
 // Interfaces with the spotify tab
 
-//TODO: fix
-function update_slider(position, slider) {  //position is in %
-  var slider;
-  if (slider == 'slider') {
-    slider = document.getElementById('app-player').contentWindow.document.getElementById('bar-click');
-  }
-  else if (slider == 'vslider') {
-    var button = document.getElementById('app-player').contentWindow.document.getElementById('volume-show');
-    var evt = document.createEvent('MouseEvents');
+// TODO: fix
+function updateSlider(position, slider) {  // position is in %
+  let sliderElem;
+  if (slider === 'slider') {
+    sliderElem = document.getElementById('app-player').contentWindow.document.getElementById('bar-click');
+  } else if (slider === 'vslider') {
+    const button = document.getElementById('app-player').contentWindow.document.getElementById('volume-show');
+    const evt = document.createEvent('MouseEvents');
     evt.initMouseEvent('mouseover', true, false);
     button.dispatchEvent(evt);
-    slider = document.getElementById('app-player').contentWindow.document.getElementById('volume-click');
+    sliderElem = document.getElementById('app-player').contentWindow.document.getElementById('volume-click');
   }
-  var newWidth = Math.round(position * slider.offsetWidth);
-  var rect = slider.getBoundingClientRect();
+  const newWidth = Math.round(position * sliderElem.offsetWidth);
+  const rect = sliderElem.getBoundingClientRect();
 
-  slider.dispatchEvent(new MouseEvent('mousedown', {
-    clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
-    clientY: rect.top + slider.clientTop - slider.scrollTop,
+  sliderElem.dispatchEvent(new MouseEvent('mousedown', {
+    clientX: newWidth + rect.left + sliderElem.clientLeft - sliderElem.scrollLeft,
+    clientY: rect.top + sliderElem.clientTop - sliderElem.scrollTop,
     bubbles: true
   }));
 
-  slider.dispatchEvent(new MouseEvent('mouseup', {
-    clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
-    clientY: rect.top + slider.clientTop - slider.scrollTop,
+  sliderElem.dispatchEvent(new MouseEvent('mouseup', {
+    clientX: newWidth + rect.left + sliderElem.clientLeft - sliderElem.scrollLeft,
+    clientY: rect.top + sliderElem.clientTop - sliderElem.scrollTop,
     bubbles: true
   }));
 }
 
-function send_command(message) {
-  var iframe = document.querySelector('#app-player').contentDocument;
-  var button = null;
+function sendCommand(message) {
+  const iframe = document.querySelector('#app-player').contentDocument;
+  let button = null;
   switch (message.type) {
     case 'play':
       button = iframe.querySelector('#play-pause'); break;
@@ -44,23 +43,25 @@ function send_command(message) {
     case 'repeat':
       button = iframe.querySelector('#repeat'); break;
     case 'slider':
-      update_slider(message.position, 'slider'); break;
+      updateSlider(message.position, 'slider'); break;
     case 'vslider':
-      update_slider(message.position, 'vslider'); break;
+      updateSlider(message.position, 'vslider'); break;
+    default:
+      break;
   }
   if (button !== null) {
     button.click();
   }
-  window.setTimeout( function() {
+  window.setTimeout(() => {
     update();
   }, 30);
 }
 
 function init() {
-  route('send_command', send_command);
+  route('sendCommand', sendCommand);
 }
 
 document.addEventListener('DOMContentLoaded', init);
-if (document.readyState != 'loading') {
+if (document.readyState !== 'loading') {
   init();
 }

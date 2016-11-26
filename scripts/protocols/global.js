@@ -1,40 +1,38 @@
-var background_port = null;
-var popup_port = null;
-var old_status = null;
+let backgroundPort = null;
+let popupPort = null;
+let oldStatus = null;
 
-var routes = {};
+const routes = {};
 
-function update() {
-  if (background_port && typeof(background_port) !== 'undefined') {
-    old_status = JSON.parse(JSON.stringify(music_status));
-    music_status.update();
-    var msg = create_background_msg(old_status, music_status);
-    if (msg != null) {
-      background_port.postMessage(msg);
-    }
-    if (popup_port) {
-      popup_port.postMessage({
-        'type': 'status',
-        'data': music_status
-      });
-    }
-  }
-}
-
-function create_background_msg(oldValue, newValue) {
-  var msg = {scrobble: false, notify: false};
+function createBackgroundMsg(oldValue, newValue) {
+  const msg = { scrobble: false, notify: false };
   msg.oldValue = oldValue;
   msg.newValue = newValue;
-  if (oldValue !== undefined && (oldValue.title != newValue.title ||
-      oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
+  if (oldValue !== undefined && (oldValue.title !== newValue.title ||
+      oldValue.artist !== newValue.artist || oldValue.album_art !== newValue.album_art)) {
     msg.scrobble = true;
-    if (newValue.title != '') {
+    if (newValue.title !== '') {
       msg.notify = true;
     }
     return msg;
   }
-  else {
-    return null;
+  return null;
+}
+
+function update() {
+  if (backgroundPort && typeof (backgroundPort) !== 'undefined') {
+    oldStatus = JSON.parse(JSON.stringify(musicStatus));
+    musicStatus.update();
+    const msg = createBackgroundMsg(oldStatus, musicStatus);
+    if (msg !== null) {
+      backgroundPort.postMessage(msg);
+    }
+    if (popupPort) {
+      popupPort.postMessage({
+        type: 'status',
+        data: musicStatus
+      });
+    }
   }
 }
 
@@ -42,26 +40,26 @@ function route(name, callback) {
   routes[name] = callback;
 }
 
-function handle_message(msg) {
+function handleMessage(msg) {
   if (routes[msg.action] !== undefined) {
     routes[msg.action](msg);
   }
 }
 
-function global_init() {
-  background_port = chrome.runtime.connect({name: "interface"});
+function globalInit() {
+  backgroundPort = chrome.runtime.connect({ name: 'interface' });
 
   route('update_status', update);
 
-  background_port.onMessage.addListener(handle_message);
+  backgroundPort.onMessage.addListener(handleMessage);
 
-  chrome.runtime.onConnect.addListener(function(port) {
-    if (port.name == 'popup') {
-      popup_port = port;
-      port.onDisconnect.addListener(function() {
-        popup_port = null;
+  chrome.runtime.onConnect.addListener(port => {
+    if (port.name === 'popup') {
+      popupPort = port;
+      port.onDisconnect.addListener(() => {
+        popupPort = null;
       });
-      port.onMessage.addListener(handle_message);
+      port.onMessage.addListener(handleMessage);
       update();
     }
   });
@@ -69,8 +67,8 @@ function global_init() {
   window.setInterval(update, 1000);
 }
 
-document.addEventListener('DOMContentLoaded', global_init);
-if (document.readyState != 'loading') {
-  global_init();
+document.addEventListener('DOMContentLoaded', globalInit);
+if (document.readyState !== 'loading') {
+  globalInit();
 }
 

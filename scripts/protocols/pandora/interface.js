@@ -1,14 +1,14 @@
 // Interfaces with the Pandora tab
 
-function update_slider(position) {  //position is in %
-  var button = document.getElementsByClassName('volumeButton')[0];
-  var evt = document.createEvent('MouseEvents');
-  evt.initMouseEvent( 'mouseover', true, false);
+function updateSlider(position) {  // position is in %
+  const button = document.getElementsByClassName('volumeButton')[0];
+  let evt = document.createEvent('MouseEvents');
+  evt.initMouseEvent('mouseover', true, false);
   button.dispatchEvent(evt);
 
-  var slider = document.getElementsByClassName('volumeBackground')[0];
-  var newWidth = Math.round(position * 82) + 43;
-  var rect = slider.getBoundingClientRect();
+  const slider = document.getElementsByClassName('volumeBackground')[0];
+  const newWidth = Math.round(position * 82) + 43;
+  const rect = slider.getBoundingClientRect();
 
   slider.dispatchEvent(new MouseEvent('click', {
     clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
@@ -17,16 +17,16 @@ function update_slider(position) {  //position is in %
   }));
 
   evt = document.createEvent('MouseEvents');
-  evt.initMouseEvent( 'mouseout', true, false);
+  evt.initMouseEvent('mouseout', true, false);
   button.dispatchEvent(evt);
 }
 
-function send_command(message) {
-  var button = null;
+function sendCommand(message) {
+  let button = null;
   switch (message.type) {
     case 'play':
       button = document.querySelector('.playButton');
-      if (getComputedStyle(button).display === "none") {
+      if (getComputedStyle(button).display === 'none') {
         button = document.querySelector('.pauseButton');
       }
       break;
@@ -37,21 +37,23 @@ function send_command(message) {
     case 'down':
       button = document.querySelector('.thumbDownButton'); break;
     case 'vslider':
-      update_slider(message.position); break;
+      updateSlider(message.position); break;
+    default:
+      break;
   }
   if (button !== null) {
     button.click();
   }
-  window.setTimeout( function() {
+  window.setTimeout(() => {
     update();
   }, 30);
 }
 
 function init() {
-  route('send_command', send_command);
+  route('sendCommand', sendCommand);
 }
 
 document.addEventListener('DOMContentLoaded', init);
-if (document.readyState != 'loading') {
+if (document.readyState !== 'loading') {
   init();
 }

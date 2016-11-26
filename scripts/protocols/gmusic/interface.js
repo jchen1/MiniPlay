@@ -1,12 +1,12 @@
 // Interfaces with the Google Play Music tab
-var load_listeners = [];
-var history_funcs = [];
+let loadListeners = [];
+const historyFuncs = [];
 
-function update_slider(position, slidername) {  //position is in %
-  var slider = document.getElementById(slidername).getElementsByTagName('paper-progress')[0];
+function updateSlider(position, slidername) {  // position is in %
+  const slider = document.getElementById(slidername).getElementsByTagName('paper-progress')[0];
 
-  var newWidth = Math.round(position * slider.offsetWidth);
-  var rect = slider.getBoundingClientRect();
+  const newWidth = Math.round(position * slider.offsetWidth);
+  const rect = slider.getBoundingClientRect();
 
   slider.dispatchEvent(new MouseEvent('mousedown', {
     clientX: newWidth + rect.left + slider.clientLeft - slider.scrollLeft,
@@ -14,8 +14,8 @@ function update_slider(position, slidername) {  //position is in %
   }));
 }
 
-function send_command(message) {
-  var button = null;
+function sendCommand(message) {
+  let button = null;
   switch (message.type) {
     case 'play':
       button = document.querySelector('paper-icon-button[data-id="play-pause"]');
@@ -33,73 +33,73 @@ function send_command(message) {
     case 'repeat':
       button = document.querySelector('paper-icon-button[data-id="repeat"]'); break;
     case 'slider':
-      update_slider(message.position, 'material-player-progress'); break;
+      updateSlider(message.position, 'material-player-progress'); break;
     case 'vslider':
-      update_slider(message.position, 'material-vslider'); break;
+      updateSlider(message.position, 'material-vslider'); break;
     case 'playlist':
-      button = document.querySelector('.song-table > tbody > .song-row[data-id="'+message.id+'"] > td[data-col="song-details"] button'); break;
+      button = document.querySelector(`.song-table > tbody > .song-row[data-id="${message.id}"] > td[data-col="song-details"] button`); break;
     case 'playlist-button':
       // Toggle the playlist to set it up for viewing
       if (!document.querySelector('#queue-overlay').classList.contains('sj-opened')) {
         document.querySelector('#queue').click();
-        window.setTimeout(function() {
+        window.setTimeout(() => {
           document.querySelector('#queue').click();
         }, 100);
       }
+      break;
+    default:
       break;
   }
   if (button !== null) {
     button.click();
   }
-  window.setTimeout( function() {
+  window.setTimeout(() => {
     update();
   }, 30);
 }
 
-function go_to_url(url, callback) {
-  var hash_index = window.location.href.search('#');
-  if (window.location.href.substring(hash_index) != url) {
-    document.getElementById('loading-overlay').style.display = "block";
+function goToUrl(url, callback) {
+  const hashIndex = window.location.href.search('#');
+  if (window.location.href.substring(hashIndex) !== url) {
+    document.getElementById('loading-overlay').style.display = 'block';
 
-    load_listeners.push({
-      callback: callback,
+    loadListeners.push({
+      callback,
       called: false
     });
 
-    window.location.href = window.location.href.substring(0, hash_index) + url;
-  }
-  else {
+    window.location.href = window.location.href.substring(0, hashIndex) + url;
+  } else {
     callback();
   }
 }
 
 function click(selector, callback) {
-  document.getElementById('loading-overlay').style.display = "block";
+  document.getElementById('loading-overlay').style.display = 'block';
 
-  load_listeners.push({
-    callback: callback,
+  loadListeners.push({
+    callback,
     called: false
   });
 
-  if (document.querySelector(selector) == null) {
+  if (document.querySelector(selector) === null) {
     console.log(selector);
   }
   document.querySelector(selector).click();
 }
 
-function parse_raw_data(raw_data, start_index, map) {
-  var data = [];
-  for (var i = 0; i < raw_data.length; i++) {
-    var item = {};
-    item.index = i + start_index;
+function parseRawData(rawData, startIndex, map) {
+  const data = [];
+  for (let i = 0; i < rawData.length; i++) {
+    const item = {};
+    item.index = i + startIndex;
 
-    map.forEach(function (key) {
+    map.forEach(key => {
       if (key.selector) {
-        item[key.name] = raw_data[i].querySelector(key.selector);
-        item[key.name] = (item[key.name] == null) ? key.if_null : item[key.name][key.property];
-      }
-      else if (key.attribute) {
-        item[key.name] = raw_data[i].getAttribute(key.attribute);
+        item[key.name] = rawData[i].querySelector(key.selector);
+        item[key.name] = (item[key.name] === null) ? key.if_null : item[key.name][key.property];
+      } else if (key.attribute) {
+        item[key.name] = rawData[i].getAttribute(key.attribute);
       }
     });
 
@@ -109,397 +109,379 @@ function parse_raw_data(raw_data, start_index, map) {
   return data;
 }
 
-function restore_state(history, msg, cb) {
-  var history = history.slice(0);
+function restoreState(history, msg, cb) {
+  history = history.slice(0);
 
-  if (history.length == 0) {
+  if (history.length === 0) {
     cb(msg);
-  }
-  else {
-    var next_state = history.shift();
-    if (next_state.type == 'selector') {
-      click(next_state.selector, function() {
-        restore_state(history, msg, cb);
+  } else {
+    const nextState = history.shift();
+    if (nextState.type === 'selector') {
+      click(nextState.selector, () => {
+        restoreState(history, msg, cb);
       });
-    }
-    else if (next_state.type == 'url') {
-      go_to_url(next_state.url, function() {
-        restore_state(history, msg, cb);
+    } else if (nextState.type === 'url') {
+      goToUrl(nextState.url, () => {
+        restoreState(history, msg, cb);
       });
-    }
-    else if (next_state.type == 'func') {
-      history_funcs[next_state.id](function() {
-        restore_state(history, msg, cb);
+    } else if (nextState.type === 'func') {
+      historyFuncs[nextState.id](() => {
+        restoreState(history, msg, cb);
       });
-    }
-    else {
-      console.log('bad state ' + next_state);
+    } else {
+      console.log(`bad state ${nextState}`);
     }
   }
 }
 
-function scroll_to_index(cluster, desired_start_index, cb) {
-  var cards = document.querySelectorAll('.lane-content > .material-card');
-  var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop - cards[0].offsetTop : 0);
-  var scroll_event = document.createEvent('HTMLEvents');
-  scroll_event.initEvent('scroll', false, true);
+function scrollToIndex(cluster, desiredStartIndex, cb) {
+  const cards = document.querySelectorAll('.lane-content > .material-card');
+  const scrollStep = (desiredStartIndex > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'), 10)].offsetTop - cards[0].offsetTop : 0);
+  const scrollEvent = document.createEvent('HTMLEvents');
+  scrollEvent.initEvent('scroll', false, true);
 
-  var observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
       if (mutation.attributeName === 'data-start-index') {
-        var current_idx = cluster.getAttribute('data-start-index');
-        if (cluster.getAttribute('data-end-index') != cluster.getAttribute('data-row-count') &&
-            desired_start_index != current_idx) {
-          document.querySelector('#mainContainer').scrollTop += scroll_step;
-          document.querySelector('#mainContainer').dispatchEvent(scroll_event);
-        }
-        else {
+        const currentIdx = cluster.getAttribute('data-start-index');
+        if (cluster.getAttribute('data-end-index') !== cluster.getAttribute('data-row-count') &&
+            desiredStartIndex !== currentIdx) {
+          document.querySelector('#mainContainer').scrollTop += scrollStep;
+          document.querySelector('#mainContainer').dispatchEvent(scrollEvent);
+        } else {
           cb(observer);
         }
       }
-    })
+    });
   });
 
-  observer.observe(cluster, {attributes: true});
+  observer.observe(cluster, { attributes: true });
 
   cluster.setAttribute('data-start-index', cluster.getAttribute('data-end-index') + 1);
   document.querySelector('#mainContainer').scrollTop = 0;
-  document.querySelector('#mainContainer').dispatchEvent(scroll_event);
+  document.querySelector('#mainContainer').dispatchEvent(scrollEvent);
 
   return observer;
 }
 
-function get_artists(msg) {
-  var history =
-  [
-    {
-      type: 'url',
-      url: '#/artists'
-    }
-  ];
+function getArtists(m) {
+  const history =
+    [
+      {
+        type: 'url',
+        url: '#/artists'
+      }
+    ];
 
-  restore_state(history, msg, function(msg) {
-    var cluster = document.querySelector('.material-card-grid');
-    var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
+  restoreState(history, m, msg => {
+    const cluster = document.querySelector('.material-card-grid');
+    const desiredStartIndex = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count'), 10));
 
-    var cards = document.querySelectorAll('.lane-content > .material-card');
-    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop : 0);
+    const cards = document.querySelectorAll('.lane-content > .material-card');
+    const scrollStep = (desiredStartIndex > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'), 10)].offsetTop : 0);
 
-    var parse_data = function(observer) {
-      var raw_artists = document.querySelectorAll('.lane-content > .material-card');
-      var offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
-      var artists = parse_raw_data(raw_artists, offset, artist_map);
+    const parseData = function(observer) {
+      const rawArtists = document.querySelectorAll('.lane-content > .material-card');
+      const offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
+      const artists = parseRawData(rawArtists, offset, artistMap);
 
-      if (popup_port) {
-        popup_port.postMessage({
+      if (popupPort) {
+        popupPort.postMessage({
           type: 'artists',
           data: artists,
-          offset: offset,
-          history: history,
-          count: parseInt(document.querySelector('#countSummary').innerText)
+          offset,
+          history,
+          count: parseInt(document.querySelector('#countSummary').innerText, 10)
         });
       }
 
-      if (observer != null) observer.disconnect();
-    }
+      if (observer !== null) observer.disconnect();
+    };
 
-    scroll_to_index(cluster, desired_start_index, parse_data);
+    scrollToIndex(cluster, desiredStartIndex, parseData);
   });
 }
 
-function get_albums(msg) {
-  var history = [
-  {
-    type: 'url',
-    url: '#/albums'
-  }];
-
-  restore_state(history, msg, function(msg) {
-    var cluster = document.querySelector('.material-card-grid');
-    var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
-
-    var cards = document.querySelectorAll('.lane-content > .material-card');
-    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop - cards[0].offsetTop + 4: 0);
-
-    var parse_data = function(observer) {
-      var raw_albums = document.querySelectorAll('.lane-content > .material-card');
-      var start_offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
-      var albums = parse_raw_data(raw_albums, start_offset, album_map);
-
-      if (popup_port) {
-        popup_port.postMessage({
-          type: 'albums',
-          data: albums,
-          offset: start_offset,
-          count: parseInt(document.querySelector('#countSummary').innerText),
-          history: history
-        });
-      }
-      if (observer != null) observer.disconnect();
-    }
-
-    scroll_to_index(cluster, desired_start_index, parse_data);
-  });
-}
-
-function get_stations(msg) {
-  var history =
-  [
+function getAlbums(m) {
+  const history = [
     {
       type: 'url',
-      url: '#/wms'
-    }
-  ];
+      url: '#/albums'
+    }];
 
-  restore_state(history, msg, function(msg) {
-    var raw_recent_stations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
-    var raw_my_stations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
+  restoreState(history, m, msg => {
+    const cluster = document.querySelector('.material-card-grid');
+    const desiredStartIndex = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count'), 10));
 
-    var recent_stations = parse_raw_data(raw_recent_stations, 0, station_map);
-    var my_stations = parse_raw_data(raw_my_stations, 0, station_map);
+    const cards = document.querySelectorAll('.lane-content > .material-card');
+    const scrollStep = (desiredStartIndex > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'), 10)].offsetTop - cards[0].offsetTop + 4 : 0);
 
-    var stations = {
-      recent_stations: recent_stations,
-      my_stations: my_stations
+    const parseData = function(observer) {
+      const rawAlbums = document.querySelectorAll('.lane-content > .material-card');
+      const startOffset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
+      const albums = parseRawData(rawAlbums, startOffset, albumMap);
+
+      if (popupPort) {
+        popupPort.postMessage({
+          type: 'albums',
+          data: albums,
+          offset: startOffset,
+          count: parseInt(document.querySelector('#countSummary').innerText, 10),
+          history
+        });
+      }
+      if (observer !== null) observer.disconnect();
     };
 
-    if (popup_port) {
-      popup_port.postMessage({
+    scrollToIndex(cluster, desiredStartIndex, parseData);
+  });
+}
+
+function getStations(m) {
+  const history =
+    [
+      {
+        type: 'url',
+        url: '#/wms'
+      }
+    ];
+
+  restoreState(history, m, msg => {
+    const rawRecentStations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
+    const rawMyStations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
+
+    const recentStations = parseRawData(rawRecentStations, 0, stationMap);
+    const myStations = parseRawData(rawMyStations, 0, stationMap);
+
+    const stations = {
+      recentStations,
+      myStations
+    };
+
+    if (popupPort) {
+      popupPort.postMessage({
         type: 'stations',
         data: stations,
-        history: history
+        history
       });
     }
   });
 }
 
-function get_album_art(art) {
-  return (!art || art == 'http://undefined') ? 'img/default_album.png' : art.substring(0, art.search('=') + 1) + 's320';
+function getAlbumArt(art) {
+  return (!art || art === 'http://undefined') ? 'img/default_album.png' : `${art.substring(0, art.search('=') + 1)}s320`;
 }
 
-function get_time(time) {
-  return time.split(':').map(function(num, index, arr) {
-    return parseInt(num, 10) * Math.pow(60, arr.length - index - 1);
-  }).reduce(function(a, b) { return a + b; });
+function getTime(time) {
+  return time.split(':').map((num, index, arr) => parseInt(num, 10) * (60 ** (arr.length - index - 1))).reduce((a, b) => a + b);
 }
 
-function get_recent(msg) {
-  var history = [
-  {
-    type: 'url',
-    url: '#/recents'
-  }];
+function getRecent(m) {
+  const history = [
+    {
+      type: 'url',
+      url: '#/recents'
+    }];
 
-  restore_state(history, msg, function(msg) {
-    var raw_recent = document.querySelectorAll('.gpm-card-grid sj-card');
+  restoreState(history, m, msg => {
+    const rawRecent = document.querySelectorAll('.gpm-card-grid sj-card');
 
-    var recent = parse_raw_data(raw_recent, 0, recent_map);
+    const recent = parseRawData(rawRecent, 0, recentMap);
 
-    if (popup_port) {
-      popup_port.postMessage({
+    if (popupPort) {
+      popupPort.postMessage({
         type: 'recent',
         data: recent,
-        history: history
+        history
       });
     }
   });
 }
 
-function search(msg) {
-  var history = [
-  {
-    type: 'url',
-    url: '#/sr/'+encodeURIComponent(msg.query)
-  }];
-  restore_state(history, msg, function(msg) {
-    var artists = [], albums = [], songs = [];
+function search(m) {
+  const history = [
+    {
+      type: 'url',
+      url: `#/sr/${encodeURIComponent(msg.query)}`
+    }];
+  restoreState(history, m, msg => {
+    const rawArtists = document.querySelectorAll('.cluster[data-type="srar"] .material-card');
+    const rawAlbums = document.querySelectorAll('.cluster[data-type="sral"] .material-card');
+    const rawSongs = document.querySelectorAll('.cluster[data-type="srs"] .song-row');
 
-    var raw_artists = document.querySelectorAll('.cluster[data-type="srar"] .material-card');
-    var raw_albums = document.querySelectorAll('.cluster[data-type="sral"] .material-card');
-    var raw_songs = document.querySelectorAll('.cluster[data-type="srs"] .song-row');
+    const artists = parseRawData(rawArtists, 0, artistMap);
+    const albums = parseRawData(rawAlbums, 0, albumMap);
+    const songs = parseRawData(rawSongs, 0, songMap);
 
-    var artists = parse_raw_data(raw_artists, 0, artist_map);
-    var albums = parse_raw_data(raw_albums, 0, album_map);
-    var songs = parse_raw_data(raw_songs, 0, song_map);
-
-    var search = {
-      artists: artists,
-      albums: albums,
-      songs: songs
+    const searchData = {
+      artists,
+      albums,
+      songs
     };
 
-    if (popup_port) {
-      popup_port.postMessage({
+    if (popupPort) {
+      popupPort.postMessage({
         type: 'search',
-        data: search,
-        history: history
+        data: searchData,
+        history
       });
     }
   });
 }
 
 // TODO: use all four images in the playlist instead of just one
-function get_playlists(msg) {
-  var history = [
+function getPlaylists(m) {
+  const history = [
     {
       type: 'url',
       url: '#/wmp'
     }
   ];
 
-  restore_state(history, msg, function(msg) {
-    var recent_playlists = [], auto_playlists = [], my_playlists = [];
+  restoreState(history, m, msg => {
+    let recentPlaylists = [];
+    let autoPlaylists = [];
+    let myPlaylists = [];
 
-    var raw_playlists = document.querySelectorAll('.g-content .cluster');
+    const rawPlaylists = document.querySelectorAll('.g-content .cluster');
 
-    var raw_recent_playlists = raw_playlists[0].querySelectorAll('.lane-content .material-card');
-    var raw_auto_playlists = raw_playlists[1].querySelectorAll('.lane-content .material-card');
+    const rawRecentPlaylists = rawPlaylists[0].querySelectorAll('.lane-content .material-card');
+    const rawAutoPlaylists = rawPlaylists[1].querySelectorAll('.lane-content .material-card');
 
-    recent_playlists = parse_raw_data(raw_recent_playlists, 0, playlist_map);
-    auto_playlists = parse_raw_data(raw_auto_playlists, 0, playlist_map);
+    recentPlaylists = parseRawData(rawRecentPlaylists, 0, playlistMap);
+    autoPlaylists = parseRawData(rawAutoPlaylists, 0, playlistMap);
 
-    var cluster = document.querySelector('.material-card-grid');
-    var desired_start_index = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count')));
+    const cluster = document.querySelector('.material-card-grid');
+    const desiredStartIndex = Math.floor(msg.offset / parseInt(cluster.getAttribute('data-col-count'), 10));
 
-    var cards = cluster.querySelectorAll('.lane-content > .material-card');
-    var scroll_step = (desired_start_index > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'))].offsetTop - cards[0].offsetTop + 4: 0);
+    const cards = cluster.querySelectorAll('.lane-content > .material-card');
+    const scrollStep = (desiredStartIndex > 0 ? cards[parseInt(cluster.getAttribute('data-col-count'), 10)].offsetTop - cards[0].offsetTop + 4 : 0);
 
-    var parse_data = function(observer) {
-      var raw_my_playlists = raw_playlists[2].querySelectorAll('.lane-content .material-card');
-      var start_offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
-      my_playlists = parse_raw_data(raw_my_playlists, start_offset, playlist_map);
+    const parseData = function(observer) {
+      const rawMyPlaylists = rawPlaylists[2].querySelectorAll('.lane-content .material-card');
+      const startOffset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
+      myPlaylists = parseRawData(rawMyPlaylists, startOffset, playlistMap);
 
-      var playlists = {
-        recent_playlists: recent_playlists,
-        auto_playlists: auto_playlists,
-        my_playlists: my_playlists
-      }
+      const playlists = {
+        recentPlaylists,
+        autoPlaylists,
+        myPlaylists
+      };
 
-      if (popup_port) {
-        popup_port.postMessage({
+      if (popupPort) {
+        popupPort.postMessage({
           type: 'playlists',
           data: playlists,
-          offset: start_offset,
-          count: parseInt(document.querySelector('#countSummary').innerText),
-          history: history
+          offset: startOffset,
+          count: parseInt(document.querySelector('#countSummary').innerText, 10),
+          history
         });
       }
-      if (observer != null) observer.disconnect();
-    }
+      if (observer !== null) observer.disconnect();
+    };
 
     // TODO: does the scroll work properly for playlists
     //       (playlists start scrolling later)
-    scroll_to_index(cluster, desired_start_index, parse_data);
-
+    scrollToIndex(cluster, desiredStartIndex, parseData);
   });
 }
 
-function data_click(msg) {
-  restore_state(msg.history, msg, function(msg) {
-    if (msg.click_type == 'album') {
-      var url = '#/album/' + msg.id;
+function dataClick(m) {
+  restoreState(m.history, m, msg => {
+    let url;
+    if (msg.click_type === 'album') {
+      url = `#/album/${msg.id}`;
 
-      var parse_album = function() {
-        var raw_songs = document.querySelectorAll('#music-content .song-table .song-row');
-        var songs = parse_raw_data(raw_songs, 0, song_map);
-        if (popup_port) {
-          popup_port.postMessage({
+      const parseAlbum = function() {
+        const rawSongs = document.querySelectorAll('#music-content .song-table .song-row');
+        const songs = parseRawData(rawSongs, 0, songMap);
+        if (popupPort) {
+          popupPort.postMessage({
             type: 'playlist',
             data: songs,
             history: [{
               type: 'url',
-              url: url,
+              url,
             }],
             title: document.querySelector('#mainContainer .title').firstChild.nodeValue,
             subtitle: document.querySelector('#mainContainer .creator-name').innerText
           });
         }
       };
-      go_to_url(url, parse_album);
-    }
+      goToUrl(url, parseAlbum);
+    } else if (msg.click_type === 'artist') {
+      url = `#/artist/${msg.id}`;
+      const parseArtist = function() {
+        const rawSongs = document.querySelectorAll('#music-content .song-table .song-row');
+        const rawAlbums = document.querySelectorAll('.cluster[data-type="saral"] .material-card');
 
-    else if (msg.click_type == 'artist') {
-      var url = '#/artist/' + msg.id;
-      var parse_artist = function() {
-        var raw_songs = document.querySelectorAll('#music-content .song-table .song-row');
-        var raw_albums = document.querySelectorAll('.cluster[data-type="saral"] .material-card');
+        const songs = parseRawData(rawSongs, 0, songMap);
+        const albums = parseRawData(rawAlbums, 0, albumMap);
+        const artist = {
+          songs,
+          albums
+        };
 
-        var songs = parse_raw_data(raw_songs, 0, song_map);
-        var albums = parse_raw_data(raw_albums, 0, album_map);
-        var artist = {
-          songs: songs,
-          albums: albums
-        }
-
-        if (popup_port) {
-          popup_port.postMessage({
+        if (popupPort) {
+          popupPort.postMessage({
             type: 'artist',
             data: artist,
             history: [{
               type: 'url',
-              url: url
+              url
             }],
             title: document.querySelector('#mainContainer .name').innerText
           });
         }
-      }
+      };
 
-      go_to_url(url, parse_artist);
-    }
+      goToUrl(url, parseArtist);
+    } else if (msg.click_type === 'playlist') {
+      document.querySelector(`.song-table > tbody > .song-row[data-id="${msg.id}"] button`).click();
 
-    else if (msg.click_type == 'playlist') {
-      document.querySelector('.song-table > tbody > .song-row[data-id="'+msg.id+'"] button').click();
-
-      window.setTimeout( function() {
+      window.setTimeout(() => {
         update();
       }, 30);
-    }
-
-    else if (msg.click_type == 'playlists') {
-      var idx = 0;
+    } else if (msg.click_type === 'playlists') {
+      let idx = 0;
       switch (msg.playlist_type) {
         case 'recent_playlist': idx = 0; break;
         case 'auto_playlist': idx = 1; break;
         case 'my_playlist': idx = 2; break;
+        default: break;
       }
-      var raw_playlists = document.querySelectorAll('.g-content .cluster')[idx].querySelectorAll('.lane-content .material-card');
+      const rawPlaylists = document.querySelectorAll('.g-content .cluster')[idx].querySelectorAll('.lane-content .material-card');
 
-      if (msg.playlist_type != 'my_playlist') {
-        raw_playlists[msg.index].querySelector('.play-button-container').click();
-      }
-      else {
-        go_to_url('#/pl/' + msg.id, function() {
+      if (msg.playlist_type !== 'my_playlist') {
+        rawPlaylists[msg.index].querySelector('.play-button-container').click();
+      } else {
+        goToUrl(`#/pl/${msg.id}`, () => {
           document.querySelector('paper-fab[data-id="play"]').click();
-          window.setTimeout( function() {
+          window.setTimeout(() => {
             update();
           }, 30);
         });
       }
-    }
-
-    // TODO do this without going to the album page...
-    else if (msg.click_type == 'recent') {
-      var card = document.querySelectorAll('gpm-card-grid sj-card')[msg.index];
-      var url = card.getAttribute('data-type') + '/' + card.getAttribute('data-id');
-      go_to_url('#/' + url, function() {
+    } else if (msg.click_type === 'recent') {
+      // TODO do this without going to the album page...
+      const card = document.querySelectorAll('gpm-card-grid sj-card')[msg.index];
+      url = `${card.getAttribute('data-type')}/${card.getAttribute('data-id')}`;
+      goToUrl(`#/${url}`, () => {
         document.querySelector('paper-fab[data-id="play"]').click();
-        window.setTimeout( function() {
+        window.setTimeout(() => {
           update();
         }, 30);
       });
-    }
-
-    else if (msg.click_type == 'station') {
-      var stations;
-      if (msg.station_type == 'my_station') {
+    } else if (msg.click_type === 'station') {
+      let stations;
+      if (msg.station_type === 'my_station') {
         stations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
-      }
-      else if (msg.station_type == 'recent_station') {
+      } else if (msg.station_type === 'recent_station') {
         stations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
       }
       stations[msg.index].querySelector('.play-button-container').click();
 
-      window.setTimeout( function() {
+      window.setTimeout(() => {
         update();
       }, 30);
     }
@@ -507,39 +489,36 @@ function data_click(msg) {
 }
 
 function init() {
-  route('get_artists', get_artists);
-  route('get_albums', get_albums);
-  route('get_playlists', get_playlists);
-  route('get_stations', get_stations);
-  route('get_recent', get_recent);
+  route('getArtists', getArtists);
+  route('getAlbums', getAlbums);
+  route('getPlaylists', getPlaylists);
+  route('getStations', getStations);
+  route('getRecent', getRecent);
   route('search', search);
-  route('data_click', data_click);
-  route('send_command', send_command);
+  route('dataClick', dataClick);
+  route('sendCommand', sendCommand);
 
-  var trigger = document.getElementById('loading-overlay');
-  var observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+  const trigger = document.getElementById('loading-overlay');
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
       if (mutation.attributeName === 'style' &&
           window.getComputedStyle(trigger).getPropertyValue('display') === 'none') {
-
-        load_listeners.forEach(function(listener) {
+        loadListeners.forEach(listener => {
           if (listener.called === false) {
             listener.called = true;
             listener.callback();
           }
         });
 
-        load_listeners = load_listeners.filter(function(listener) {
-          return listener.called === false;
-        });
+        loadListeners = loadListeners.filter(listener => listener.called === false);
       }
     });
   });
 
-  observer.observe(trigger, {attributes: true});
+  observer.observe(trigger, { attributes: true });
 }
 
 document.addEventListener('DOMContentLoaded', init);
-if (document.readyState != 'loading') {
+if (document.readyState !== 'loading') {
   init();
 }

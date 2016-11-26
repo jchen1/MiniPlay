@@ -65,13 +65,13 @@ var recent_map = [
 },
 {
   name: 'title',
-  selector: '.title',
+  selector: '#details a.card-title',
   property: 'innerText',
   if_null: ''
 },
 {
   name: 'subtitle',
-  selector: '.sub-title',
+  selector: '#details a.card-subtitle',
   property: 'innerText',
   if_null: ''
 },

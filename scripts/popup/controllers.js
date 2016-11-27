@@ -1,19 +1,7 @@
-const controller = popupApp.controller('PopupController', ['$scope', 'NpService', 'InputManager', function($scope, NpService, InputManager) {
-  $scope.backgroundPort = null;
-  $scope.interfacePort = null;
-
-  $scope.colors = {
-    gmusic: '#ef6c00',
-    pandora: '#455774',
-    spotify: '#84bd00',
-    none: 'rgb(244, 67, 54)'
-  };
-
+const controller = popupApp.controller('PopupController', ['$scope', 'CommService', 'NPService', 'InputManager', 'SettingsManager', function($scope, CommService, NPService, InputManager, SettingsManager) {
   $scope.InputManager = InputManager;
-
-  $scope.np = NpService.get();
-  // let state = InputManager.get('ervice').get();
-  // $scope.state = StateService.get();
+  $scope.SettingsManager = SettingsManager;
+  $scope.np = NPService.get();
 
   $scope.data = {
     playlists: {
@@ -46,8 +34,6 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
     subtitle: '',
     view_stack: []
   };
-
-  $scope.settings = {};
 
   $scope.counts = {};
 
@@ -111,17 +97,15 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
   };
 
   $scope.search = function() {
-    if ($scope.interfacePort) {
-      $scope.interfacePort.postMessage(
-        {
-          action: 'search',
-          query: $scope.data.query
-        });
-      $scope.data.title = `Search: ${$scope.data.query}`;
-      InputManager.set('displayed_content', 'loading');
-      InputManager.set('playlist_pressed', false);
-      InputManager.set('drawer_open', false);
-    }
+    CommService.postMessage(
+      {
+        action: 'search',
+        query: $scope.data.query
+      });
+    $scope.data.title = `Search: ${$scope.data.query}`;
+    InputManager.set('displayed_content', 'loading');
+    InputManager.set('playlist_pressed', false);
+    InputManager.set('drawer_open', false);
   };
 
   $scope.setState = function(s) {
@@ -153,15 +137,12 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
   };
 
   $scope.playlist_click = function(id) {
-    if ($scope.interfacePort) {
-      $scope.interfacePort.postMessage(
-        {
-          action: 'dataClick',
-          click_type: 'playlist',
-          id,
-          history: $scope.data.last_history
-        });
-    }
+    CommService.postMessage({
+      action: 'dataClick',
+      click_type: 'playlist',
+      id,
+      history: $scope.data.last_history
+    });
   };
 
   $scope.playlist_button_pressed = function() {
@@ -181,7 +162,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
 
   $scope.dataClick = function(type, data) {
     const oldContent = InputManager.get('displayed_content');
-    if ($scope.interfacePort && $scope.np.status.protocol === 'gmusic') {
+    if (CommService.isConnected() && $scope.np.status.protocol === 'gmusic') {
       InputManager.set('displayed_content', 'loading');
 
       switch (type) {
@@ -189,7 +170,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
           InputManager.set('displayed_content', '');
         case 'album':
         case 'artist':
-          $scope.interfacePort.postMessage(
+          CommService.postMessage(
             {
               action: 'dataClick',
               click_type: type,
@@ -207,7 +188,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
           break;
         case 'recent_station':
         case 'my_station':
-          $scope.interfacePort.postMessage(
+          CommService.postMessage(
             {
               action: 'dataClick',
               click_type: 'station',
@@ -220,7 +201,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
         case 'recent_playlist':
         case 'auto_playlist':
         case 'my_playlist':
-          $scope.interfacePort.postMessage(
+          CommService.postMessage(
             {
               action: 'dataClick',
               click_type: 'playlists',
@@ -237,13 +218,10 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
   };
 
   $scope.drawer_click = function(clicked) {
-    if ($scope.interfacePort) {
-      $scope.interfacePort.postMessage(
-        {
-          action: `get${clicked}`,
-          offset: 0
-        });
-    }
+    CommService.postMessage({
+      action: `get${clicked}`,
+      offset: 0
+    });
 
     if (clicked !== 'library') {
       InputManager.set('displayed_content', 'loading');
@@ -258,9 +236,9 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
   };
 
   $scope.album_art_click = function() {
-    if ($scope.interfacePort) {
-      chrome.tabs.update($scope.interfacePort.id, { highlighted: true });
-      chrome.tabs.get($scope.interfacePort.id, tab => {
+    if (CommService.isConnected()) {
+      chrome.tabs.update(CommService.getTabId(), { highlighted: true });
+      chrome.tabs.get(CommService.getTabId(), tab => {
         chrome.windows.update(tab.windowId, { focused: true });
       });
     }
@@ -274,13 +252,10 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
   };
 
   $scope.scroll_data = function(contentType) {
-    if ($scope.interfacePort) {
-      $scope.interfacePort.postMessage(
-        {
-          action: `get_${contentType}`,
-          offset: (contentType === 'stations' ? 0 : $scope.data[contentType].length)
-        });
-    }
+    CommService.postMessage({
+      action: `get_${contentType}`,
+      offset: (contentType === 'stations' ? 0 : $scope.data[contentType].length)
+    });
     InputManager.set('scrolling_busy', true);
   };
 
@@ -316,13 +291,10 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
   $scope.handle_key = function($event) {
     if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode === 32) {
       $scope.np.status.status = !$scope.np.status.status;
-      if ($scope.interfacePort) {
-        $scope.interfacePort.postMessage(
-          {
-            action: 'sendCommand',
-            type: 'play'
-          });
-      }
+      CommService.postMessage({
+        action: 'sendCommand',
+        type: 'play'
+      });
     } else if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode === 8) {
       if ($scope.data.view_stack.length > 0) {
         const oldView = $scope.data.view_stack.pop();
@@ -349,22 +321,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
 
   $scope.$on('$includeContentLoaded', (event, src) => {
     componentHandler.upgradeDom();
-
-    if (src === 'templates/options.html') {
-      chrome.storage.sync.get(['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'], data => {
-        $scope.$apply(() => {
-          $.extend($scope.settings, data);
-        });
-      });
-    }
   });
-
-  function update(response) {
-    if (chrome.extension.lastError) {
-      return $scope.$emit('msg:status', { state: StateEnum.NO_TAB });
-    }
-    return $scope.$emit('msg:status', response);
-  }
 
   $scope.$on('np-service:updated', (event, np) => {
     $scope.setState(np.state);
@@ -379,14 +336,21 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
     });
   });
 
-  $scope.$on('state-service:updated', (event, newState) => {
-    state = newState;
+  $scope.$on('comm-service:connect', () => {
+    $scope.$apply(() => {
+      $scope.setState(StateEnum.NO_SONG);
+    });
   });
 
+  $scope.$on('comm-service:disconnect', () => {
+    $scope.$apply(() => {
+      $scope.setState(StateEnum.NO_TAB);
+    });
+  });
+
+  // temporary until controllers are split up
   function routeInterfaceMsg(msg) {
-    if (msg.type === 'status') {
-      update(msg.data);
-    } else {
+    if (msg.type !== 'status') {
       if (msg.type === 'artists' || msg.type === 'albums') {
         $scope.data[msg.type] = $scope.data[msg.type].slice(0, msg.offset).concat(msg.data);
         InputManager.set('scrolling_busy', false);
@@ -414,44 +378,12 @@ const controller = popupApp.controller('PopupController', ['$scope', 'NpService'
     }
   }
 
-  const init = function() {
-    $scope.backgroundPort = chrome.runtime.connect({ name: 'popup' });
-    $scope.backgroundPort.onMessage.addListener(msg => {
-      if (msg.type === 'connect') {
-        $scope.interfacePort = chrome.tabs.connect(msg.id, { name: 'popup' });
-        $scope.interfacePort.id = msg.id;
-        $scope.interfacePort.onDisconnect.addListener(() => {
-          $scope.interfacePort = null;
-          $scope.$apply(() => {
-            $scope.setState(StateEnum.NO_TAB);
-          });
-        });
-        $scope.interfacePort.onMessage.addListener(routeInterfaceMsg);
-        $scope.$apply(() => {
-          $scope.setState(StateEnum.NO_SONG);
-        });
-      }
-    });
+  function init() {
+    CommService.init();
+    CommService.addInterfaceListener('controller', routeInterfaceMsg);
 
-    chrome.storage.onChanged.addListener((changes, area) => {
-      $scope.$apply(() => {
-        if (area === 'sync') {
-          if (changes['notifications-enabled']) {
-            $scope.settings['notifications-enabled'] = changes['notifications-enabled'].newValue;
-          }
-          if (changes['shortcuts-enabled']) {
-            $scope.settings['shortcuts-enabled'] = changes['shortcuts-enabled'].newValue;
-          }
-          if (changes['scrobbling-enabled']) {
-            $scope.settings['scrobbling-enabled'] = changes['scrobbling-enabled'].newValue;
-          }
-          if (changes.lastfm_sessionID) {
-            $scope.settings.lastfm_sessionID = changes.lastfm_sessionID.newValue;
-          }
-        }
-      });
-    });
-  };
+    SettingsManager.init();
+  }
 
   init();
 }]);

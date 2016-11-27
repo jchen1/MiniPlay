@@ -41,24 +41,24 @@ popupApp.directive('mpSlider', () => {
   };
 });
 
-popupApp.directive('mdlSwitch', () => ({
+popupApp.directive('mdlSwitch', ['SettingsManager', SettingsManager => ({
   restrict: 'A',
   link(scope, element, attrs) {
-    scope.$watch(attrs.ngModel, (newValue, oldValue) => {
-      const mdlSwitch = element[0].parentElement.MaterialSwitch;
-      const func = (newValue) ? 'on' : 'off';
-      const attr = element[0].getAttribute('ng-model').split('"')[1];
-
-      if (mdlSwitch) mdlSwitch[func]();
-
-      if (typeof (newValue) !== 'undefined') {
-        const newSetting = {};
-        newSetting[attr] = newValue;
-        chrome.storage.sync.set(newSetting);
+    const settingName = element.attr('mdl-switch');
+    let firstRun = true;
+    SettingsManager.init();
+    scope.$watch(() => element.parent().attr('class').includes('is-checked'), (newValue, oldValue) => {
+      if (firstRun) {
+        const ms = element.parent()[0].MaterialSwitch;
+        const funcName = SettingsManager.get(settingName) ? 'on' : 'off';
+        ms[funcName]();
+        firstRun = false;
+      } else {
+        SettingsManager.set(settingName, newValue);
       }
     });
   }
-}));
+})]);
 
 popupApp.directive('mpVolslider', () => ({
   restrict: 'C',

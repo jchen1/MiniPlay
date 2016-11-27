@@ -12,8 +12,7 @@ popupApp.factory('InputManager', ['$interval', '$rootScope', ($interval, $rootSc
     slider_dragging: false,
     displayed_content: '',
     scrolling_busy: false,
-    drawer_open: false,
-    current_color: colors.none  // TODO move to npService
+    drawer_open: false
   };
 
   return {
@@ -21,9 +20,6 @@ popupApp.factory('InputManager', ['$interval', '$rootScope', ($interval, $rootSc
       return key ? state[key] : state;
     },
     set(key, value) {
-      if (key === 'current_color') {
-        value = colors[value] || colors.none;
-      }
       state[key] = value;
       return $rootScope.$broadcast('input-manager:updated', state);
     }

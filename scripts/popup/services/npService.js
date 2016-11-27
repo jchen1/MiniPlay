@@ -1,4 +1,4 @@
-popupApp.factory('NpService', ['$interval', '$rootScope', ($interval, $rootScope) => {
+popupApp.factory('NPService', ['$interval', '$rootScope', ($interval, $rootScope) => {
   const status = {
     title: '',
     artist: '',
@@ -24,7 +24,7 @@ popupApp.factory('NpService', ['$interval', '$rootScope', ($interval, $rootScope
   let disabled = {};
   let state = StateEnum.NO_TAB;
 
-  function update(event, updated) {
+  function update(event, { data: updated }) {
     if (updated.state) {
       state = updated.state;
       return $rootScope.$broadcast('np-service:updated', { state, status, queue, disabled });

@@ -30,7 +30,7 @@ popupApp.directive('mpSlider', () => {
         $(element).hide().show(0); // Force reflow
       });
 
-      scope.$watch(() => scope.musicStatus.disabled.slider, value => {
+      scope.$watch(() => scope.np.disabled.slider, value => {
         if (value === true) {
           $(element).add($(element).parent()).on('mousedown mouseup', false);
         } else {

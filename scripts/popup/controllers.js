@@ -1,4 +1,5 @@
-const controller = popupApp.controller('PopupController', ['$scope', function($scope) {
+const controller = popupApp.controller('PopupController', ['$scope', 'npService', function($scope, npService) {
+
   $scope.StateEnum = StateEnum;
   $scope.RepeatEnum = RepeatEnum;
   $scope.ThumbEnum = ThumbEnum;
@@ -24,26 +25,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
     current_color: $scope.colors.none
   };
 
-  $scope.musicStatus = {
-    state: StateEnum.NO_TAB,
-    title: 'No music tab found',
-    artist: '',
-    album: '',
-    album_art: 'img/default_album.png',
-    shuffle: false,
-    repeat: RepeatEnum.NONE,
-    current_time: '',
-    total_time: '',
-    current_time_s: 0,
-    total_time_s: 0,
-    status: StatusEnum.PAUSED,
-    disabled: {},
-    volume: 100,
-    thumb: ThumbEnum.NONE,
-    artist_id: '',
-    album_id: '',
-    protocol: 'gmusic'
-  };
+  $scope.np = npService.get();
 
   $scope.data = {
     playlists: {
@@ -83,7 +65,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   $scope.counts = {};
 
   $scope.repeat_icon = function() {
-    return ($scope.musicStatus.repeat === RepeatEnum.ONE) ? 'repeat_one' : 'repeat';
+    return ($scope.np.status.repeat === RepeatEnum.ONE) ? 'repeat_one' : 'repeat';
   };
 
   $scope.menu_icon = function() {
@@ -91,7 +73,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.menu_icon_click = function() {
-    if ($scope.musicStatus.protocol === 'gmusic') {
+    if ($scope.np.status.protocol === 'gmusic') {
       if ($scope.status.displayed_content === '' || $scope.status.displayed_content === 'current_playlist') {
         $scope.status.drawer_open = true;
       } else {
@@ -112,9 +94,9 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.volume_icon = function() {
-    if ($scope.musicStatus.volume === 0) {
+    if ($scope.np.status.volume === 0) {
       return 'volume_mute';
-    } else if ($scope.musicStatus.volume < 50) {
+    } else if ($scope.np.status.volume < 50) {
       return 'volume_down';
     }
 
@@ -122,7 +104,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.status_icon = function() {
-    return ($scope.musicStatus.status === StatusEnum.PAUSED) ? 'play_arrow' : 'pause';
+    return ($scope.np.status.status === StatusEnum.PAUSED) ? 'play_arrow' : 'pause';
   };
 
   $scope.should_show_art = function() {
@@ -130,7 +112,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.album_art_background = function() {
-    return `${$scope.musicStatus.state === StateEnum.PLAYING ? '' : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), no-repeat '}url(${$scope.musicStatus.album_art})`;
+    return `${$scope.np.state === StateEnum.PLAYING ? '' : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), no-repeat '}url(${$scope.np.status.album_art})`;
   };
 
   $scope.artist_background = function(image) {
@@ -138,7 +120,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.status_title = function() {
-    return ($scope.musicStatus.status === StatusEnum.PAUSED) ? 'Play' : 'Pause';
+    return ($scope.np.status.status === StatusEnum.PAUSED) ? 'Play' : 'Pause';
   };
 
   $scope.search = function() {
@@ -156,19 +138,18 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.setState = function(state) {
-    $scope.musicStatus.state = state;
     switch (state) {
       case StateEnum.NO_TAB:
-        $scope.musicStatus.album_art = 'img/default_album.png';
-        $scope.musicStatus.title = 'No music tab found';
-        $scope.musicStatus.artist = '';
-        $scope.musicStatus.album = '';
+        $scope.np.status.album_art = 'img/default_album.png';
+        $scope.np.status.title = 'No music tab found';
+        $scope.np.status.artist = '';
+        $scope.np.status.album = '';
         break;
       case StateEnum.NO_SONG:
-        $scope.musicStatus.album_art = 'img/default_album.png';
-        $scope.musicStatus.title = 'No song selected';
-        $scope.musicStatus.artist = '';
-        $scope.musicStatus.album = '';
+        $scope.np.status.album_art = 'img/default_album.png';
+        $scope.np.status.title = 'No song selected';
+        $scope.np.status.artist = '';
+        $scope.np.status.album = '';
         break;
       case StateEnum.PLAYING:
       default:
@@ -178,9 +159,9 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.set_disabled = function(disabled) {
-    $scope.musicStatus.disabled = {};
+    $scope.np.disabled = {};
     for (let i = 0; i < disabled.length; i++) {
-      $scope.musicStatus.disabled[disabled[i]] = true;
+      $scope.np.disabled[disabled[i]] = true;
     }
   };
 
@@ -213,7 +194,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
 
   $scope.dataClick = function(type, data) {
     const oldContent = $scope.status.displayed_content;
-    if ($scope.interfacePort && $scope.musicStatus.protocol === 'gmusic') {
+    if ($scope.interfacePort && $scope.np.status.protocol === 'gmusic') {
       $scope.status.displayed_content = 'loading';
       switch (type) {
         case 'recent':
@@ -336,9 +317,9 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
   };
 
   $scope.is_song_playing = function(song) {
-    return (song.title === $scope.musicStatus.title &&
-              song.artist === $scope.musicStatus.artist &&
-              song.album === $scope.musicStatus.album);
+    return (song.title === $scope.np.status.title &&
+              song.artist === $scope.np.status.artist &&
+              song.album === $scope.np.status.album);
   };
 
   $scope.is_drawer_open = function() {
@@ -347,7 +328,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
 
   $scope.handle_key = function($event) {
     if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode === 32) {
-      $scope.musicStatus.status = !$scope.musicStatus.status;
+      $scope.np.status.status = !$scope.np.status.status;
       if ($scope.interfacePort) {
         $scope.interfacePort.postMessage(
           {
@@ -395,41 +376,21 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
 
   function update(response) {
     if (chrome.extension.lastError) {
-      $scope.$apply(() => {
-        $scope.setState(StateEnum.NO_TAB);
-      });
-    } else {
-      $.extend($scope.musicStatus, response);
-      if (response.title === '') {
-        $scope.$apply(() => {
-          $scope.setState(StateEnum.NO_SONG);
-          $scope.changeColor($scope.colors[response.protocol]);
-        });
-      } else {
-        $scope.$apply(() => {
-          $scope.setState(StateEnum.PLAYING);
-          $scope.changeColor($scope.colors[response.protocol]);
-
-          if ($scope.status.slider_dragging === true) {
-            response.current_time_s = $scope.current_time_s;
-            response.current_time = $scope.current_time;
-          }
-
-          $scope.set_disabled(response.disabled_buttons);
-
-          for (let i = 0; response.playlist && i < response.playlist.length; i++) {
-            if (response.playlist[i].title &&
-                  ($scope.data.current_playlist.length <= i ||
-                    response.playlist[i].title !== $scope.data.current_playlist[i].title ||
-                    response.playlist[i].currently_playing !== $scope.data.current_playlist[i].currently_playing)) {
-              $scope.data.current_playlist[i] = response.playlist[i];
-              $scope.data.current_playlist[i].index = i;
-            }
-          }
-        });
-      }
+      $scope.$emit('msg:status', { state: StateEnum.NO_TAB });
     }
+    $scope.$emit('msg:status', response);
   }
+
+  $scope.$on('np-service:updated', (event, np) => {
+    $scope.setState(np.state);
+    $scope.changeColor($scope.colors[np.status.protocol]);
+    if ($scope.status.slider_dragging === true) {
+      np.status = _.omit(np.status, 'current_time_s', 'current_time');
+    }
+    $scope.$apply(() => {
+      $scope.np = _.extend({}, $scope.np, np);
+    });
+  });
 
   function routeInterfaceMsg(msg) {
     if (msg.type === 'status') {

@@ -6,21 +6,25 @@
 
   <script src='scripts/vendor/jquery.js'></script>
   <script src='scripts/vendor/angular.min.js'></script>
+  <script src='scripts/vendor/lodash.js'></script>
+
   <script src='scripts/enums.js'></script>
-  <script src='scripts/popup.js'></script>
-  <script src='scripts/controllers.js'></script>
-  <script src='scripts/directives.js'></script>
+  <script src='scripts/popup/popup.js'></script>
+  <script src='scripts/popup/controllers.js'></script>
+  <script src='scripts/popup/directives.js'></script>
+  <script src='scripts/popup/services/npService.js'></script>
+
 </head>
 <body ng-controller='PopupController' ng-mouseup='status.slider_dragging = false' ng-keyup='handle_key($event)'>
 
   <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header'>
-      <div class="mdl-layout__drawer-button" ng-click="menu_icon_click()" ng-if='musicStatus.protocol == "gmusic"'><i class="material-icons">{{menu_icon()}}</i></div>
+      <div class="mdl-layout__drawer-button" ng-click="menu_icon_click()" ng-if='np.status.protocol == "gmusic"'><i class="material-icons">{{menu_icon()}}</i></div>
       <i class='material-icons close-button' ng-click='clear_stack()' ng-show='data.view_stack.length > 0'>close</i>
-      <section id='song-info' class='mdl-layout-title' ng-style='{"padding-left": musicStatus.protocol == "gmusic" ? 60 : 20}'>
-        <div id='title' ng-style='{"text-transform": status.displayed_content == "" || status.displayed_content == "current_playlist" ? "none" : "capitalize", width: musicStatus.protocol == "gmusic" ? 220 : 260}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? musicStatus.title : data.title}}</div>
-        <div id='subtitle' ng-switch='status.displayed_content == "" || status.displayed_content == "current_playlist"' ng-style='{width: musicStatus.protocol == "gmusic" ? 220 : 260}'>
-          <div ng-switch-when='true' ng-hide='musicStatus.state != StateEnum.PLAYING'><a href='#' ng-click='data_click("artist", {id: musicStatus.artist_id})'>{{musicStatus.artist}}</a> <span ng-hide='musicStatus.album.length == 0'>-</span> <a href='#' ng-click='data_click("album", {id: musicStatus.album_id})'>{{musicStatus.album}}</a></div>
+      <section id='song-info' class='mdl-layout-title' ng-style='{"padding-left": np.status.protocol == "gmusic" ? 60 : 20}'>
+        <div id='title' ng-style='{"text-transform": status.displayed_content == "" || status.displayed_content == "current_playlist" ? "none" : "capitalize", width: np.status.protocol == "gmusic" ? 220 : 260}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? np.status.title : data.title}}</div>
+        <div id='subtitle' ng-switch='status.displayed_content == "" || status.displayed_content == "current_playlist"' ng-style='{width: np.status.protocol == "gmusic" ? 220 : 260}'>
+          <div ng-switch-when='true' ng-hide='np.state != StateEnum.PLAYING'><a href='#' ng-click='data_click("artist", {id: np.status.artist_id})'>{{np.status.artist}}</a> <span ng-hide='np.status.album.length == 0'>-</span> <a href='#' ng-click='data_click("album", {id: np.status.album_id})'>{{np.status.album}}</a></div>
           <div ng-switch-when='false'>{{data.subtitle}}</div>
         </div>
       </section>
@@ -47,8 +51,8 @@
     </div>
     <section class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>
       <div id='art-controls'>
-        <i mp-control id='repeat' class='material-icons' ng-class='{"art-control-active": musicStatus.repeat != RepeatEnum.NONE}' ng-disabled='musicStatus.state != StateEnum.PLAYING || musicStatus.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
-        <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": musicStatus.shuffle == true}' ng-disabled='musicStatus.state != StateEnum.PLAYING || musicStatus.disabled.shuffle' title='Shuffle songs' ng-click='musicStatus.shuffle=!musicStatus.shuffle'>shuffle</i>
+        <i mp-control id='repeat' class='material-icons' ng-class='{"art-control-active": np.status.repeat != RepeatEnum.NONE}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
+        <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": np.status.shuffle == true}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.shuffle' title='Shuffle songs' ng-click='np.status.shuffle=!np.status.shuffle'>shuffle</i>
       </div>
     </section>
     <section id='list-content' ng-switch='status.displayed_content' infinite-scroll='scroll_data(status.displayed_content)' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
@@ -90,10 +94,10 @@
 
     <footer id='controls'>
       <p id='slider-wrapper'>
-        <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{musicStatus.total_time_s}}' value='{{musicStatus.current_time_s}}' ng-mousedown='status.slider_dragging = true' tabindex="-1" />
+        <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{np.status.total_time_s}}' value='{{np.status.current_time_s}}' ng-mousedown='status.slider_dragging = true' tabindex="-1" />
       </p>
-      <div id='current-time' ng-show='musicStatus.state == StateEnum.PLAYING'>{{musicStatus.current_time}}</div>
-      <div id='total-time' ng-show='musicStatus.state == StateEnum.PLAYING'>{{musicStatus.total_time}}</div>
+      <div id='current-time' ng-show='np.state == StateEnum.PLAYING'>{{np.status.current_time}}</div>
+      <div id='total-time' ng-show='np.state == StateEnum.PLAYING'>{{np.status.total_time}}</div>
       <div id='controls-left' ng-include src='"templates/controls-left.html"'></div>
       <div id='controls-right' ng-include src='"templates/controls-right.html"'></div>
     </footer>

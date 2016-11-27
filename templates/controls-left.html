@@ -1,9 +1,9 @@
-<button mp-control id='rew' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='musicStatus.state != StateEnum.PLAYING || musicStatus.disabled.rew' title='Previous song'>
+<button mp-control id='rew' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.rew' title='Previous song'>
   <i class="material-icons">skip_previous</i>
 </button>
-<button mp-control id='play' class='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary' ng-disabled='musicStatus.state != StateEnum.PLAYING || musicStatus.disabled.play' ng-attr-title='{{status_title()}}' ng-click='musicStatus.status=!musicStatus.status' tabindex="0">
+<button mp-control id='play' class='mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--primary' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.play' ng-attr-title='{{status_title()}}' ng-click='np.status.status=!np.status.status' tabindex="0">
   <i class="material-icons">{{status_icon()}}</i>
 </button>
-<button mp-control id='ff' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='musicStatus.state != StateEnum.PLAYING || musicStatus.disabled.ff' title='Next song'>
+<button mp-control id='ff' class='mdl-button mdl-js-button mdl-button--icon' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.ff' title='Next song'>
   <i class="material-icons">skip_next</i>
 </button>

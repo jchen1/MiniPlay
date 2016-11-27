@@ -1,4 +1,4 @@
-/* eslint-disable camel-case */
+/* eslint-disable camelcase */
 
 const api_key = '2aa5bd89dfc1b94205cc65b55556ef0e';
 const api_secret = '80bec7945eb422b6030391d85896174a';
@@ -24,8 +24,10 @@ function getQueryString(params) {
   let o = '';
 
   for (const x in params) {
-    parts.push(`${x}=${encodeURIComponent(params[x])}`);
-    keys.push(x);
+    if (params.hasOwnProperty(x)) {
+      parts.push(`${x}=${encodeURIComponent(params[x])}`);
+      keys.push(x);
+    }
   }
 
   keys.sort();

@@ -24,7 +24,7 @@
       <section id='song-info' class='mdl-layout-title' ng-style='{"padding-left": np.status.protocol == "gmusic" ? 60 : 20}'>
         <div id='title' ng-style='{"text-transform": status.displayed_content == "" || status.displayed_content == "current_playlist" ? "none" : "capitalize", width: np.status.protocol == "gmusic" ? 220 : 260}'>{{status.displayed_content == "" || status.displayed_content == "current_playlist" ? np.status.title : data.title}}</div>
         <div id='subtitle' ng-switch='status.displayed_content == "" || status.displayed_content == "current_playlist"' ng-style='{width: np.status.protocol == "gmusic" ? 220 : 260}'>
-          <div ng-switch-when='true' ng-hide='np.state != StateEnum.PLAYING'><a href='#' ng-click='data_click("artist", {id: np.status.artist_id})'>{{np.status.artist}}</a> <span ng-hide='np.status.album.length == 0'>-</span> <a href='#' ng-click='data_click("album", {id: np.status.album_id})'>{{np.status.album}}</a></div>
+          <div ng-switch-when='true' ng-hide='np.state != StateEnum.PLAYING'><a href='#' ng-click='dataClick("artist", {id: np.status.artist_id})'>{{np.status.artist}}</a> <span ng-hide='np.status.album.length == 0'>-</span> <a href='#' ng-click='dataClick("album", {id: np.status.album_id})'>{{np.status.album}}</a></div>
           <div ng-switch-when='false'>{{data.subtitle}}</div>
         </div>
       </section>
@@ -41,11 +41,11 @@
             </div>
           </form>
         </div>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("recent")'><i class='material-icons'>replay</i>Recent</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("playlists")'><i class='material-icons'>playlist_play</i>Playlists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("stations")'><i class='material-icons'>radio</i>Stations</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("artists")'><i class='material-icons'>person</i>Artists</a>
-        <a class="mdl-navigation__link" href="" ng-click='drawer_click("albums")'><i class='material-icons'>album</i>Albums</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("Recent")'><i class='material-icons'>replay</i>Recent</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("Playlists")'><i class='material-icons'>playlist_play</i>Playlists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("Stations")'><i class='material-icons'>radio</i>Stations</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("Artists")'><i class='material-icons'>person</i>Artists</a>
+        <a class="mdl-navigation__link" href="" ng-click='drawer_click("Albums")'><i class='material-icons'>album</i>Albums</a>
         <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'><i class='material-icons'>settings</i>Settings</a>
       </nav>
     </div>

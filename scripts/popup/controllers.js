@@ -1,5 +1,4 @@
 const controller = popupApp.controller('PopupController', ['$scope', 'npService', function($scope, npService) {
-
   $scope.StateEnum = StateEnum;
   $scope.RepeatEnum = RepeatEnum;
   $scope.ThumbEnum = ThumbEnum;
@@ -41,7 +40,6 @@ const controller = popupApp.controller('PopupController', ['$scope', 'npService'
     artists: [],
     albums: [],
     playlist: [],
-    current_playlist: [],
     loading: [],
     '': [],
     last_history: [],
@@ -252,7 +250,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'npService'
     if ($scope.interfacePort) {
       $scope.interfacePort.postMessage(
         {
-          action: `get_${clicked}`,
+          action: `get${clicked}`,
           offset: 0
         });
     }
@@ -376,9 +374,9 @@ const controller = popupApp.controller('PopupController', ['$scope', 'npService'
 
   function update(response) {
     if (chrome.extension.lastError) {
-      $scope.$emit('msg:status', { state: StateEnum.NO_TAB });
+      return $scope.$emit('msg:status', { state: StateEnum.NO_TAB });
     }
-    $scope.$emit('msg:status', response);
+    return $scope.$emit('msg:status', response);
   }
 
   $scope.$on('np-service:updated', (event, np) => {

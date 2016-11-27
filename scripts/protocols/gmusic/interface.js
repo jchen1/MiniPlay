@@ -302,7 +302,7 @@ function search(m) {
   const history = [
     {
       type: 'url',
-      url: `#/sr/${encodeURIComponent(msg.query)}`
+      url: `#/sr/${encodeURIComponent(m.query)}`
     }];
   restoreState(history, m, msg => {
     const rawArtists = document.querySelectorAll('.cluster[data-type="srar"] .material-card');
@@ -312,6 +312,8 @@ function search(m) {
     const artists = parseRawData(rawArtists, 0, artistMap);
     const albums = parseRawData(rawAlbums, 0, albumMap);
     const songs = parseRawData(rawSongs, 0, songMap);
+
+    console.log('hi!');
 
     const searchData = {
       artists,

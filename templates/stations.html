@@ -6,7 +6,7 @@
     <div class="mdl-tabs__panel is-active" id="recents-panel">
         <table class='mdl-data-table mdl-js-data-table playlist-table'>
           <tbody>
-            <tr class='song-row' ng-repeat='station in data.stations.recent_stations' ng-click='data_click("recent_station", station)'>
+            <tr class='song-row' ng-repeat='station in data.stations.recent_stations' ng-click='dataClick("recent_station", station)'>
               <td class='song-details-span mdl-data-table__cell--non-numeric'>
                 <span class='song-info'>
                   <img class='small-art' ng-src='{{station.image}}'/>
@@ -23,7 +23,7 @@
     <div class="mdl-tabs__panel" id="my-panel">
         <table class='mdl-data-table mdl-js-data-table playlist-table'>
           <tbody>
-            <tr class='song-row' ng-repeat='station in data.stations.my_stations' ng-click='data_click("my_station", station)'>
+            <tr class='song-row' ng-repeat='station in data.stations.my_stations' ng-click='dataClick("my_station", station)'>
               <td class='song-details-span mdl-data-table__cell--non-numeric'>
                 <span class='song-info'>
                   <img class='small-art' ng-src='{{station.image}}'/>

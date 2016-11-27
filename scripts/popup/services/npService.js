@@ -52,7 +52,6 @@ popupApp.factory('npService', ['$interval', '$rootScope', ($interval, $rootScope
     } else {
       state = StateEnum.PLAYING;
     }
-
     return $rootScope.$broadcast('np-service:updated', { state, status, queue, disabled });
   }
 

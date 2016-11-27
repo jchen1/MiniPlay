@@ -6,7 +6,7 @@
     </div>
     <div class="mdl-tabs__panel is-active" id="artists-panel">
       <div class='card-table'>
-        <div class='card-image mdl-card mdl-shadow--2dp' ng-repeat='artist in data.search.artists' ng-style='{"background": artist_background(artist.image)}' ng-click='data_click("artist", artist)'>
+        <div class='card-image mdl-card mdl-shadow--2dp' ng-repeat='artist in data.search.artists' ng-style='{"background": artist_background(artist.image)}' ng-click='dataClick("artist", artist)'>
           <div class="mdl-card__title mdl-card--expand"></div>
           <div class="mdl-card__actions">
             <span class="card-image__filename">{{artist.name}}</span>
@@ -18,7 +18,7 @@
     <div class="mdl-tabs__panel" id="albums-panel">
       <table class='mdl-data-table mdl-js-data-table playlist-table'>
         <tbody>
-          <tr class='song-row' ng-repeat='album in data.search.albums' ng-click='data_click("album", album)'>
+          <tr class='song-row' ng-repeat='album in data.search.albums' ng-click='dataClick("album", album)'>
             <td class='song-details-span mdl-data-table__cell--non-numeric'>
               <span class='song-info'>
                 <img class='small-art' ng-src='{{album.image}}'/>

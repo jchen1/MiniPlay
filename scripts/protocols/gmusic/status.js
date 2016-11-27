@@ -14,7 +14,7 @@ const musicStatus = {
   shuffle: '',
   status: '',
   volume: '',
-  playlist: [],
+  queue: [],
   artist_id: '',
   album_id: '',
   protocol: 'gmusic',
@@ -45,7 +45,7 @@ const musicStatus = {
     }
   },
 
-  get_playlist() {
+  get_queue() {
     const playlistRoot = document.querySelector('#queueContainer > .queue-song-table > .song-table > tbody');
     if (!playlistRoot) {
       return [];
@@ -112,7 +112,7 @@ const musicStatus = {
     this.repeat = this.get_repeat();
     this.status = document.querySelector('paper-icon-button[data-id="play-pause"]').getAttribute('title') === 'Pause' ? StatusEnum.PLAYING : StatusEnum.PAUSED;
     this.volume = parseInt(document.querySelector('#material-vslider').getAttribute('aria-valuenow'), 10);
-    this.playlist = this.get_playlist();
+    this.queue = this.get_queue();
     return this;
   }
 };

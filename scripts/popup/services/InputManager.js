@@ -1,6 +1,6 @@
-popupApp.factory('StateService', ['$interval', '$rootScope', ($interval, $rootScope) => {
+popupApp.factory('InputManager', ['$interval', '$rootScope', ($interval, $rootScope) => {
   const colors = {
-    gmusic: '#ef6c00',
+    gmusic: '#ff5722',
     pandora: '#455774',
     spotify: '#84bd00',
     none: 'rgb(244, 67, 54)'
@@ -13,19 +13,19 @@ popupApp.factory('StateService', ['$interval', '$rootScope', ($interval, $rootSc
     displayed_content: '',
     scrolling_busy: false,
     drawer_open: false,
-    current_color: colors.none
+    current_color: colors.none  // TODO move to npService
   };
 
   return {
-    get() {
-      return state;
+    get(key) {
+      return key ? state[key] : state;
     },
-    update(key, value) {
+    set(key, value) {
       if (key === 'current_color') {
         value = colors[value] || colors.none;
       }
       state[key] = value;
-      return $rootScope.$broadcast('state-service:updated', state);
+      return $rootScope.$broadcast('input-manager:updated', state);
     }
   };
 }]);

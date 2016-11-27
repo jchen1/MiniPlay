@@ -20,3 +20,10 @@ const StatusEnum = {
   PAUSED: 0,
   PLAYING: 1
 };
+
+const ColorEnum = {
+  gmusic: '#ff5722',
+  pandora: '#455774',
+  spotify: '#84bd00',
+  none: 'rgb(244, 67, 54)'
+};

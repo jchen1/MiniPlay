@@ -16,7 +16,8 @@ popupApp.factory('NpService', ['$interval', '$rootScope', ($interval, $rootScope
     thumb: ThumbEnum.NONE,
     artist_id: '',
     album_id: '',
-    protocol: 'gmusic',
+    protocol: '',
+    current_color: ColorEnum.none
   };
 
   const queue = [];
@@ -31,9 +32,11 @@ popupApp.factory('NpService', ['$interval', '$rootScope', ($interval, $rootScope
 
     const newQueue = updated.queue;
     const newDisabled = updated.disabled;
-    const pickedUpdated = _.omit(updated, 'queue', 'disabled', 'state');
-
+    const pickedUpdated = _.omit(updated, 'queue', 'disabled', 'state', 'last_color');
+    status.oldColor = status.color;
     _.extend(status, pickedUpdated);
+    status.color = ColorEnum[status.protocol] || ColorEnum.none;
+
     _.each(newQueue, (item, index) => {
       const oldItem = queue[index] || {};
       if (item.title &&

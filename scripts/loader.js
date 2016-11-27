@@ -8,7 +8,7 @@ function load() {
   };
 
   const backgroundPort = chrome.runtime.connect({ name: 'loader' });
-  for (const protocol of urls) {
+  for (const protocol in urls) {
     if (urls.hasOwnProperty(protocol) && document.URL.search(urls[protocol]) > 0) {
       backgroundPort.postMessage({ protocol });
     }

@@ -51,8 +51,6 @@ popupApp.directive('mdlSwitch', () => ({
 
       if (mdlSwitch) mdlSwitch[func]();
 
-      console.log(`${attr}, ${newValue}`);
-
       if (typeof (newValue) !== 'undefined') {
         const newSetting = {};
         newSetting[attr] = newValue;
@@ -172,18 +170,17 @@ popupApp.directive('infiniteScroll', [
   }
 ]);
 
-popupApp.directive('focusMe', $parse => ({
-  link(scope, element, attrs) {
-    const model = $parse(attrs.focusMe);
-    scope.$watch(model, value => {
-      if (value === true) {
-        element[0].focus();
-      } else {
-        element[0].blur();
-      }
-    });
-  }
-}));
+// popupApp.directive('focusMe', $parse => ({
+//   link(scope, element, attrs) {
+//     scope.$watch($parse(attrs.focusMe), value => {
+//       if (value === true) {
+//         element[0].focus();
+//       } else {
+//         element[0].blur();
+//       }
+//     });
+//   }
+// }));
 
 popupApp.directive('mpControl', () => ({
   restrict: 'A',

@@ -1,6 +1,8 @@
-const apiKey = '2aa5bd89dfc1b94205cc65b55556ef0e';
-const apiSecret = '80bec7945eb422b6030391d85896174a';
-const apiUrl = 'http://ws.audioscrobbler.com/2.0/?';
+/* eslint-disable camel-case */
+
+const api_key = '2aa5bd89dfc1b94205cc65b55556ef0e';
+const api_secret = '80bec7945eb422b6030391d85896174a';
+const apiUrl = 'http://ws.audioscrobbler.com/2.0/';
 
 function getSignature(params) {
   const keys = Object.keys(params);
@@ -11,7 +13,7 @@ function getSignature(params) {
     string += key + params[key];
   });
 
-  string += apiSecret;
+  string += api_secret;
 
   return MD5(string);
 }
@@ -21,7 +23,7 @@ function getQueryString(params) {
   const keys = [];
   let o = '';
 
-  for (const x of params) {
+  for (const x in params) {
     parts.push(`${x}=${encodeURIComponent(params[x])}`);
     keys.push(x);
   }
@@ -35,7 +37,7 @@ function getQueryString(params) {
     o = o + keys[i] + params[keys[i]];
   }
 
-  return `${parts.join('&')}&apiSig=${
+  return `?${parts.join('&')}&api_sig=${
          getSignature(params)}`;
 }
 
@@ -66,10 +68,8 @@ function failScrobble(msg) {
 function auth() {
   const params = {
     method: 'auth.gettoken',
-    apiKey,
+    api_key,
   };
-
-  const apiSig = getSignature(params);
 
   $.get(apiUrl + getQueryString(params), data => {
     if ($(data).find('lfm').attr('status') === 'ok') {
@@ -77,7 +77,7 @@ function auth() {
       chrome.storage.sync.set({ lastfm_token: token });
       chrome.tabs.create(
         {
-          url: (`https://www.last.fm/api/auth/?apiKey=${apiKey}&token=${token}`)
+          url: `https://www.last.fm/api/auth/?api_key=${api_key}&token=${token}`
         });
     } else {
       chrome.storage.sync.remove('lastfm_token');
@@ -95,7 +95,7 @@ function getSessionId(cb) {
     } else {
       const params = {
         method: 'auth.getsession',
-        apiKey,
+        api_key,
         token: data.lastfm_token
       };
       $.get(apiUrl + getQueryString(params), xml => {
@@ -124,9 +124,9 @@ function nowPlaying(details) {
             track: details.title,
             album: details.album,
             sk: sessionId,
-            apiKey
+            api_key
           };
-          params.apiSig = getSignature(params);
+          params.api_sig = getSignature(params);
           $.post(apiUrl, params).error(data => {
             const status = $(data).find('lfm').attr('status');
             if (status !== 'ok') {
@@ -164,9 +164,9 @@ function scrobble(details) {
               'timestamp[0]': Math.round((new Date().getTime() / 1000) - details.total_time_s),
               'album[0]': details.album,
               sk: sessionId,
-              apiKey
+              api_key
             };
-            params.apiSig = getSignature(params);
+            params.api_sig = getSignature(params);
 
             $.post(apiUrl, params).error(data => {
               const status = $(data.responseXML).find('lfm').attr('status');

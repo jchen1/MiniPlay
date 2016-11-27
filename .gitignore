@@ -1,3 +1,4 @@
 .DS_Store
 img/sprites.psd
 node_modules
+npm-debug.log

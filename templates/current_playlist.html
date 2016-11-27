@@ -16,7 +16,7 @@
             <div class='song-title'>{{song.title}}</div>
             <div class='song-artist-album'>{{song.artist}} - {{song.album}}</div>
           </div>
-          <div class='song-indicator' ng-class='{"song-indicator-active" : is_song_playing(song) && music_status.status == StatusEnum.PLAYING}' ng-disabled='!is_song_playing(song)'></div>
+          <div class='song-indicator' ng-class='{"song-indicator-active" : is_song_playing(song) && musicStatus.status == StatusEnum.PLAYING}' ng-disabled='!is_song_playing(song)'></div>
         </span>
       </td>
       <td class='duration'>

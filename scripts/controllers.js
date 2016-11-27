@@ -155,7 +155,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
     }
   };
 
-  $scope.set_state = function(state) {
+  $scope.setState = function(state) {
     $scope.musicStatus.state = state;
     switch (state) {
       case StateEnum.NO_TAB:
@@ -367,7 +367,7 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
     }
   };
 
-  $scope.change_color = function(newColor) {
+  $scope.changeColor = function(newColor) {
     const oldColor = $scope.status.current_color;
     for (let i = 0; i < document.styleSheets.length; i++) {
       if (document.styleSheets[i].href) {
@@ -392,6 +392,44 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
       });
     }
   });
+
+  function update(response) {
+    if (chrome.extension.lastError) {
+      $scope.$apply(() => {
+        $scope.setState(StateEnum.NO_TAB);
+      });
+    } else {
+      $.extend($scope.musicStatus, response);
+      if (response.title === '') {
+        $scope.$apply(() => {
+          $scope.setState(StateEnum.NO_SONG);
+          $scope.changeColor($scope.colors[response.protocol]);
+        });
+      } else {
+        $scope.$apply(() => {
+          $scope.setState(StateEnum.PLAYING);
+          $scope.changeColor($scope.colors[response.protocol]);
+
+          if ($scope.status.slider_dragging === true) {
+            response.current_time_s = $scope.current_time_s;
+            response.current_time = $scope.current_time;
+          }
+
+          $scope.set_disabled(response.disabled_buttons);
+
+          for (let i = 0; response.playlist && i < response.playlist.length; i++) {
+            if (response.playlist[i].title &&
+                  ($scope.data.current_playlist.length <= i ||
+                    response.playlist[i].title !== $scope.data.current_playlist[i].title ||
+                    response.playlist[i].currently_playing !== $scope.data.current_playlist[i].currently_playing)) {
+              $scope.data.current_playlist[i] = response.playlist[i];
+              $scope.data.current_playlist[i].index = i;
+            }
+          }
+        });
+      }
+    }
+  }
 
   function routeInterfaceMsg(msg) {
     if (msg.type === 'status') {
@@ -426,7 +464,6 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
 
   const init = function() {
     $scope.backgroundPort = chrome.runtime.connect({ name: 'popup' });
-
     $scope.backgroundPort.onMessage.addListener(msg => {
       if (msg.type === 'connect') {
         $scope.interfacePort = chrome.tabs.connect(msg.id, { name: 'popup' });
@@ -434,12 +471,12 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
         $scope.interfacePort.onDisconnect.addListener(() => {
           $scope.interfacePort = null;
           $scope.$apply(() => {
-            $scope.set_state(StateEnum.NO_TAB);
+            $scope.setState(StateEnum.NO_TAB);
           });
         });
         $scope.interfacePort.onMessage.addListener(routeInterfaceMsg);
         $scope.$apply(() => {
-          $scope.set_state(StateEnum.NO_SONG);
+          $scope.setState(StateEnum.NO_SONG);
         });
       }
     });
@@ -462,44 +499,6 @@ const controller = popupApp.controller('PopupController', ['$scope', function($s
         }
       });
     });
-
-    function update(response) {
-      if (chrome.extension.lastError) {
-        $scope.$apply(() => {
-          $scope.set_state(StateEnum.NO_TAB);
-        });
-      } else {
-        $.extend($scope.musicStatus, response);
-        if (response.title === '') {
-          $scope.$apply(() => {
-            $scope.set_state(StateEnum.NO_SONG);
-            $scope.change_color($scope.colors[response.protocol]);
-          });
-        } else {
-          $scope.$apply(() => {
-            $scope.set_state(StateEnum.PLAYING);
-            $scope.change_color($scope.colors[response.protocol]);
-
-            if ($scope.status.slider_dragging === true) {
-              response.current_time_s = $scope.current_time_s;
-              response.current_time = $scope.current_time;
-            }
-
-            $scope.set_disabled(response.disabled_buttons);
-
-            for (let i = 0; response.playlist && i < response.playlist.length; i++) {
-              if (response.playlist[i].title &&
-                    ($scope.data.current_playlist.length <= i ||
-                     response.playlist[i].title !== $scope.data.current_playlist[i].title ||
-                     response.playlist[i].currently_playing !== $scope.data.current_playlist[i].currently_playing)) {
-                $scope.data.current_playlist[i] = response.playlist[i];
-                $scope.data.current_playlist[i].index = i;
-              }
-            }
-          });
-        }
-      }
-    }
   };
 
   init();

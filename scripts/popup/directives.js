@@ -1,4 +1,4 @@
-popupApp.directive('mpSlider', () => {
+popupApp.directive('mpSlider', ['CommService', CommService => {
   const secondsToHms = function(d) {
     d = Number(d);
     const h = Math.floor(d / 3600);
@@ -10,15 +10,13 @@ popupApp.directive('mpSlider', () => {
   return {
     restrict: 'C',
     link(scope, element, attrs) {
+      CommService.init();
       $(element).on('mouseup', () => {
-        if (scope.interfacePort) {
-          scope.interfacePort.postMessage(
-            {
-              action: 'sendCommand',
-              type: 'slider',
-              position: $(element).val() / $(element).attr('max')
-            });
-        }
+        CommService.postMessage({
+          action: 'sendCommand',
+          type: 'slider',
+          position: $(element).val() / $(element).attr('max')
+        });
       }).on('input', () => {
         $('#current-time').html(secondsToHms($(element).val()));
       });
@@ -39,7 +37,7 @@ popupApp.directive('mpSlider', () => {
       });
     }
   };
-});
+}]);
 
 popupApp.directive('mdlSwitch', ['SettingsManager', SettingsManager => ({
   restrict: 'A',
@@ -60,18 +58,16 @@ popupApp.directive('mdlSwitch', ['SettingsManager', SettingsManager => ({
   }
 })]);
 
-popupApp.directive('mpVolslider', () => ({
+popupApp.directive('mpVolslider', ['CommService', CommService => ({
   restrict: 'C',
   link(scope, element, attrs) {
+    CommService.init();
     $(element).on('input', event => {
-      if (scope.interfacePort) {
-        scope.interfacePort.postMessage(
-          {
-            action: 'sendCommand',
-            type: 'vslider',
-            position: $(element).val() / $(element).attr('max')
-          });
-      }
+      CommService.postMessage({
+        action: 'sendCommand',
+        type: 'vslider',
+        position: $(element).val() / $(element).attr('max')
+      });
     });
 
     scope.$watch(() => attrs.value, () => {
@@ -81,7 +77,7 @@ popupApp.directive('mpVolslider', () => ({
       $(element).hide().show(0); // Force reflow
     });
   }
-}));
+})]);
 
 popupApp.directive('mpScrollIf', () => {
   const getScrollingParent = function(element) {
@@ -182,18 +178,16 @@ popupApp.directive('focusMe', $parse => ({
   }
 }));
 
-popupApp.directive('mpControl', () => ({
+popupApp.directive('mpControl', ['CommService', CommService => ({
   restrict: 'A',
   link(scope, elements, attrs) {
+    CommService.init();
     $(elements).on('click', event => {
-      if (scope.interfacePort) {
-        scope.interfacePort.postMessage(
-          {
-            action: 'sendCommand',
-            type: event.currentTarget.getAttribute('id')
-          });
-        event.stopPropagation();
-      }
+      CommService.postMessage({
+        action: 'sendCommand',
+        type: event.currentTarget.getAttribute('id')
+      });
+      event.stopPropagation();
     });
   }
-}));
+})]);

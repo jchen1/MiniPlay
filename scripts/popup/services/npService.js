@@ -1,6 +1,6 @@
-popupApp.factory('npService', ['$interval', '$rootScope', ($interval, $rootScope) => {
+popupApp.factory('NpService', ['$interval', '$rootScope', ($interval, $rootScope) => {
   const status = {
-    title: 'No music tab found',
+    title: '',
     artist: '',
     album: '',
     album_art: 'img/default_album.png',

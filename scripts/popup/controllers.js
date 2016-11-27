@@ -59,6 +59,8 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
           $scope.data.subtitle = oldView.subtitle;
         } else {
           InputManager.set('displayed_content', '');
+          $scope.data.title = '';
+          $scope.data.subtitle = '';
         }
       }
     } else {

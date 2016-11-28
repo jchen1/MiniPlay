@@ -63,7 +63,7 @@
         <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": np.status.shuffle == true}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.shuffle' title='Shuffle songs' ng-click='np.status.shuffle=!np.status.shuffle'>shuffle</i>
       </div>
     </section>-->
-    <section id='list-content' ng-switch='InputManager.get("displayedContent")' infinite-scroll='scroll_data(InputManager.get("displayedContent"))' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
+    <section id='list-content' ng-switch='InputManager.get("displayedContent")' infinite-scroll='scrollData(InputManager.get("displayedContent"))' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
       <div ng-switch-when='playlist'>
         <div id='playlist' ng-include src='"templates/playlist.html"'></div>
       </div>

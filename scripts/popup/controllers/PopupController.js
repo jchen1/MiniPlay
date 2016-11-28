@@ -229,7 +229,9 @@ const controller = angular.module('app').controller('PopupController', function(
     $scope.data.subtitle = '';
   };
 
-  $scope.scroll_data = function(contentType) {
+  $scope.scrollData = function(contentType) {
+    if (InputManager.get('displayedContent') === '') return;
+
     CommService.postMessage({
       action: `get_${contentType}`,
       offset: (contentType === 'stations' ? 0 : $scope.data[contentType].length)
@@ -247,7 +249,6 @@ const controller = angular.module('app').controller('PopupController', function(
 
   $scope.should_disable_scroll = function() {
     if (InputManager.get('scrollingBusy')) return true;
-
 
     if (InputManager.get('displayedContent') === 'stations') {
       // TODO

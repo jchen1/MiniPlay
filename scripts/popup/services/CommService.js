@@ -1,11 +1,24 @@
-angular.module('app').factory('CommService', ($interval, $rootScope) => {
+angular.module('app').factory('CommService', $rootScope => {
   let hasInit = false;
   let backgroundPort;
   let interfacePort;
+  const pendingRequests = {};
+
+  function uuid(a) {
+    // eslint-disable-next-line
+    return a?(a^Math.random()*16>>a/4).toString(16):([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,uuid);
+  }
 
   function routeInterfaceMsg(msg) {
+    msg.uuid = msg.uuid || 'none';
     if (chrome.extension.lastError) {
+      if (pendingRequests[msg.uuid]) {
+        pendingRequests[msg.uuid].reject(new Error('unknown error'));
+      }
       return $rootScope.$broadcast('msg:status', { state: StateEnum.NO_TAB });
+    }
+    if (pendingRequests[msg.uuid]) {
+      pendingRequests[msg.uuid].resolve(msg);
     }
     return $rootScope.$broadcast(`msg:${msg.type}`, msg);
   }
@@ -44,9 +57,19 @@ angular.module('app').factory('CommService', ($interval, $rootScope) => {
       _.unset(interfaceListeners, name);
     },
     postMessage(msg) {
-      if (hasInit && interfacePort) {
-        interfacePort.postMessage(msg);
-      }
+      const promise = new Promise((resolve, reject) => {
+        if (!hasInit) {
+          reject(new Error('CommService has not been initialized!'));
+        } else if (!interfacePort) {
+          reject(new Error('No music tab found'));
+        } else {
+          msg.uuid = msg.uuid || uuid();
+          pendingRequests[msg.uuid] = { resolve, reject };
+          interfacePort.postMessage(msg);
+        }
+      });
+
+      return promise;
     },
     isConnected() {
       return !_.isNil(interfacePort);

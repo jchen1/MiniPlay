@@ -1,4 +1,4 @@
-const controller = popupApp.controller('PopupController', ['$scope', '$state', 'CommService', 'NPService', 'InputManager', 'SettingsManager', function($scope, $state, CommService, NPService, InputManager, SettingsManager) {
+const controller = angular.module('app').controller('PopupController', function($scope, $state, CommService, NPService, InputManager, SettingsManager) {
   $scope.InputManager = InputManager;
   $scope.SettingsManager = SettingsManager;
   $scope.np = NPService.get();
@@ -366,4 +366,4 @@ const controller = popupApp.controller('PopupController', ['$scope', '$state', '
   }
 
   init();
-}]);
+});

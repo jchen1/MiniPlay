@@ -1,4 +1,4 @@
-popupApp.factory('NPService', ['$interval', '$rootScope', ($interval, $rootScope) => {
+angular.module('app').factory('NPService', ($interval, $rootScope) => {
   const status = {
     title: '',
     artist: '',
@@ -65,4 +65,4 @@ popupApp.factory('NPService', ['$interval', '$rootScope', ($interval, $rootScope
       return { status, queue, disabled };
     }
   };
-}]);
+});

@@ -1,4 +1,4 @@
-popupApp.directive('mpSlider', ['CommService', CommService => {
+angular.module('app').directive('mpSlider', CommService => {
   const secondsToHms = function(d) {
     d = Number(d);
     const h = Math.floor(d / 3600);
@@ -37,9 +37,9 @@ popupApp.directive('mpSlider', ['CommService', CommService => {
       });
     }
   };
-}]);
+});
 
-popupApp.directive('mdlSwitch', ['SettingsManager', SettingsManager => ({
+angular.module('app').directive('mdlSwitch', SettingsManager => ({
   restrict: 'A',
   link(scope, element, attrs) {
     const settingName = attrs['mdl-switch'];
@@ -56,9 +56,9 @@ popupApp.directive('mdlSwitch', ['SettingsManager', SettingsManager => ({
       }
     });
   }
-})]);
+}));
 
-popupApp.directive('mpVolslider', ['CommService', CommService => ({
+angular.module('app').directive('mpVolslider', CommService => ({
   restrict: 'C',
   link(scope, element, attrs) {
     CommService.init();
@@ -77,9 +77,9 @@ popupApp.directive('mpVolslider', ['CommService', CommService => ({
       $(element).hide().show(0); // Force reflow
     });
   }
-})]);
+}));
 
-popupApp.directive('mpScrollIf', () => {
+angular.module('app').directive('mpScrollIf', () => {
   const getScrollingParent = function(element) {
     element = element.parentElement;
     while (element) {
@@ -106,7 +106,7 @@ popupApp.directive('mpScrollIf', () => {
   };
 });
 
-popupApp.directive('infiniteScroll', [
+angular.module('app').directive('infiniteScroll', [
   '$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
     return {
       link(scope, elem, attrs) {
@@ -166,7 +166,7 @@ popupApp.directive('infiniteScroll', [
   }
 ]);
 
-popupApp.directive('focusMe', $parse => ({
+angular.module('app').directive('focusMe', $parse => ({
   link(scope, element, attrs) {
     scope.$watch($parse(attrs.focusMe), value => {
       if (value === true) {
@@ -178,7 +178,7 @@ popupApp.directive('focusMe', $parse => ({
   }
 }));
 
-popupApp.directive('mpControl', ['CommService', CommService => ({
+angular.module('app').directive('mpControl', CommService => ({
   restrict: 'A',
   link(scope, elements, attrs) {
     CommService.init();
@@ -190,4 +190,4 @@ popupApp.directive('mpControl', ['CommService', CommService => ({
       event.stopPropagation();
     });
   }
-})]);
+}));

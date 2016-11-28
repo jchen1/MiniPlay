@@ -1,4 +1,4 @@
-popupApp.factory('SettingsManager', ['$rootScope', $rootScope => {
+angular.module('app').factory('SettingsManager', $rootScope => {
   const settings = {};
   const settingNames = ['shortcuts-enabled', 'notifications-enabled', 'scrobbling-enabled', 'lastfm_sessionID'];
   let hasInit = false;
@@ -54,4 +54,4 @@ popupApp.factory('SettingsManager', ['$rootScope', $rootScope => {
       };
     }
   };
-}]);
+});

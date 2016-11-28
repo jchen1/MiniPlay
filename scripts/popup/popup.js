@@ -1,14 +1,23 @@
-const popupApp = angular.module('app', ['ui.router']);
+angular.module('app', ['ui.router']);
 
-popupApp.config(['$compileProvider', '$stateProvider', function($compileProvider, $stateProvider) {
+angular.module('app').config(($compileProvider, $stateProvider) => {
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|chrome-extension):/);
-  $stateProvider.state('test', {
-    template: '<h1>HIHIHI</h1>'
+  const states = {
+    nowPlaying: {
+      templateUrl: 'templates/nowPlaying.html'
+    },
+    playlist: {
+      templateUrl: 'templates/playlist.html'
+    },
+
+  }
+  $stateProvider.state('nowPlaying', {
+    templateUrl: 'templates/nowPlaying.html'
   });
-}]);
+});
 
 // allow HTML to access enums
-popupApp.run($rootScope => {
+angular.module('app').run($rootScope => {
   $rootScope.StateEnum = StateEnum;
   $rootScope.RepeatEnum = RepeatEnum;
   $rootScope.ThumbEnum = ThumbEnum;

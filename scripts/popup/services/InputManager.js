@@ -1,4 +1,4 @@
-popupApp.factory('InputManager', ['$interval', '$rootScope', ($interval, $rootScope) => {
+angular.module('app').factory('InputManager', ($interval, $rootScope) => {
   const colors = {
     gmusic: '#ff5722',
     pandora: '#455774',
@@ -24,4 +24,4 @@ popupApp.factory('InputManager', ['$interval', '$rootScope', ($interval, $rootSc
       return $rootScope.$broadcast('input-manager:updated', state);
     }
   };
-}]);
+});

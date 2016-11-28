@@ -1,4 +1,4 @@
-popupApp.factory('CommService', ['$interval', '$rootScope', ($interval, $rootScope) => {
+angular.module('app').factory('CommService', ($interval, $rootScope) => {
   let hasInit = false;
   let backgroundPort;
   let interfacePort;
@@ -58,4 +58,4 @@ popupApp.factory('CommService', ['$interval', '$rootScope', ($interval, $rootSco
       return -1;
     }
   };
-}]);
+});

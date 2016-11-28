@@ -1,4 +1,4 @@
-const footerController = popupApp.controller('FooterController', ['$scope', 'CommService', 'NPService', 'InputManager', 'SettingsManager', function($scope, CommService, NPService, InputManager, SettingsManager) {
+const footerController = angular.module('app').controller('FooterController', function($scope, CommService, NPService, InputManager, SettingsManager) {
   $scope.np = NPService.get();
   $scope.InputManager = InputManager;
   $scope.SettingsManager = SettingsManager;
@@ -58,4 +58,4 @@ const footerController = popupApp.controller('FooterController', ['$scope', 'Com
   }
 
   init();
-}]);
+});

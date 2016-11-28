@@ -5,8 +5,10 @@
   <link rel='stylesheet' href='styles/popup.css'>
 
   <script src='scripts/vendor/jquery.js'></script>
-  <script src='scripts/vendor/angular.min.js'></script>
   <script src='scripts/vendor/lodash.js'></script>
+
+  <script src='scripts/vendor/angular.min.js'></script>
+  <script src='scripts/vendor/angular-ui-router.min.js'></script>
 
   <script src='scripts/enums.js'></script>
   <script src='scripts/popup/popup.js'></script>
@@ -19,28 +21,27 @@
   <script src='scripts/popup/services/SettingsManager.js'></script>
 
 </head>
-<body ng-controller='PopupController' ng-mouseup='InputManager.set("slider_dragging", false)' ng-keyup='handleKey($event)'>
-
+<body ng-controller='PopupController' ng-mouseup='InputManager.set("sliderDragging", false)' ng-keyup='handleKey($event)'>
   <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header'>
       <div class="mdl-layout__drawer-button" ng-click="menu_icon_click()" ng-if='np.status.protocol == "gmusic"'><i class="material-icons">{{menu_icon()}}</i></div>
       <i class='material-icons close-button' ng-click='clear_stack()' ng-show='data.view_stack.length > 0'>close</i>
       <section id='song-info' class='mdl-layout-title' ng-style='{"padding-left": np.status.protocol == "gmusic" ? 60 : 20}'>
-        <div id='title' ng-style='{"text-transform": InputManager.get("displayed_content") == "" || InputManager.get("displayed_content") == "current_playlist" ? "none" : "capitalize", width: np.status.protocol == "gmusic" ? 220 : 260}'>{{data.title || np.status.title}}</div>
-        <div id='subtitle' ng-switch='InputManager.get("displayed_content") == "" || InputManager.get("displayed_content") == "current_playlist"' ng-style='{width: np.status.protocol == "gmusic" ? 220 : 260}'>
+        <div id='title' ng-style='{"text-transform": InputManager.get("displayedContent") == "" || InputManager.get("displayedContent") == "current_playlist" ? "none" : "capitalize", width: np.status.protocol == "gmusic" ? 220 : 260}'>{{data.title || np.status.title}}</div>
+        <div id='subtitle' ng-switch='InputManager.get("displayedContent") == "" || InputManager.get("displayedContent") == "current_playlist"' ng-style='{width: np.status.protocol == "gmusic" ? 220 : 260}'>
           <div ng-switch-when='true' ng-hide='np.state != StateEnum.PLAYING'><a href='#' ng-click='dataClick("artist", {id: np.status.artist_id})'>{{np.status.artist}}</a> <span ng-hide='np.status.album.length == 0'>-</span> <a href='#' ng-click='dataClick("album", {id: np.status.album_id})'>{{np.status.album}}</a></div>
           <div ng-switch-when='false'>{{data.subtitle}}</div>
         </div>
       </section>
     </header>
-    <div class="mdl-layout__drawer" ng-class='{"is-visible": InputManager.get("drawer_open")}'>
+    <div class="mdl-layout__drawer" ng-class='{"is-visible": InputManager.get("drawerOpen")}'>
       <span class="mdl-layout-title">MiniPlay</span>
       <nav class="mdl-navigation">
         <div class='search-container'>
           <i class="material-icons">search</i>
           <form class='search' ng-submit='search()'>
             <div class="mdl-textfield mdl-js-textfield">
-              <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search" focus-me='InputManager.get("drawer_open")' tabindex="-1" >
+              <input class="mdl-textfield__input" autocomplete="off" ng-model='data.query' type="text" id="search" focus-me='InputManager.get("drawerOpen")' tabindex="-1" >
               <label class="mdl-textfield__label" for="search">Search in library...</label>
             </div>
           </form>
@@ -59,7 +60,7 @@
         <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": np.status.shuffle == true}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.shuffle' title='Shuffle songs' ng-click='np.status.shuffle=!np.status.shuffle'>shuffle</i>
       </div>
     </section>
-    <section id='list-content' ng-switch='InputManager.get("displayed_content")' infinite-scroll='scroll_data(InputManager.get("displayed_content"))' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
+    <section id='list-content' ng-switch='InputManager.get("displayedContent")' infinite-scroll='scroll_data(InputManager.get("displayedContent"))' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
       <div ng-switch-when='playlist'>
         <div id='playlist' ng-include src='"templates/playlist.html"'></div>
       </div>
@@ -97,7 +98,7 @@
     </section>
     <div ng-include src='"templates/footer.html"'></div>
 
-    <div class='mdl-layout__obfuscator' ng-click='InputManager.set("drawer_open", false)' ng-class='{"is-visible": InputManager.get("drawer_open")}'></div>
+    <div class='mdl-layout__obfuscator' ng-click='InputManager.set("drawerOpen", false)' ng-class='{"is-visible": InputManager.get("drawerOpen")}'></div>
   </div>
 
   <script src="scripts/vendor/material.min.js"></script>

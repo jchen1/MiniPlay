@@ -42,8 +42,8 @@ popupApp.directive('mpSlider', ['CommService', CommService => {
 popupApp.directive('mdlSwitch', ['SettingsManager', SettingsManager => ({
   restrict: 'A',
   link(scope, element, attrs) {
-    const settingName = element.attr('mdl-switch');
-    let firstRun = true;
+    const settingName = attrs['mdl-switch'];
+    let firstRun = true;  // Don't set it here since the MaterialSwitch hasn't been initialized yet
     SettingsManager.init();
     scope.$watch(() => element.parent().attr('class').includes('is-checked'), (newValue, oldValue) => {
       if (firstRun) {

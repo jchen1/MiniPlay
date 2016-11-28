@@ -1,7 +1,9 @@
-const controller = popupApp.controller('PopupController', ['$scope', 'CommService', 'NPService', 'InputManager', 'SettingsManager', function($scope, CommService, NPService, InputManager, SettingsManager) {
+const controller = popupApp.controller('PopupController', ['$scope', '$state', 'CommService', 'NPService', 'InputManager', 'SettingsManager', function($scope, $state, CommService, NPService, InputManager, SettingsManager) {
   $scope.InputManager = InputManager;
   $scope.SettingsManager = SettingsManager;
   $scope.np = NPService.get();
+
+  $state.go('test');
 
   $scope.data = {
     playlists: {
@@ -42,23 +44,23 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
   };
 
   $scope.menu_icon = function() {
-    return (InputManager.get('displayed_content') === '' || InputManager.get('displayed_content') === 'current_playlist') ? 'menu' : 'arrow_back';
+    return (InputManager.get('displayedContent') === '' || InputManager.get('displayedContent') === 'current_playlist') ? 'menu' : 'arrow_back';
   };
 
   $scope.menu_icon_click = function() {
     if ($scope.np.status.protocol === 'gmusic') {
-      if (InputManager.get('displayed_content') === '' || InputManager.get('displayed_content') === 'current_playlist') {
-        InputManager.set('drawer_open', true);
+      if (InputManager.get('displayedContent') === '' || InputManager.get('displayedContent') === 'current_playlist') {
+        InputManager.set('drawerOpen', true);
       } else {
-        InputManager.set('drawer_open', false);
+        InputManager.set('drawerOpen', false);
 
         if ($scope.data.view_stack.length > 0) {
           const oldView = $scope.data.view_stack.pop();
-          InputManager.set('displayed_content', oldView.content);
+          InputManager.set('displayedContent', oldView.content);
           $scope.data.title = oldView.title;
           $scope.data.subtitle = oldView.subtitle;
         } else {
-          InputManager.set('displayed_content', '');
+          InputManager.set('displayedContent', '');
           $scope.data.title = '';
           $scope.data.subtitle = '';
         }
@@ -69,7 +71,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
   };
 
   $scope.should_show_art = function() {
-    return (InputManager.get('playlist_pressed') === false && InputManager.get('displayed_content').length === 0);
+    return (InputManager.get('playlistPressed') === false && InputManager.get('displayedContent').length === 0);
   };
 
   $scope.album_art_background = function() {
@@ -87,9 +89,9 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
         query: $scope.data.query
       });
     $scope.data.title = `Search: ${$scope.data.query}`;
-    InputManager.set('displayed_content', 'loading');
-    InputManager.set('playlist_pressed', false);
-    InputManager.set('drawer_open', false);
+    InputManager.set('displayedContent', 'loading');
+    InputManager.set('playlistPressed', false);
+    InputManager.set('drawerOpen', false);
   };
 
   $scope.setState = function(s) {
@@ -123,19 +125,19 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
   };
 
   $scope.settings_click = function($event) {
-    InputManager.set('displayed_content', 'options');
-    InputManager.set('drawer_open', false);
+    InputManager.set('displayedContent', 'options');
+    InputManager.set('drawerOpen', false);
     $scope.data.title = 'options';
   };
 
   $scope.dataClick = function(type, data) {
-    const oldContent = InputManager.get('displayed_content');
+    const oldContent = InputManager.get('displayedContent');
     if (CommService.isConnected() && $scope.np.status.protocol === 'gmusic') {
-      InputManager.set('displayed_content', 'loading');
+      InputManager.set('displayedContent', 'loading');
 
       switch (type) {
         case 'recent':
-          InputManager.set('displayed_content', '');
+          InputManager.set('displayedContent', '');
           $scope.data.title = '';
           $scope.data.subtitle = '';
         case 'album':
@@ -166,7 +168,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
               index: data.index,
               history: $scope.data.last_history,
             });
-          InputManager.set('displayed_content', '');
+          InputManager.set('displayedContent', '');
           $scope.data.title = '';
           $scope.data.subtitle = '';
           break;
@@ -181,7 +183,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
               index: data.index,
               history: $scope.data.last_history,
             });
-          InputManager.set('displayed_content', '');
+          InputManager.set('displayedContent', '');
           $scope.data.title = '';
           $scope.data.subtitle = '';
           break;
@@ -198,17 +200,17 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
     });
 
     if (clicked !== 'library') {
-      InputManager.set('displayed_content', 'loading');
+      InputManager.set('displayedContent', 'loading');
       $scope.data.title = clicked;
       $scope.data.view_stack.length = 0;
     } else {
-      InputManager.set('displayed_content', '');
+      InputManager.set('displayedContent', '');
       $scope.data.title = '';
       $scope.data.subtitle = '';
     }
 
-    InputManager.set('playlist_pressed', false);
-    InputManager.set('drawer_open', false);
+    InputManager.set('playlistPressed', false);
+    InputManager.set('drawerOpen', false);
   };
 
   $scope.album_art_click = function() {
@@ -222,7 +224,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
 
   $scope.clear_stack = function() {
     $scope.data.view_stack.length = 0;
-    InputManager.set('displayed_content', '');
+    InputManager.set('displayedContent', '');
     $scope.data.title = '';
     $scope.data.subtitle = '';
   };
@@ -232,7 +234,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
       action: `get_${contentType}`,
       offset: (contentType === 'stations' ? 0 : $scope.data[contentType].length)
     });
-    InputManager.set('scrolling_busy', true);
+    InputManager.set('scrollingBusy', true);
   };
 
   $scope.lastfm_auth = function() {
@@ -244,14 +246,14 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
   };
 
   $scope.should_disable_scroll = function() {
-    if (InputManager.get('scrolling_busy')) return true;
+    if (InputManager.get('scrollingBusy')) return true;
 
 
-    if (InputManager.get('displayed_content') === 'stations') {
+    if (InputManager.get('displayedContent') === 'stations') {
       // TODO
       return true;
     }
-    return $scope.counts[InputManager.get('displayed_content')] === $scope.data[InputManager.get('displayed_content')].length;
+    return $scope.counts[InputManager.get('displayedContent')] === $scope.data[InputManager.get('displayedContent')].length;
   };
 
   $scope.is_song_playing = function(song) {
@@ -260,7 +262,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
               song.album === $scope.np.status.album);
   };
 
-  $scope.is_drawer_open = function() {
+  $scope.is_drawerOpen = function() {
     return $('.mdl-layout__drawer').hasClass('is-visible');
   };
 
@@ -274,11 +276,11 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
     } else if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode === 8) {
       if ($scope.data.view_stack.length > 0) {
         const oldView = $scope.data.view_stack.pop();
-        InputManager.set('displayed_content', oldView.content);
+        InputManager.set('displayedContent', oldView.content);
         $scope.data.title = oldView.title;
         $scope.data.subtitle = oldView.subtitle;
       } else {
-        InputManager.set('displayed_content', '');
+        InputManager.set('displayedContent', '');
         $scope.data.title = '';
         $scope.data.subtitle = '';
       }
@@ -306,7 +308,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
     if (np.status.oldColor !== np.status.color) {
       changeColor(np.status.oldColor, np.status.color);
     }
-    if (InputManager.get('slider_dragging') === true) {
+    if (InputManager.get('sliderDragging') === true) {
       np.status = _.omit(np.status, 'current_time_s', 'current_time');
     }
     $scope.$apply(() => {
@@ -331,13 +333,13 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
     if (msg.type !== 'status') {
       if (msg.type === 'artists' || msg.type === 'albums') {
         $scope.data[msg.type] = $scope.data[msg.type].slice(0, msg.offset).concat(msg.data);
-        InputManager.set('scrolling_busy', false);
+        InputManager.set('scrollingBusy', false);
         $scope.counts[msg.type] = msg.count;
       } else if (msg.type === 'playlists') {
         $scope.data.playlists.myPlaylists = $scope.data.playlists.myPlaylists.slice(0, msg.offset).concat(msg.data.myPlaylists);
         $scope.data.playlists.autoPlaylists = msg.data.autoPlaylists;
         $scope.data.playlists.recentPlaylists = msg.data.recentPlaylists;
-        InputManager.set('scrolling_busy', false);
+        InputManager.set('scrollingBusy', false);
         $scope.counts.playlists = msg.count;
       } else if (msg.type === 'search') {
         $scope.data.search = msg.data;
@@ -352,7 +354,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
         $scope.data[msg.type] = msg.data;
       }
       $scope.data.last_history = msg.history;
-      InputManager.set('displayed_content', msg.type);
+      InputManager.set('displayedContent', msg.type);
     }
   }
 

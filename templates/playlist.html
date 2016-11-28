@@ -8,7 +8,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr class='song-row' ng-repeat='song in data.playlist' ng-click='playlist_click(song.id)' mp-scroll-if='InputManager.get("playlist_pressed") && song.currently_playing'>
+    <tr class='song-row' ng-repeat='song in data.playlist' ng-click='playlist_click(song.id)' mp-scroll-if='InputManager.get("playlistPressed") && song.currently_playing'>
       <td class='song-details-span mdl-data-table__cell--non-numeric'>
         <span class='song-info'>
           <img class='small-art' ng-src='{{song.album_art}}' ng-style='{opacity: is_song_playing(song) ? 0 : 100}'/>

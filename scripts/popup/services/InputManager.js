@@ -7,12 +7,12 @@ popupApp.factory('InputManager', ['$interval', '$rootScope', ($interval, $rootSc
   };
 
   const state = {
-    vol_pressed: false,
-    playlist_pressed: false,
-    slider_dragging: false,
-    displayed_content: '',
-    scrolling_busy: false,
-    drawer_open: false
+    volPressed: false,
+    playlistPressed: false,
+    sliderDragging: false,
+    displayedContent: '',
+    scrollingBusy: false,
+    drawerOpen: false
   };
 
   return {

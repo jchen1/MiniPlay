@@ -10,8 +10,8 @@
 
   <script src='scripts/enums.js'></script>
   <script src='scripts/popup/popup.js'></script>
-  <script src='scripts/popup/controllers.js'></script>
-  <script src='scripts/popup/controllers/footerController.js'></script>
+  <script src='scripts/popup/controllers/PopupController.js'></script>
+  <script src='scripts/popup/controllers/FooterController.js'></script>
   <script src='scripts/popup/directives.js'></script>
   <script src='scripts/popup/services/NPService.js'></script>
   <script src='scripts/popup/services/InputManager.js'></script>
@@ -19,7 +19,7 @@
   <script src='scripts/popup/services/SettingsManager.js'></script>
 
 </head>
-<body ng-controller='PopupController' ng-mouseup='InputManager.set("slider_dragging", false)' ng-keyup='handle_key($event)'>
+<body ng-controller='PopupController' ng-mouseup='InputManager.set("slider_dragging", false)' ng-keyup='handleKey($event)'>
 
   <div id='popup' class='mdl-layout mdl-layout--fixed-header'>
     <header class='mdl-layout__header'>
@@ -95,16 +95,7 @@
       </div>
       <div id='list-none' ng-switch-default></div>
     </section>
-
-    <footer id='controls'>
-      <p id='slider-wrapper'>
-        <input class='mp-slider mdl-slider mdl-js-slider' type='range' min='0' max='{{np.status.total_time_s}}' value='{{np.status.current_time_s}}' ng-mousedown='InputManager.set("slider_dragging", true)' tabindex="-1" />
-      </p>
-      <div id='current-time' ng-show='np.state == StateEnum.PLAYING'>{{np.status.current_time}}</div>
-      <div id='total-time' ng-show='np.state == StateEnum.PLAYING'>{{np.status.total_time}}</div>
-      <div id='controls-left' ng-include src='"templates/controls-left.html"'></div>
-      <div id='controls-right' ng-include src='"templates/controls-right.html"'></div>
-    </footer>
+    <div ng-include src='"templates/footer.html"'></div>
 
     <div class='mdl-layout__obfuscator' ng-click='InputManager.set("drawer_open", false)' ng-class='{"is-visible": InputManager.get("drawer_open")}'></div>
   </div>

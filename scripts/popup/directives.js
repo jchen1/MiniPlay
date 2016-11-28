@@ -6,11 +6,11 @@ popupApp.directive('mpSlider', ['CommService', CommService => {
     const s = Math.floor(d % 3600 % 60);
     return ((h > 0 ? `${h}:` : '') + (m > 0 ? `${(h > 0 && m < 10 ? '0' : '') + m}:` : '0:') + (s < 10 ? '0' : '') + s);
   };
+  CommService.init();
 
   return {
     restrict: 'C',
     link(scope, element, attrs) {
-      CommService.init();
       $(element).on('mouseup', () => {
         CommService.postMessage({
           action: 'sendCommand',

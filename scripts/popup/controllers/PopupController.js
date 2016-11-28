@@ -68,20 +68,6 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
     }
   };
 
-  $scope.volume_icon = function() {
-    if ($scope.np.status.volume === 0) {
-      return 'volume_mute';
-    } else if ($scope.np.status.volume < 50) {
-      return 'volume_down';
-    }
-
-    return 'volume_up';
-  };
-
-  $scope.status_icon = function() {
-    return ($scope.np.status.status === StatusEnum.PAUSED) ? 'play_arrow' : 'pause';
-  };
-
   $scope.should_show_art = function() {
     return (InputManager.get('playlist_pressed') === false && InputManager.get('displayed_content').length === 0);
   };
@@ -92,10 +78,6 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
 
   $scope.artist_background = function(image) {
     return `url(${image}) center / cover`;
-  };
-
-  $scope.state_title = function() {
-    return ($scope.np.status.status === StatusEnum.PAUSED) ? 'Play' : 'Pause';
   };
 
   $scope.search = function() {
@@ -131,13 +113,6 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
     }
   };
 
-  $scope.set_disabled = function(disabled) {
-    $scope.np.disabled = {};
-    for (let i = 0; i < disabled.length; i++) {
-      $scope.np.disabled[disabled[i]] = true;
-    }
-  };
-
   $scope.playlist_click = function(id) {
     CommService.postMessage({
       action: 'dataClick',
@@ -145,15 +120,6 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
       id,
       history: $scope.data.last_history
     });
-  };
-
-  $scope.playlist_button_pressed = function() {
-    InputManager.set('playlist_pressed', !InputManager.get('playlist_pressed'));
-    InputManager.set('displayed_content', InputManager.get('playlist_pressed') ? 'current_playlist' : '');
-  };
-
-  $scope.vol_pressed = function() {
-    InputManager.set('vol_pressed', !InputManager.get('vol_pressed'));
   };
 
   $scope.settings_click = function($event) {
@@ -170,6 +136,8 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
       switch (type) {
         case 'recent':
           InputManager.set('displayed_content', '');
+          $scope.data.title = '';
+          $scope.data.subtitle = '';
         case 'album':
         case 'artist':
           CommService.postMessage(
@@ -199,6 +167,8 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
               history: $scope.data.last_history,
             });
           InputManager.set('displayed_content', '');
+          $scope.data.title = '';
+          $scope.data.subtitle = '';
           break;
         case 'recent_playlist':
         case 'auto_playlist':
@@ -212,6 +182,8 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
               history: $scope.data.last_history,
             });
           InputManager.set('displayed_content', '');
+          $scope.data.title = '';
+          $scope.data.subtitle = '';
           break;
         default:
           break;
@@ -231,6 +203,8 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
       $scope.data.view_stack.length = 0;
     } else {
       InputManager.set('displayed_content', '');
+      $scope.data.title = '';
+      $scope.data.subtitle = '';
     }
 
     InputManager.set('playlist_pressed', false);
@@ -290,7 +264,7 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
     return $('.mdl-layout__drawer').hasClass('is-visible');
   };
 
-  $scope.handle_key = function($event) {
+  $scope.handleKey = function($event) {
     if (!$('.mdl-layout__drawer').hasClass('is-visible') && $event.keyCode === 32) {
       $scope.np.status.status = !$scope.np.status.status;
       CommService.postMessage({
@@ -305,6 +279,8 @@ const controller = popupApp.controller('PopupController', ['$scope', 'CommServic
         $scope.data.subtitle = oldView.subtitle;
       } else {
         InputManager.set('displayed_content', '');
+        $scope.data.title = '';
+        $scope.data.subtitle = '';
       }
     }
   };

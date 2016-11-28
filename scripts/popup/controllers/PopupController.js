@@ -3,8 +3,6 @@ const controller = angular.module('app').controller('PopupController', function(
   $scope.SettingsManager = SettingsManager;
   $scope.np = NPService.get();
 
-  $state.go('test');
-
   $scope.data = {
     playlists: {
       recentPlaylists: [],
@@ -36,6 +34,8 @@ const controller = angular.module('app').controller('PopupController', function(
     subtitle: '',
     view_stack: []
   };
+
+  $state.go('playing');
 
   $scope.counts = {};
 

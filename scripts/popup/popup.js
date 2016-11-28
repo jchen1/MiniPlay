@@ -3,17 +3,26 @@ angular.module('app', ['ui.router']);
 angular.module('app').config(($compileProvider, $stateProvider) => {
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|chrome-extension):/);
   const states = {
-    nowPlaying: {
-      templateUrl: 'templates/nowPlaying.html'
+    playing: {
+      templateUrl: 'templates/playing.html',
+      controller: 'PlayingController'
     },
-    playlist: {
-      templateUrl: 'templates/playlist.html'
-    },
+    // tabbed: {
+    //   templateUrl: 'templates/tabbed.html',
+    //   controller: 'TabbedController'
+    // },
+    // 'tabbed.list': {
+    //   templateUrl: 'templates/tabbed-list.html',
+    //   controller: 'TabbedListController'
+    // },
+    // 'tabbed.grid': {
+    //   templateUrl: 'templates/tabbed-grid.html',
+    //   controller: 'TabbedGridController'
+    // }
 
-  }
-  $stateProvider.state('nowPlaying', {
-    templateUrl: 'templates/nowPlaying.html'
-  });
+  };
+
+  _.each(states, (state, name) => $stateProvider.state(name, state));
 });
 
 // allow HTML to access enums
@@ -23,3 +32,14 @@ angular.module('app').run($rootScope => {
   $rootScope.ThumbEnum = ThumbEnum;
   $rootScope.StatusEnum = StatusEnum;
 });
+
+// list view
+// grid view
+
+/*
+ * nowPlaying
+ * tabbed
+ *  tabbed.list
+ *  tabbed.grid
+ *  tabbed.settings
+ */

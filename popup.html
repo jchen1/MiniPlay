@@ -14,6 +14,8 @@
   <script src='scripts/popup/popup.js'></script>
   <script src='scripts/popup/controllers/PopupController.js'></script>
   <script src='scripts/popup/controllers/FooterController.js'></script>
+  <script src='scripts/popup/controllers/PlayingController.js'></script>
+
   <script src='scripts/popup/directives.js'></script>
   <script src='scripts/popup/services/NPService.js'></script>
   <script src='scripts/popup/services/InputManager.js'></script>
@@ -54,12 +56,13 @@
         <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'><i class='material-icons'>settings</i>Settings</a>
       </nav>
     </div>
-    <section class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>
+    <section ui-view></section>
+    <!--<section class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>
       <div id='art-controls'>
         <i mp-control id='repeat' class='material-icons' ng-class='{"art-control-active": np.status.repeat != RepeatEnum.NONE}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
         <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": np.status.shuffle == true}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.shuffle' title='Shuffle songs' ng-click='np.status.shuffle=!np.status.shuffle'>shuffle</i>
       </div>
-    </section>
+    </section>-->
     <section id='list-content' ng-switch='InputManager.get("displayedContent")' infinite-scroll='scroll_data(InputManager.get("displayedContent"))' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
       <div ng-switch-when='playlist'>
         <div id='playlist' ng-include src='"templates/playlist.html"'></div>

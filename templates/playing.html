@@ -1,0 +1,6 @@
+<section class='album-art' ng-style='getAlbumArt()' ng-click='clickArt()'>
+  <div id='art-controls'>
+    <i mp-control id='repeat' class='material-icons' ng-class='activeRepeat()' ng-disabled='isDisabled("repeat")' title='Repeat songs'>{{getRepeatIcon()}}</i>
+    <i mp-control id='shuffle' class='material-icons' ng-class='activeShuffle()' ng-disabled='isDisabled("shuffle")' title='Shuffle songs' ng-click='np.status.shuffle=!np.status.shuffle'>shuffle</i>
+  </div>
+</section>

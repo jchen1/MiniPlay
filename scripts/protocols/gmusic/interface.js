@@ -18,20 +18,20 @@ function sendCommand(message) {
   let button = null;
   switch (message.type) {
     case 'play':
-      button = document.querySelector('paper-icon-button[data-id="play-pause"]');
+      button = document.querySelector('#player paper-icon-button[data-id="play-pause"]');
       break;
     case 'rew':
-      button = document.querySelector('paper-icon-button[data-id="rewind"]'); break;
+      button = document.querySelector('#player paper-icon-button[data-id="rewind"]'); break;
     case 'ff':
-      button = document.querySelector('paper-icon-button[data-id="forward"]'); break;
+      button = document.querySelector('#player paper-icon-button[data-id="forward"]'); break;
     case 'up':
-      button = document.querySelector('paper-icon-button[data-rating="5"]'); break;
+      button = document.querySelector('#player paper-icon-button[data-rating="5"]'); break;
     case 'down':
-      button = document.querySelector('paper-icon-button[data-rating="1"]'); break;
+      button = document.querySelector('#player paper-icon-button[data-rating="1"]'); break;
     case 'shuffle':
-      button = document.querySelector('paper-icon-button[data-id="shuffle"]'); break;
+      button = document.querySelector('#player paper-icon-button[data-id="shuffle"]'); break;
     case 'repeat':
-      button = document.querySelector('paper-icon-button[data-id="repeat"]'); break;
+      button = document.querySelector('#player paper-icon-button[data-id="repeat"]'); break;
     case 'slider':
       updateSlider(message.position, 'material-player-progress'); break;
     case 'vslider':

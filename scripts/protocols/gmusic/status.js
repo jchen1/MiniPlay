@@ -24,20 +24,20 @@ const musicStatus = {
   },
 
   get_thumb() {
-    if (document.querySelector('paper-icon-button[data-rating="5"]').getAttribute('title') === 'Undo thumb-up') {
+    if (document.querySelector('#player paper-icon-button[data-rating="5"]').getAttribute('title') === 'Undo thumb-up') {
       return ThumbEnum.UP;
-    } else if (document.querySelector('paper-icon-button[data-rating="1"]').getAttribute('title') === 'Undo thumb-down') {
+    } else if (document.querySelector('#player paper-icon-button[data-rating="1"]').getAttribute('title') === 'Undo thumb-down') {
       return ThumbEnum.DOWN;
     }
     return ThumbEnum.NONE;
   },
 
   get_shuffle() {
-    return (document.querySelector('paper-icon-button[data-id="shuffle"]').classList.contains('active'));
+    return (document.querySelector('#player paper-icon-button[data-id="shuffle"]').classList.contains('active'));
   },
 
   get_repeat() {
-    switch (document.querySelector('paper-icon-button[data-id="repeat"]').getAttribute('title').split(' ')[1]) {
+    switch (document.querySelector('#player paper-icon-button[data-id="repeat"]').getAttribute('title').split(' ')[1]) {
       case 'Off.': return RepeatEnum.NONE;
       case 'Current': return RepeatEnum.ONE;
       case 'All': return RepeatEnum.ALL;

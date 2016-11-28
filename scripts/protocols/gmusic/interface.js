@@ -143,7 +143,7 @@ function scrollToIndex(cluster, desiredStartIndex, cb) {
   const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
       if (mutation.attributeName === 'data-start-index') {
-        const currentIdx = cluster.getAttribute('data-start-index');
+        const currentIdx = parseInt(cluster.getAttribute('data-start-index'), 10);
         if (cluster.getAttribute('data-end-index') !== cluster.getAttribute('data-row-count') &&
             desiredStartIndex !== currentIdx) {
           document.querySelector('#mainContainer').scrollTop += scrollStep;
@@ -312,8 +312,6 @@ function search(m) {
     const artists = parseRawData(rawArtists, 0, artistMap);
     const albums = parseRawData(rawAlbums, 0, albumMap);
     const songs = parseRawData(rawSongs, 0, songMap);
-
-    console.log('hi!');
 
     const searchData = {
       artists,

@@ -194,10 +194,12 @@ const controller = angular.module('app').controller('PopupController', function(
   };
 
   $scope.drawer_click = function(clicked) {
-    CommService.postMessage({
+    const promise = CommService.postMessage({
       action: `get${clicked}`,
       offset: 0
     });
+
+    $state.go('tabbed', { promise });
 
     if (clicked !== 'library') {
       InputManager.set('displayedContent', 'loading');

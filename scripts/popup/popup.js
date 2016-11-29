@@ -1,4 +1,4 @@
-angular.module('app', ['ui.router']);
+angular.module('app', ['ui.router', 'ngMaterial']);
 
 angular.module('app').config(($compileProvider, $stateProvider) => {
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|chrome-extension):/);
@@ -7,18 +7,30 @@ angular.module('app').config(($compileProvider, $stateProvider) => {
       templateUrl: 'templates/playing.html',
       controller: 'PlayingController'
     },
-    // tabbed: {
-    //   templateUrl: 'templates/tabbed.html',
-    //   controller: 'TabbedController'
-    // },
+    tabbed: {
+      templateUrl: 'templates/tabbed.html',
+      controller: 'TabbedController',
+      resolve: {
+        data: $stateParams => $stateParams.promise
+      },
+      params: { promise: null },
+    },
     // 'tabbed.list': {
     //   templateUrl: 'templates/tabbed-list.html',
     //   controller: 'TabbedListController'
     // },
-    // 'tabbed.grid': {
-    //   templateUrl: 'templates/tabbed-grid.html',
-    //   controller: 'TabbedGridController'
-    // }
+    'tabbed.grid': {
+      views: {
+        tab: {
+          templateUrl: 'templates/tabbed-grid.html',
+          controller: 'TabbedGridController',
+        }
+      },
+      params: { tabIndex: null },
+      resolve: {
+        tabIndex: $stateParams => $stateParams.tabIndex
+      },
+    }
 
   };
 

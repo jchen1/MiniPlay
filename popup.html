@@ -3,6 +3,8 @@
   <link rel="stylesheet" href="styles/fonts.css" >
   <link rel="stylesheet" href="styles/material.red-blue.min.css" />
   <link rel='stylesheet' href='styles/popup.css'>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.2/angular-material.min.css">
+
 
   <script src='scripts/vendor/jquery.js'></script>
   <script src='scripts/vendor/lodash.js'></script>
@@ -10,11 +12,21 @@
   <script src='scripts/vendor/angular.min.js'></script>
   <script src='scripts/vendor/angular-ui-router.min.js'></script>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-aria.min.js"></script>
+
+
+  <!-- Angular Material Javascript now available via Google CDN; version 1.0.7 used here -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.js"></script>
+
   <script src='scripts/enums.js'></script>
   <script src='scripts/popup/popup.js'></script>
   <script src='scripts/popup/controllers/PopupController.js'></script>
   <script src='scripts/popup/controllers/FooterController.js'></script>
   <script src='scripts/popup/controllers/PlayingController.js'></script>
+  <script src='scripts/popup/controllers/TabbedController.js'></script>
+  <script src='scripts/popup/controllers/TabbedGridController.js'></script>
+
 
   <script src='scripts/popup/directives.js'></script>
   <script src='scripts/popup/services/NPService.js'></script>
@@ -56,14 +68,14 @@
         <a class="mdl-navigation__link" href="" ng-click='settings_click($event)'><i class='material-icons'>settings</i>Settings</a>
       </nav>
     </div>
-    <section ui-view></section>
+    <section ui-view id='list-content'></section>
     <!--<section class='album-art' ng-style='{"background-image":album_art_background(), "display": should_show_art() ? "block" : "none"}' ng-click='album_art_click()'>
       <div id='art-controls'>
         <i mp-control id='repeat' class='material-icons' ng-class='{"art-control-active": np.status.repeat != RepeatEnum.NONE}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.repeat' title='Repeat songs'>{{repeat_icon()}}</i>
         <i mp-control id='shuffle' class='material-icons' ng-class='{"art-control-active": np.status.shuffle == true}' ng-disabled='np.state != StateEnum.PLAYING || np.status.disabled.shuffle' title='Shuffle songs' ng-click='np.status.shuffle=!np.status.shuffle'>shuffle</i>
       </div>
     </section>-->
-    <section id='list-content' ng-switch='InputManager.get("displayedContent")' infinite-scroll='scrollData(InputManager.get("displayedContent"))' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
+    <!--<section id='list-content' ng-switch='InputManager.get("displayedContent")' infinite-scroll='scrollData(InputManager.get("displayedContent"))' infinite-scroll-disabled='should_disable_scroll()' infinite-scroll-distance='5'>
       <div ng-switch-when='playlist'>
         <div id='playlist' ng-include src='"templates/playlist.html"'></div>
       </div>
@@ -98,7 +110,7 @@
         <div id='search' ng-include src='"templates/search.html"'></div>
       </div>
       <div id='list-none' ng-switch-default></div>
-    </section>
+    </section>-->
     <div ng-include src='"templates/footer.html"'></div>
 
     <div class='mdl-layout__obfuscator' ng-click='InputManager.set("drawerOpen", false)' ng-class='{"is-visible": InputManager.get("drawerOpen")}'></div>

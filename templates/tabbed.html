@@ -1,0 +1,25 @@
+<div ng-if="!shouldTab()">
+  <!-- TODO ng-switch or views here? -->
+  <div ui-view="tab"></div>
+</div>
+
+
+<div ng-if="shouldTab()" >
+  <!--<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+    <div class="mdl-tabs__tab-bar">
+      <a ng-repeat="tab in getTabs()" ng-href="#{{tab.name}}-panel" ng-class="{'is-active':$first}" class="mdl-tabs__tab">{{tab.name}}</a>
+    </div>
+    <div ng-repeat="tab in getTabs()" class="mdl-tabs__panel" ng-class="{'is-active':$first}" ng-attr-id="{{tab.name}}-panel">
+      <h1>{{tab.name}}</h1>
+    </div>
+  </div>-->
+  <!--<div ui-view="tab"></div>-->
+  <md-content>
+    <md-tabs md-selected="selectedTab" md-border-bottom md-center-tabs>
+      <md-tab ng-repeat="tab in getTabs()" label="{{tab.name}}" md-on-select="selectTab($index)">
+        <div ui-view="tab"></div>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+
+</div>

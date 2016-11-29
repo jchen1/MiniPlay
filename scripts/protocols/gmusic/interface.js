@@ -187,10 +187,22 @@ function getArtists(m) {
 
       if (popupPort) {
         popupPort.postMessage({
+          uuid: msg.uuid || undefined,
           type: 'artists',
+          tabs: [
+            {
+              data: artists,
+              name: 'Artists',
+              displayType: 'grid'
+            },
+            {
+              data: artists.slice().reverse(),
+              name: 'Artists2',
+              displayType: 'grid'
+            }
+          ],
           data: artists,
           offset,
-          history,
           count: parseInt(document.querySelector('#countSummary').innerText, 10)
         });
       }

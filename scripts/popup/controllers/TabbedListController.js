@@ -11,9 +11,9 @@ const TabbedListController = angular.module('app').controller('TabbedListControl
     if (_.size($scope.tab.data) < $scope.tab.count) {
       isScrolling = true;
       return CommService.postMessage({
-        action: 'getArtists',
+        action: `get${$scope.tab.name}`,
         offset: $scope.tab.offset,
-        tabId: $scope.tab.tabId
+        datatype: $scope.tab.datatype
       }).then(msg => {
         $scope.$apply(() => {
           $scope.tab.data = _.concat($scope.tab.data, msg.tabs[tabIndex].data);

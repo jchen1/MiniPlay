@@ -37,12 +37,12 @@ function update() {
 }
 
 function route(name, callback) {
-  routes[name] = callback;
+  routes[name.toLowerCase()] = callback;
 }
 
 function handleMessage(msg) {
-  if (routes[msg.action] !== undefined) {
-    routes[msg.action](msg);
+  if (routes[msg.action.toLowerCase()] !== undefined) {
+    routes[msg.action.toLowerCase()](msg);
   }
 }
 

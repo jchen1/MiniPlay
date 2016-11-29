@@ -193,9 +193,9 @@ function getArtists(m) {
           type: 'artists',
           tabs: [
             {
-              tabId: 'artists',
-              data: artists,
+              datatype: 'artist',
               name: 'Artists',
+              data: artists,
               displayType: 'list',
               offset,
               count: parseInt(document.querySelector('#countSummary').innerText, 10)

@@ -2,6 +2,7 @@ const TabbedGridController = angular.module('app').controller('TabbedGridControl
   function init() {
     // $state.go(`tabbed.${_.first(data.tabs).displayType}`, _.first(data.tabs));
     $scope.tab = data.tabs[tabIndex];
+    console.log($scope.tab);
   }
 
   init();

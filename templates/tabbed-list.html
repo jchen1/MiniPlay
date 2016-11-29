@@ -1,0 +1,12 @@
+<md-content>
+  <md-list class='md-dense'>
+    <md-list-item ng-repeat='item in tab.data' ng-class='getLIClass(item)'>
+      <img ng-src='{{item.image}}' class='md-avatar' ng-attr-alt='{{item.heading}}' ng-class='{ "md-avatar-square": item.square }' />
+      <div class='md-list-item-text'>
+        <h3 ng-if='true || item.heading' >{{ item.heading }}</h3>
+        <h4 ng-if='item.subheading'>{{ item.subheading }}</h4>
+        <p ng-if='item.text'>{{ item.text }}</p>
+      </div>
+    </md-list-item>
+  </md-list>
+</md-content>

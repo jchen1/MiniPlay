@@ -319,6 +319,10 @@ header {
   overflow: auto;
 }
 
+#list-content > div, #list-content md-content, #list-content md-tabs {
+  height: 100%;
+}
+
 #list-loader {
   position: absolute;
   top: 146; /* 320/2 - height/2 */
@@ -433,4 +437,53 @@ header {
   top: 11px;
   z-index: 2;
   cursor: pointer;
+}
+
+
+md-list h3 {
+  font-size: 15px;
+  line-height: 20px;
+  margin: 0;
+}
+
+md-list h4 {
+  font-size: 13px;
+  line-height: 16px;
+  margin: 0;
+}
+
+md-list p {
+  font-size: 11px;
+  line-height: 13px;
+  margin: 0 0 4 0;
+}
+
+#list-content md-list-item > .md-avatar:first-child {
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.37);
+  border: 2px solid white;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  height: 44px;
+  width: 44px;
+}
+
+#list-content md-list-item > img.md-avatar-square {
+  border-radius: initial;
+}
+
+#list-content md-grid-list {
+  margin: 8px;
+}
+
+#list-content md-grid-tile-header {
+  height: 75%;
+}
+
+#list-content .grid-image {
+  height: 100%;
+}
+
+#list-content md-grid-tile-footer {
+  height: 25%;
 }

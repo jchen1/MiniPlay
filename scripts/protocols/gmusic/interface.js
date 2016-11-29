@@ -97,9 +97,11 @@ function parseRawData(rawData, startIndex, map) {
     map.forEach(key => {
       if (key.selector) {
         item[key.name] = rawData[i].querySelector(key.selector);
-        item[key.name] = (item[key.name] === null) ? key.if_null : item[key.name][key.property];
+        item[key.name] = (!item[key.name]) ? key.default : item[key.name][key.property];
       } else if (key.attribute) {
         item[key.name] = rawData[i].getAttribute(key.attribute);
+      } else {
+        item[key.name] = key.default;
       }
     });
 
@@ -198,7 +200,7 @@ function getArtists(m) {
             {
               data: artists.slice().reverse(),
               name: 'Artists2',
-              displayType: 'grid'
+              displayType: 'list'
             }
           ],
           data: artists,

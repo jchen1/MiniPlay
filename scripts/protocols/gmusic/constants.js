@@ -3,7 +3,13 @@ const artistMap = [
     name: 'name',
     selector: 'a',
     property: 'innerText',
-    if_null: ''
+    default: ''
+  },
+  {
+    name: 'heading',
+    selector: 'a',
+    property: 'innerText',
+    default: ''
   },
   {
     name: 'id',
@@ -13,7 +19,7 @@ const artistMap = [
     name: 'image',
     selector: 'img',
     property: 'src',
-    if_null: 'img/default_artist.png'
+    default: 'img/default_artist.png'
   }];
 
 const albumMap = [
@@ -21,13 +27,13 @@ const albumMap = [
     name: 'title',
     selector: '.title',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'artist',
     selector: '.sub-title',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'id',
@@ -37,7 +43,7 @@ const albumMap = [
     name: 'image',
     selector: 'img',
     property: 'src',
-    if_null: 'img/default_album.png'
+    default: 'img/default_album.png'
   }];
 
 const stationMap = [
@@ -49,13 +55,13 @@ const stationMap = [
     name: 'title',
     selector: '.title',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'image',
     selector: 'img',
     property: 'src',
-    if_null: 'img/default_album.png'
+    default: 'img/default_album.png'
   }];
 
 const recentMap = [
@@ -67,19 +73,19 @@ const recentMap = [
     name: 'title',
     selector: '#details a.card-title',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'subtitle',
     selector: '#details a.card-subtitle',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'image',
     selector: 'img',
     property: 'src',
-    if_null: 'img/default_album.png'
+    default: 'img/default_album.png'
   }];
 
 const playlistMap = [
@@ -91,13 +97,13 @@ const playlistMap = [
     name: 'title',
     selector: '.title',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'image',
     selector: 'img',
     property: 'src',
-    if_null: 'img/default_album.png'
+    default: 'img/default_album.png'
   }];
 
 const songMap = [
@@ -109,29 +115,29 @@ const songMap = [
     name: 'title',
     selector: 'td[data-col="title"] span',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'artist',
     selector: 'td[data-col="artist"] span a',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'album',
     selector: 'td[data-col="album"] span a',
     property: 'innerText',
-    if_null: ''
+    default: ''
   },
   {
     name: 'total_time',
     selector: 'td[data-col="duration"] span',
     property: 'innerText',
-    if_null: '0:00'
+    default: '0:00'
   },
   {
     name: 'album_art',
     selector: 'td[data-col="title"] span img',
     property: 'src',
-    if_null: 'img/default_album.png'
+    default: 'img/default_album.png'
   }];

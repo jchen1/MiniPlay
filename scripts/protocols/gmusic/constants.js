@@ -16,6 +16,10 @@ const artistMap = [
     attribute: 'data-id'
   },
   {
+    name: 'style',
+    // default: 'circle'
+  },
+  {
     name: 'image',
     selector: 'img',
     property: 'src',

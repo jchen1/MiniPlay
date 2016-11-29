@@ -130,7 +130,9 @@ const controller = angular.module('app').controller('PopupController', function(
     $scope.data.title = 'options';
   };
 
+
   $scope.dataClick = function(type, data) {
+    console.log(type, data);
     const oldContent = InputManager.get('displayedContent');
     if (CommService.isConnected() && $scope.np.status.protocol === 'gmusic') {
       InputManager.set('displayedContent', 'loading');
@@ -192,6 +194,8 @@ const controller = angular.module('app').controller('PopupController', function(
       }
     }
   };
+
+  this.dataClick = $scope.dataClick;
 
   $scope.drawer_click = function(clicked) {
     const promise = CommService.postMessage({

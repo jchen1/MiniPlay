@@ -24,9 +24,12 @@ const musicStatus = {
   },
 
   get_thumb() {
-    if (document.querySelector('#player paper-icon-button[data-rating="5"]').getAttribute('title') === 'Undo thumb-up') {
+    const thumbUp = document.querySelector('#player paper-icon-button[data-rating="5"]');
+    const thumbDown = document.querySelector('#player paper-icon-button[data-rating="1"]');
+
+    if (thumbUp && thumbUp.getAttribute('title') === 'Undo thumb-up') {
       return ThumbEnum.UP;
-    } else if (document.querySelector('#player paper-icon-button[data-rating="1"]').getAttribute('title') === 'Undo thumb-down') {
+    } else if (thumbDown && thumbDown.getAttribute('title') === 'Undo thumb-down') {
       return ThumbEnum.DOWN;
     }
     return ThumbEnum.NONE;

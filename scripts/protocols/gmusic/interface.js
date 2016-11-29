@@ -193,14 +193,12 @@ function getArtists(m) {
           type: 'artists',
           tabs: [
             {
+              tabId: 'artists',
               data: artists,
               name: 'Artists',
-              displayType: 'grid'
-            },
-            {
-              data: artists.slice().reverse(),
-              name: 'Artists2',
-              displayType: 'list'
+              displayType: 'list',
+              offset,
+              count: parseInt(document.querySelector('#countSummary').innerText, 10)
             }
           ],
           data: artists,

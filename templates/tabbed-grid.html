@@ -10,12 +10,12 @@
 <div class='end-loading mdl-spinner mdl-js-spinner is-active' ng-style='{"display": counts.artists == tab.data.length ? "none" : "block"}'></div>-->
 <md-content>
   <md-grid-list md-cols='2' md-row-height='3:4' md-gutter='8px'>
-    <md-grid-tile ng-repeat='item in tab.data' ng-style='{"background-color": "red"}'>
+    <md-grid-tile ng-repeat='item in tab.data' ng-class='getTileClass(item)'>
       <md-grid-tile-header>
         <img class='grid-image' ng-src='{{item.image}}' ng-attr-alt='{{item.heading}}' />
       </md-grid-tile-header>
       <md-grid-tile-footer>
-        <p>{{item.heading}}</p>
+        <h5>{{item.heading}}</h5>
       </md-grid-tile-footer>
     </md-grid-tile>
   </md-grid-list>

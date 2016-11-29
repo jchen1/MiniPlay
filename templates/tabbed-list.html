@@ -1,6 +1,6 @@
 <md-content infinite-scroll='scrollData()' infinite-scroll-distance='5' infinite-scroll-disabled='isScrollingDisabled()'>
   <md-list>
-    <md-list-item ng-repeat='item in tab.data' ng-class='getLIClass(item)' class='md-no-style' ng-click='pc.dataClick("artist", item)'>
+    <md-list-item ng-repeat='item in tab.data' ng-class='getLIClass(item)' class='md-no-style' ng-click='pc.dataClick(tab.datatype, item)'>
       <img ng-src='{{item.image}}' class='md-avatar' ng-attr-alt='{{item.heading}}' ng-class='{ "md-avatar-square": item.square }' />
       <div class='md-list-item-text'>
         <h3 ng-if='true || item.heading' >{{ item.heading }}</h3>

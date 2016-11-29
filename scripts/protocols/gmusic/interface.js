@@ -14,6 +14,14 @@ function updateSlider(position, slidername) {  // position is in %
   }));
 }
 
+function postMessage(receivedMsg, msg) {
+  if (receivedMsg.uuid) msg.uuid = receivedMsg.uuid;
+
+  if (popupPort) {
+    popupPort.postMessage(msg);
+  }
+}
+
 function sendCommand(message) {
   let button = null;
   switch (message.type) {
@@ -187,25 +195,18 @@ function getArtists(m) {
       const offset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
       const artists = parseRawData(rawArtists, offset, artistMap);
 
-      if (popupPort) {
-        popupPort.postMessage({
-          uuid: msg.uuid || undefined,
-          type: 'artists',
-          tabs: [
-            {
-              datatype: 'artist',
-              name: 'Artists',
-              data: artists,
-              displayType: 'list',
-              offset,
-              count: parseInt(document.querySelector('#countSummary').innerText, 10)
-            }
-          ],
-          data: artists,
-          offset,
-          count: parseInt(document.querySelector('#countSummary').innerText, 10)
-        });
-      }
+      postMessage(m, {
+        type: 'artists',
+        tabs: [
+          {
+            datatype: 'artist',
+            name: 'Artists',
+            data: artists,
+            displayType: 'list',
+            count: parseInt(document.querySelector('#countSummary').innerText, 10)
+          }
+        ],
+      });
 
       if (observer !== null) observer.disconnect();
     };
@@ -233,15 +234,18 @@ function getAlbums(m) {
       const startOffset = cluster.getAttribute('data-col-count') * cluster.getAttribute('data-start-index');
       const albums = parseRawData(rawAlbums, startOffset, albumMap);
 
-      if (popupPort) {
-        popupPort.postMessage({
-          type: 'albums',
-          data: albums,
-          offset: startOffset,
-          count: parseInt(document.querySelector('#countSummary').innerText, 10),
-          history
-        });
-      }
+      postMessage(m, {
+        type: 'albums',
+        tabs: [
+          {
+            datatype: 'album',
+            name: 'Albums',
+            displayType: 'grid',
+            data: albums,
+            count: parseInt(document.querySelector('#countSummary').innerText, 10)
+          }
+        ],
+      });
       if (observer !== null) observer.disconnect();
     };
 
@@ -259,24 +263,31 @@ function getStations(m) {
     ];
 
   restoreState(history, m, msg => {
-    const rawRecentStations = document.querySelectorAll('.g-content .my-recent-stations-cluster-wrapper .lane-content .material-card');
+    const rawRecentStations = document.querySelectorAll('.g-content div.material-cluster[data-type="wms"] .lane-content .material-card');
     const rawMyStations = document.querySelectorAll('.g-content .section-header+.cluster .lane-content .material-card');
 
     const recentStations = parseRawData(rawRecentStations, 0, stationMap);
     const myStations = parseRawData(rawMyStations, 0, stationMap);
 
-    const stations = {
-      recentStations,
-      myStations
-    };
-
-    if (popupPort) {
-      popupPort.postMessage({
-        type: 'stations',
-        data: stations,
-        history
-      });
-    }
+    postMessage(m, {
+      type: 'stations',
+      tabs: [
+        {
+          datatype: 'station',
+          name: 'Recent Stations',
+          displayType: 'list',
+          data: recentStations,
+          count: recentStations.length
+        },
+        {
+          datatype: 'station',
+          name: 'My Stations',
+          displayType: 'list',
+          data: myStations,
+          count: myStations.length
+        }
+      ]
+    });
   });
 }
 
@@ -297,16 +308,20 @@ function getRecent(m) {
 
   restoreState(history, m, msg => {
     const rawRecent = document.querySelectorAll('.gpm-card-grid sj-card');
-
     const recent = parseRawData(rawRecent, 0, recentMap);
 
-    if (popupPort) {
-      popupPort.postMessage({
-        type: 'recent',
-        data: recent,
-        history
-      });
-    }
+    postMessage(m, {
+      type: 'recent',
+      tabs: [
+        {
+          datatype: 'recent',
+          name: 'Recent',
+          displayType: 'grid',
+          data: recent,
+          count: recent.length
+        }
+      ]
+    });
   });
 }
 
@@ -325,19 +340,32 @@ function search(m) {
     const albums = parseRawData(rawAlbums, 0, albumMap);
     const songs = parseRawData(rawSongs, 0, songMap);
 
-    const searchData = {
-      artists,
-      albums,
-      songs
-    };
-
-    if (popupPort) {
-      popupPort.postMessage({
-        type: 'search',
-        data: searchData,
-        history
-      });
-    }
+    postMessage(m, {
+      type: 'search',
+      tabs: [
+        {
+          datatype: 'artist',
+          name: 'Artists',
+          displayType: 'grid',
+          data: artists,
+          count: artists.length
+        },
+        {
+          datatype: 'album',
+          name: 'Albums',
+          displayType: 'grid',
+          data: albums,
+          count: albums.length
+        },
+        {
+          datatype: 'song',  // TODO implement
+          name: 'Top Songs',
+          displayType: 'list',
+          data: songs,
+          count: songs.length
+        }
+      ]
+    });
   });
 }
 
@@ -380,15 +408,33 @@ function getPlaylists(m) {
         myPlaylists
       };
 
-      if (popupPort) {
-        popupPort.postMessage({
-          type: 'playlists',
-          data: playlists,
-          offset: startOffset,
-          count: parseInt(document.querySelector('#countSummary').innerText, 10),
-          history
-        });
-      }
+      postMessage(m, {
+        type: 'playlists',
+        // data: playlists,
+        tabs: [
+          {
+            datatype: 'playlist',
+            name: 'Recent',
+            displayType: 'grid',
+            data: recentPlaylists,
+            count: recentPlaylists.length
+          },
+          {
+            datatype: 'playlist',
+            name: 'Auto',
+            displayType: 'grid',
+            data: autoPlaylists,
+            count: autoPlaylists.length
+          },
+          {
+            datatype: 'playlist',
+            name: 'My',
+            displayType: 'grid',
+            data: myPlaylists,
+            count: parseInt(document.querySelector('#countSummary').innerText, 10)
+          }
+        ]
+      });
       if (observer !== null) observer.disconnect();
     };
 

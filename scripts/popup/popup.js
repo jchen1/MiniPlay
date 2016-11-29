@@ -38,6 +38,9 @@ angular.module('app').config(($compileProvider, $stateProvider, $provide) => {
       resolve: {
         tabIndex: $stateParams => $stateParams.tabIndex
       },
+    },
+    loading: {
+      templateUrl: 'templates/loading.html'
     }
 
   };

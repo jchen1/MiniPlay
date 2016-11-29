@@ -1,11 +1,5 @@
 const artistMap = [
   {
-    name: 'name',
-    selector: 'a',
-    property: 'innerText',
-    default: ''
-  },
-  {
     name: 'heading',
     selector: 'a',
     property: 'innerText',
@@ -16,10 +10,6 @@ const artistMap = [
     attribute: 'data-id'
   },
   {
-    name: 'style',
-    // default: 'circle'
-  },
-  {
     name: 'image',
     selector: 'img',
     property: 'src',
@@ -28,13 +18,13 @@ const artistMap = [
 
 const albumMap = [
   {
-    name: 'title',
+    name: 'heading',
     selector: '.title',
     property: 'innerText',
     default: ''
   },
   {
-    name: 'artist',
+    name: 'subheading',
     selector: '.sub-title',
     property: 'innerText',
     default: ''
@@ -56,7 +46,7 @@ const stationMap = [
     attribute: 'data-id'
   },
   {
-    name: 'title',
+    name: 'heading',
     selector: '.title',
     property: 'innerText',
     default: ''
@@ -74,16 +64,20 @@ const recentMap = [
     attribute: 'data-id'
   },
   {
-    name: 'title',
+    name: 'heading',
     selector: '#details a.card-title',
     property: 'innerText',
     default: ''
   },
   {
-    name: 'subtitle',
+    name: 'subheading',
     selector: '#details a.card-subtitle',
     property: 'innerText',
     default: ''
+  },
+  {
+    name: 'style',
+    default: 'circle'
   },
   {
     name: 'image',
@@ -98,10 +92,14 @@ const playlistMap = [
     attribute: 'data-id'
   },
   {
-    name: 'title',
+    name: 'heading',
     selector: '.title',
     property: 'innerText',
     default: ''
+  },
+  {
+    name: 'style',
+    default: 'circle'
   },
   {
     name: 'image',

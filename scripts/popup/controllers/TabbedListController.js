@@ -12,12 +12,11 @@ const TabbedListController = angular.module('app').controller('TabbedListControl
       isScrolling = true;
       return CommService.postMessage({
         action: `get${$scope.tab.name}`,
-        offset: $scope.tab.offset,
+        offset: _.size($scope.tab.data),
         datatype: $scope.tab.datatype
       }).then(msg => {
         $scope.$apply(() => {
           $scope.tab.data = _.concat($scope.tab.data, msg.tabs[tabIndex].data);
-          $scope.tab.offset = _.size($scope.tab.data);
         });
         isScrolling = false;
       });
@@ -32,7 +31,6 @@ const TabbedListController = angular.module('app').controller('TabbedListControl
 
   function init() {
     $scope.tab = data.tabs[tabIndex];
-    $scope.tab.offset = _.size($scope.tab.data);
   }
 
   init();

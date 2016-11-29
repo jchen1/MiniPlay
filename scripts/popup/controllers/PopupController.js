@@ -60,6 +60,7 @@ const controller = angular.module('app').controller('PopupController', function(
           $scope.data.title = oldView.title;
           $scope.data.subtitle = oldView.subtitle;
         } else {
+          $state.go('playing');
           InputManager.set('displayedContent', '');
           $scope.data.title = '';
           $scope.data.subtitle = '';
@@ -132,7 +133,6 @@ const controller = angular.module('app').controller('PopupController', function(
 
 
   $scope.dataClick = function(type, data) {
-    console.log(type, data);
     const oldContent = InputManager.get('displayedContent');
     if (CommService.isConnected() && $scope.np.status.protocol === 'gmusic') {
       InputManager.set('displayedContent', 'loading');
@@ -202,7 +202,7 @@ const controller = angular.module('app').controller('PopupController', function(
       action: `get${clicked}`,
       offset: 0
     });
-
+    $state.go('loading');
     $state.go('tabbed', { promise });
 
     if (clicked !== 'library') {

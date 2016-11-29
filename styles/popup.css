@@ -334,6 +334,19 @@ header {
   margin: 10 0 10 0;
 }
 
+.loading-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #list-none {
   display: none;
 }
@@ -499,24 +512,64 @@ md-list p {
   background: none;
 }
 
-#list-content md-grid-tile.grid-tile__circle md-grid-tile-footer > figcaption {
+#list-content md-grid-tile md-grid-tile-footer > figcaption {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
   height: 100%;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-#list-content md-grid-tile-footer > figcaption > h5 {
+#list-content md-grid-tile.grid-tile__circle md-grid-tile-footer > figcaption > h3 {
   text-align: center;
   margin: 0;
 }
 
-#list-content md-grid-tile md-grid-tile-footer > figcaption > h5 {
+#list-content md-grid-tile md-grid-tile-footer > figcaption > h3 {
   width: 100%;
   color: black;
   font-weight: 400;
   font-size: 13px;
-  margin: 0 4px;
+  line-height: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px;
+}
+
+#list-content md-grid-tile.grid-tile__circle md-grid-tile-footer > figcaption > h4 {
+  text-align: center;
+  margin: 0;
+}
+
+#list-content md-grid-tile md-grid-tile-footer > figcaption > h4 {
+  width: 100%;
+  color: black;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px;
+}
+
+#list-content md-grid-tile md-grid-tile-footer > figcaption > p {
+  width: 100%;
+  color: black;
+  font-weight: 400;
+  font-size: 9px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px;
 }
 
 #list-content md-grid-tile.grid-tile__square {

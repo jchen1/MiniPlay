@@ -23,23 +23,39 @@ var music_status = {
   },
 
   get_album_art : function () {
-    var url = getComputedStyle(document.querySelector('#app-player').contentDocument.querySelector('.sp-image-img'))['background-image'];
-    return url ? url.substring(url.search('http'), url.indexOf(')') - 1) : 'img/default_album.png';
+    var artworkDOM = document.querySelector('div.now-playing');
+    console.log('artwork', artworkDOM);
+    var artworkURL = null;
+
+    if (artworkDOM) {
+      var bgImage = artworkDOM.querySelector('.cover-art-image').style['background-image'];
+      artworkURL = bgImage.substring(bgImage.search('http'), bgImage.indexOf(')') - 1);
+    }
+
+    return artworkURL ? artworkURL : 'img/default_album.png';
+  },
+
+  get_play_pause_status: function() {
+    var pauseButton = document.querySelector('.spoticon-pause-32');
+    var playButton = document.querySelector('.spoticon-play-32');
+
+    return playButton ? StatusEnum.PAUSED : StatusEnum.PLAYING;
   },
 
   update : function() {
-    var iframe = document.querySelector('#app-player').contentDocument;
-    this.title = iframe.querySelector('#track-name > a').innerText;
-    this.artist = iframe.querySelector('#track-artist > a').innerText;
+
+    var nowPlayingContent = document.querySelector('.now-playing');
+    var trackInfo = nowPlayingContent.querySelector('.track-info');
+
+    this.title = trackInfo.querySelector('.track-info-name > a').innerText;
+    this.artist = trackInfo.querySelector('.track-info-artists > span > a').innerText;
     this.album_art = this.get_album_art();
-    this.current_time = iframe.querySelector('#track-current').innerText;
-    this.total_time = iframe.querySelector('#track-length').innerText;
-    this.current_time_s = this.get_time(this.current_time);
-    this.total_time_s = this.get_time(this.total_time);
-    this.repeat = iframe.querySelector('#repeat').classList.contains('active') ? RepeatEnum.ALL : RepeatEnum.NONE;
-    this.shuffle = iframe.querySelector('#shuffle').classList.contains('active');
-    this.status = (iframe.querySelector('#play-pause').classList.contains('playing')) ? StatusEnum.PLAYING : StatusEnum.PAUSED;
-    this.volume = parseFloat(getComputedStyle(iframe.querySelector('#vol-position')).left, 10) / 108 * 100;
+    this.protocol = 'spotify';
+    this.status = this.get_play_pause_status();
+
+    var volumeStr = document.querySelector('.volume-bar > div > div > div').style.width;
+    this.volume = parseInt(volumeStr.substring(0, volumeStr.length - 2));
+
     return this;
   }
 };

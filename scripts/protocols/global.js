@@ -9,6 +9,7 @@ function update() {
     old_status = JSON.parse(JSON.stringify(music_status));
     music_status.update();
     var msg = create_background_msg(old_status, music_status);
+
     if (msg != null) {
       background_port.postMessage(msg);
     }
@@ -25,6 +26,7 @@ function create_background_msg(oldValue, newValue) {
   var msg = {scrobble: false, notify: false};
   msg.oldValue = oldValue;
   msg.newValue = newValue;
+
   if (oldValue !== undefined && (oldValue.title != newValue.title ||
       oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
 

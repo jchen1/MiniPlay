@@ -42,7 +42,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
       thumb: ThumbEnum.NONE,
       artist_id: '',
       album_id: '',
-      protocol: 'gmusic'
+      protocol: 'spotify'
     };
 
     $scope.data = {
@@ -403,6 +403,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
 
       $scope.background_port.onMessage.addListener(function(msg) {
         if (msg.type == 'connect') {
+
           $scope.interface_port = chrome.tabs.connect(msg.id, {name: "popup"});
           $scope.interface_port.id = msg.id;
           $scope.interface_port.onDisconnect.addListener(function() {
@@ -492,6 +493,7 @@ var controller = popupApp.controller('PopupController', ['$scope', function($sco
         }
         else {
           $.extend($scope.music_status, response);
+
           if (response.title === '') {
             $scope.$apply(function() {
               $scope.set_state(StateEnum.NO_SONG);

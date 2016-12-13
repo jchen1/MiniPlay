@@ -5,6 +5,14 @@ chrome.storage.local.set({'last_notification': ''});
 var interface_port = null, popup_port = null;
 var loader_ports = {};
 
+
+// Listen for spotify to open
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo,tab) {
+    if (tab.url.indexOf("open.spotify.com") > -1 && changeInfo.url === undefined) {
+        chrome.tabs.executeScript(tabId, {file: "scripts/loader.js"});
+    }
+});
+
 chrome.runtime.onConnect.addListener(function(port) {
 
   if (port.name == "loader") {

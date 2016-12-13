@@ -45,6 +45,12 @@ function create_background_msg(oldValue, newValue) {
     if (newValue.title != '') {
       msg.notify = true;
     }
+
+    // Do not send if music isn't playing
+    if (newValue.status == StatusEnum.PAUSED) {
+        return null;
+    }
+
     return msg;
   }
   else {

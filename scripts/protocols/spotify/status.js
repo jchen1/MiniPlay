@@ -24,7 +24,6 @@ var music_status = {
 
   get_album_art : function () {
     var artworkDOM = document.querySelector('div.now-playing');
-    console.log('artwork', artworkDOM);
     var artworkURL = null;
 
     if (artworkDOM) {

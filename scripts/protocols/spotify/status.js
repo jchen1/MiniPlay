@@ -23,7 +23,7 @@ var music_status = {
   },
 
   get_album_art : function () {
-    var artworkDOM = document.querySelector('div.now-playing');
+    var artworkDOM = document.querySelector('div.now-playing-bar');
     var artworkURL = null;
 
     if (artworkDOM) {
@@ -43,11 +43,11 @@ var music_status = {
 
   update : function() {
 
-    var nowPlayingContent = document.querySelector('.now-playing');
+    var nowPlayingContent = document.querySelector('.now-playing-bar');
     var trackInfo = nowPlayingContent.querySelector('.track-info');
 
-    this.title = trackInfo.querySelector('.track-info-name > a').innerText;
-    this.artist = trackInfo.querySelector('.track-info-artists > span > a').innerText;
+    this.title = nowPlayingContent.querySelector('div.react-contextmenu-wrapper > a').innerText;
+    this.artist = nowPlayingContent.querySelector('span > a').innerText;
     this.album_art = this.get_album_art();
     this.protocol = 'spotify';
     this.status = this.get_play_pause_status();

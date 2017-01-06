@@ -31,6 +31,18 @@ function update_slider(position, slider) {  //position is in %
 
 function send_command(message) {
   var iframe = document.querySelector('#app-player').contentDocument;
+  var track = document.querySelector('div.track-info-name');
+
+  chrome.notifications.create('42', {
+    type: 'basic',
+    title: 'test track',
+    message: 'name; ' + track,
+    contextMessage: 'test context',
+    iconUrl: 'https://chambermaster.blob.core.windows.net/userfiles/UserFiles/chambers/2219/Image/christmas-tree-clip-art-xmas_christmas_tree_5-3333px.png'
+  }, function(id) {
+    console.log('id', id);
+  });
+
   var button = null;
   switch (message.type) {
     case 'play':

@@ -9,6 +9,7 @@ function update() {
     old_status = JSON.parse(JSON.stringify(music_status));
     music_status.update();
     var msg = create_background_msg(old_status, music_status);
+
     if (msg != null) {
       background_port.postMessage(msg);
     }
@@ -25,12 +26,31 @@ function create_background_msg(oldValue, newValue) {
   var msg = {scrobble: false, notify: false};
   msg.oldValue = oldValue;
   msg.newValue = newValue;
+
   if (oldValue !== undefined && (oldValue.title != newValue.title ||
       oldValue.artist != newValue.artist || oldValue.album_art != newValue.album_art)) {
+
+    // There's a bug where 2 notifications are shown sometimes
+    // because the album artwork takes a while to load. The first
+    // notification will have the new title and artist, but old artwork.
+    //
+    // This fix prevents that notification from being displayed, showing
+    // the notification only once the new artwork is also fetched.p
+    if (oldValue.title != newValue.title && oldValue.artist != newValue.artist &&
+       oldValue.album_art == newValue.album_art) {
+      return null;
+    }
+
     msg.scrobble = true;
     if (newValue.title != '') {
       msg.notify = true;
     }
+
+    // Do not send if music isn't playing
+    if (newValue.status == StatusEnum.PAUSED) {
+        return null;
+    }
+
     return msg;
   }
   else {

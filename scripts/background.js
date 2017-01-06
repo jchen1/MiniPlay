@@ -5,11 +5,21 @@ chrome.storage.local.set({'last_notification': ''});
 var interface_port = null, popup_port = null;
 var loader_ports = {};
 
+
+// Listen for spotify to open
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo,tab) {
+    if (tab.url.indexOf("open.spotify.com") > -1 && changeInfo.url === undefined) {
+        chrome.tabs.executeScript(tabId, {file: "scripts/loader.js"});
+    }
+});
+
 chrome.runtime.onConnect.addListener(function(port) {
+
   if (port.name == "loader") {
     port.id = port.sender.tab.id;
     loader_ports[port.id] = port;
     port.onMessage.addListener(function(msg) {
+
       if (msg.protocol) {
         chrome.tabs.executeScript(port.id, {file: "scripts/enums.js"});
         chrome.tabs.executeScript(port.id, {file: "scripts/protocols/global.js"});
@@ -22,15 +32,18 @@ chrome.runtime.onConnect.addListener(function(port) {
       loader_ports[port.id] = null;
     });
   }
-  if (port.name == "interface" && !interface_port) {
+  if (port.name == "interface" /*&& !interface_port*/) {
+
     interface_port = port;
     interface_port.id = port.sender.tab.id;
     port.onMessage.addListener(function(msg) {
-      if (msg.scrobble == true) {
-        scrobble(msg.oldValue);
-      }
+
+      // if (msg.scrobble == true) {
+      //   scrobble(msg.oldValue);
+      // }
       if (msg.notify == true) {
-        create_notification(msg.newValue);
+        //create_notification(msg.newValue);
+        notify_helper(msg.newValue, msg.newValue.album_art);
         now_playing(msg.newValue);
       }
     });
@@ -54,7 +67,7 @@ chrome.runtime.onConnect.addListener(function(port) {
 });
 
 function notify_helper(details, url) {
-  chrome.notifications.create('',
+  chrome.notifications.create('100',
   {
     type: 'basic',
     title: details.title,
@@ -71,12 +84,7 @@ function notify_helper(details, url) {
         iconUrl: 'img/notification_ff.png'
       }]
   }, function(id){
-    chrome.storage.local.get('last_notification', function (data) {
-      if (data['last_notification']) {
-        chrome.notifications.clear(data['last_notification'], function(cleared){});
-      }
-      chrome.storage.local.set({'last_notification': id});
-    });
+    console.log('notified', id);
   });
 }
 

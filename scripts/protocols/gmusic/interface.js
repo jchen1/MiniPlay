@@ -515,6 +515,17 @@ function init() {
     });
   });
 
+  let interval;
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && !interval) {
+      musicStatus.hidden_song = musicStatus.title + musicStatus.total_time_s;
+      interval = window.setInterval(() => musicStatus.time_delta++, 1000);
+    } else {
+      window.clearInterval(interval);
+      musicStatus.time_delta = 0;
+    }
+  });
+
   observer.observe(trigger, { attributes: true });
 }
 

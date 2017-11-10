@@ -18,6 +18,7 @@ const musicStatus = {
   artist_id: '',
   album_id: '',
   protocol: 'gmusic',
+  time_delta: 0,
 
   getTime(time) {
     return time.split(':').map((num, index, arr) => parseInt(num, 10) * (60 ** (arr.length - index - 1))).reduce((a, b) => a + b);
@@ -105,7 +106,7 @@ const musicStatus = {
     this.total_time = document.querySelector('#time_container_duration');
     this.total_time = (this.total_time === null) ? '' : this.total_time.innerText;
 
-    this.current_time_s = this.getTime(this.current_time);
+    this.current_time_s = this.getTime(this.current_time) + this.time_delta;
     this.total_time_s = this.getTime(this.total_time);
     this.thumb = this.get_thumb();
     this.shuffle = this.get_shuffle();

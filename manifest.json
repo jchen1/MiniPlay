@@ -34,7 +34,10 @@
     "notifications",
     "storage",
     "tabs",
-    "*://*/"
+    "*://play.google.com/music*", 
+    "*://*.pandora.com/*", 
+    "*://songza.com/*",
+    "*://play.spotify.com/*"
   ],
 
   "content_scripts": [
